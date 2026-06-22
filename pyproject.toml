@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "relative-glv"
+version = "0.1.0"
+description = "The relative (scale-invariant) generalised Lotka-Volterra model: a growing economy with MSB firm-growth statistics"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "numpy",
+    "scipy",
+    "networkx",
+    "matplotlib",
+    "joblib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "jupyter", "ipykernel"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["relative_glv"]
