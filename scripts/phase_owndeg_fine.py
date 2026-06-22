@@ -115,6 +115,12 @@ def plot():
     ax.pcolormesh(edges(mu_s), edges(sig), code_s, cmap=ListedColormap(COLS),
                   vmin=-0.5, vmax=3.5, shading="flat", edgecolors="white", linewidth=0.3)
     COL = np.array([matplotlib.colors.to_rgb(c) for c in COLS])
+
+    # grow/shrink boundary: g_eff=0 contour of the MEASURED grid (divergent cells = fast-growing)
+    geff_s = geff[:, order].copy()
+    fin = np.isfinite(geff_s)
+    geff_s[~fin] = np.nanmax(geff_s[fin]) if fin.any() else 0.0
+    ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="#6e1414", linewidths=2.0)
     ax.axhline(np.sqrt(2), color="#1f6f8b", ls="--", lw=1.1)
     ax.text(-mus[-1] + 0.05, np.sqrt(2) + 0.012, r"$\sigma_c=\sqrt{2}$ (DMFT)",
             color="#1f6f8b", fontsize=8.5, va="bottom")
@@ -125,10 +131,12 @@ def plot():
     ax.set_xlabel(r"mean interaction  $\mu$   ($\mu<0$ competitive)", fontsize=12)
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
     ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
+    from matplotlib.lines import Line2D
     leg = [Patch(facecolor=COL[1], label="fluctuating + growing (MSB regime)"),
            Patch(facecolor=COL[0], label="frozen (shares relax)"),
            Patch(facecolor=COL[2], label=r"shrinking ($g_{\rm eff}<0$)"),
-           Patch(facecolor=COL[3], label="divergent (explodes)")]
+           Patch(facecolor=COL[3], label="divergent (explodes)"),
+           Line2D([], [], color="#6e1414", lw=2.0, label=r"$g_{\rm eff}=0$ (grow/shrink)")]
     ax.legend(handles=leg, loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=9, frameon=False)
     fig.tight_layout()
     out = os.path.join(DATA, "phase_owndeg_fine.png")
