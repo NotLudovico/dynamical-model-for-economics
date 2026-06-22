@@ -122,7 +122,7 @@ def plot():
     reg = ind.argmax(0)
     COL = np.array([matplotlib.colors.to_rgb(c)            # frozen, fluctuating, shrinking, divergent
                     for c in ["#aebfd4", "#3f9b6e", "#e2948c", "#2f2f2f"]])
-    img = COL[reg]
+    img = COL[reg][:, ::-1]                                # flip mu axis: mu<0 (competitive) on the left
 
     fig, ax = plt.subplots(figsize=(8.8, 6.2))
     ax.imshow(img, origin="lower", aspect="auto", extent=[-mus[-1], -mus[0], sig[0], sig[-1]])
