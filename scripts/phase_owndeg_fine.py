@@ -126,14 +126,14 @@ def plot():
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
     ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
     # label each region directly on the plot (no legend box)
-    ax.text(-1.15, 1.45, "frozen", color="black", fontsize=12, ha="center", va="center")
+    ax.text(-2.05, 1.45, "frozen", color="black", fontsize=12, ha="center", va="center")
     ax.text(-0.95, 1.71, "fluctuating\n+ growing\n(MSB)", color="white", fontsize=11,
             ha="center", va="center", weight="bold")
     ax.text(-2.28, 1.73, "shrinking", color="white", fontsize=10.5, ha="center", va="center",
             weight="bold")
     ax.text(-0.45, 1.93, "divergent", color="white", fontsize=11, ha="center", va="center",
             weight="bold")
-    ax.text(-0.78, 1.44, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
+    ax.text(-0.95, 1.46, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
     fig.tight_layout()
     out = os.path.join(DATA, "phase_owndeg_fine.png")
     fig.savefig(out, dpi=150, bbox_inches="tight")
