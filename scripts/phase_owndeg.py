@@ -22,7 +22,7 @@ N, LAM = 4000, 1e-3
 TMAX, N_EVAL, LATE, DT = 400.0, 800, (320.0, 390.0), 0.5
 SIGMAS = np.round(np.linspace(1.40, 1.95, 8), 3)
 MUS = np.round(np.linspace(0.0, 2.5, 8), 3)
-SEEDS, N_JOBS, TIMEOUT = 6, 6, 120
+SEEDS, N_JOBS, TIMEOUT = 6, 6, 90
 OP = (1.76, 1.75)                                    # operating point (mu, sigma)
 FREEZE_CHURN = 0.02                                  # churn below this = frozen
 
@@ -56,14 +56,15 @@ def compute():
     nS, nM = len(SIGMAS), len(MUS)
     # raw[i,j,seed,metric], metrics = churn, g_eff, surv, beta, r2
     raw = np.full((nS, nM, SEEDS, 5), np.nan)
+    out = os.path.join(DATA, "phase_owndeg.npz")
     print(f"[phase] own-degree N={N} lam={LAM}  {nS}x{nM} grid x {SEEDS} seeds", flush=True)
     for i, s in enumerate(SIGMAS):
         for j, m in enumerate(MUS):
             res = Parallel(n_jobs=N_JOBS)(delayed(run_one)(s, m, k) for k in range(SEEDS))
             raw[i, j] = np.array(res)
+        np.savez(out, sigmas=SIGMAS, mus=MUS, seeds=SEEDS, N=N, lam=LAM,
+                 op=np.array(OP), raw=raw)                 # checkpoint each row
         print(f"  sigma={s:.3f} done  ({(time.time()-t0)/60:.1f} min)", flush=True)
-    np.savez(os.path.join(DATA, "phase_owndeg.npz"),
-             sigmas=SIGMAS, mus=MUS, seeds=SEEDS, N=N, lam=LAM, op=np.array(OP), raw=raw)
     print(f"[phase] saved data/phase_owndeg.npz  ({(time.time()-t0)/60:.1f} min)", flush=True)
 
 
@@ -75,23 +76,30 @@ def plot():
     d = np.load(os.path.join(DATA, "phase_owndeg.npz"))
     sig, mus, raw, op = d["sigmas"], d["mus"], d["raw"], d["op"]
     nS, nM = len(sig), len(mus)
-    okfrac = np.isfinite(raw[..., 3]).mean(2)
-    med = np.nanmedian(raw, axis=2)                  # (nS,nM,5)
-    churn, geff, beta = med[..., 0], med[..., 1], med[..., 3]
+    # divergence = the INTEGRATION failed (no trajectory -> churn is nan), NOT
+    # merely an unmeasurable beta in a valid (e.g. low-survival frozen) state.
+    integ_ok = np.isfinite(raw[..., 0]).mean(2)      # fraction of seeds that integrated
+    med = np.nanmedian(raw, axis=2)                  # (nS,nM,5): churn,geff,surv,beta,r2
+    churn, geff, surv, beta, r2 = (med[..., k] for k in range(5))
+    # a beta is only trustworthy on a clean power-law fit of a coexisting economy;
+    # junk fits on near-extinct states fake a low beta (the near-frozen trap).
+    beta_ok = (r2 >= 0.85) & (surv >= 0.05) & (integ_ok >= 0.5)
 
-    REG = {"frz": "#cfd8e3", "shr": "#e8a0a0", "div": "#3a3a3a"}
+    REG = {"frz": "#cfd8e3", "shr": "#e8a0a0", "div": "#3a3a3a", "nob": "#efe2a0"}
     gmap = matplotlib.colormaps["viridis_r"]
     bmin, bmax = 0.4, 0.95
     rgba = np.ones((nS, nM, 3))
     cat = np.empty((nS, nM), dtype=object)
     for i in range(nS):
         for j in range(nM):
-            if okfrac[i, j] < 0.5 or not np.isfinite(beta[i, j]):
+            if integ_ok[i, j] < 0.5:                                  # integration failed
                 rgba[i, j] = matplotlib.colors.to_rgb(REG["div"]); cat[i, j] = "div"
             elif np.isfinite(churn[i, j]) and churn[i, j] < FREEZE_CHURN:
                 rgba[i, j] = matplotlib.colors.to_rgb(REG["frz"]); cat[i, j] = "frz"
-            elif geff[i, j] < 0:
+            elif np.isfinite(geff[i, j]) and geff[i, j] < 0:
                 rgba[i, j] = matplotlib.colors.to_rgb(REG["shr"]); cat[i, j] = "shr"
+            elif not beta_ok[i, j]:                                   # valid state, beta untrustworthy
+                rgba[i, j] = matplotlib.colors.to_rgb(REG["nob"]); cat[i, j] = "nob"
             else:
                 t = np.clip((beta[i, j] - bmin) / (bmax - bmin), 0, 1)
                 rgba[i, j] = gmap(t)[:3]; cat[i, j] = "flu"
@@ -120,6 +128,7 @@ def plot():
     leg = [Patch(facecolor=REG["frz"], label="frozen (shares relax)"),
            Patch(facecolor=gmap(0.5)[:3], label=r"fluctuating + growing (MSB; $\beta$ shown)"),
            Patch(facecolor=REG["shr"], label=r"shrinking ($g_{\rm eff}<0$)"),
+           Patch(facecolor=REG["nob"], label=r"$\beta$ unreliable (junk fit / near-extinct)"),
            Patch(facecolor=REG["div"], label="divergent (unintegrable)")]
     ax.legend(handles=leg, loc="upper left", bbox_to_anchor=(1.18, 1.0), fontsize=8, frameon=False)
     fig.tight_layout()
