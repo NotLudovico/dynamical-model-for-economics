@@ -125,13 +125,15 @@ def plot():
     ax.set_xlabel(r"mean interaction  $\mu$   ($\mu<0$ competitive)", fontsize=12)
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
     ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
-    from matplotlib.lines import Line2D
-    leg = [Patch(facecolor=COL[1], label="fluctuating + growing (MSB regime)"),
-           Patch(facecolor=COL[0], label="frozen (shares relax)"),
-           Patch(facecolor=COL[2], label=r"shrinking ($g_{\rm eff}<0$)"),
-           Patch(facecolor=COL[3], label="divergent (explodes)"),
-           Line2D([], [], color="black", lw=2.0, label=r"$g_{\rm eff}=0$ (grow/shrink)")]
-    ax.legend(handles=leg, loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=9, frameon=False)
+    # label each region directly on the plot (no legend box)
+    ax.text(-1.15, 1.45, "frozen", color="black", fontsize=12, ha="center", va="center")
+    ax.text(-0.95, 1.71, "fluctuating\n+ growing\n(MSB)", color="white", fontsize=11,
+            ha="center", va="center", weight="bold")
+    ax.text(-2.28, 1.73, "shrinking", color="white", fontsize=10.5, ha="center", va="center",
+            weight="bold", rotation=38)
+    ax.text(-0.45, 1.93, "divergent", color="white", fontsize=11, ha="center", va="center",
+            weight="bold")
+    ax.text(-0.78, 1.44, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
     fig.tight_layout()
     out = os.path.join(DATA, "phase_owndeg_fine.png")
     fig.savefig(out, dpi=150, bbox_inches="tight")
