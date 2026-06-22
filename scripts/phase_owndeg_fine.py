@@ -130,7 +130,7 @@ def plot():
     ax.text(-0.95, 1.71, "fluctuating\n+ growing\n(MSB)", color="white", fontsize=11,
             ha="center", va="center", weight="bold")
     ax.text(-2.28, 1.73, "shrinking", color="white", fontsize=10.5, ha="center", va="center",
-            weight="bold", rotation=38)
+            weight="bold")
     ax.text(-0.45, 1.93, "divergent", color="white", fontsize=11, ha="center", va="center",
             weight="bold")
     ax.text(-0.78, 1.44, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
