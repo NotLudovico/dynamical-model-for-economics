@@ -63,3 +63,58 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
         cols = np.concatenate([ej, ei])
         return sparse.csr_array((np.concatenate([w_ij, w_ji]), (rows, cols)), shape=(N, N))
     raise ValueError(f"unknown kind {kind!r} (expected 'fc' or 'powerlaw')")
+
+
+def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,
+              method="LSODA", rtol=1e-7, atol=1e-9):
+    """Integrate the relative GLV in the share + log-scale split.
+
+    Writing x_i = M w_i with w on the simplex (sum_i w_i = 1) and splitting off
+    the scale gives a replicator for the shares plus a linear equation for ln M:
+
+        f_i      = 1 - N w_i - N (alpha w)_i           (per-firm fitness, N = number of firms)
+        <f>      = sum_i w_i f_i = g_eff               (aggregate growth rate)
+        dw_i/dt  = w_i (f_i - <f>) + lam (1/N - w_i)   (replicator + optional share floor)
+        d lnM/dt = g_eff
+
+    The absolute abundance x_i = M w_i is NEVER formed, so nothing overflows even
+    though M grows exponentially: w stays on the simplex and ln M grows linearly.
+    The optional lam term is a persistent, mass-conserving immigration floor that
+    fights condensation onto a single firm.
+
+    Returns dict(t, W, lnM, success): W shape (N, n_eval), columns renormalised
+    to the simplex; lnM the log aggregate (lnM(0)=0).
+    """
+    N = alpha.shape[0]
+    rng = np.random.default_rng(seed)
+    w0 = rng.uniform(0.5, 1.5, N)
+    w0 /= w0.sum()
+
+    def rhs(t, state):
+        w = np.clip(state[:N], 0.0, None)
+        s = w.sum()
+        if s > 0:
+            w = w / s
+        f = 1.0 - N * w - N * (alpha @ w)
+        fbar = float(w @ f)
+        dw = w * (f - fbar) + lam * (1.0 / N - w)
+        return np.concatenate([dw, [fbar]])
+
+    r = solve_ivp(rhs, (0.0, tmax), np.concatenate([w0, [0.0]]), method=method,
+                  t_eval=np.linspace(0.0, tmax, n_eval), rtol=rtol, atol=atol)
+    W = np.clip(r.y[:N], 0.0, None)
+    W = W / W.sum(0, keepdims=True)
+    return dict(t=r.t, W=W, lnM=r.y[N], success=bool(r.success))
+
+
+def growth_rate(t, lnM, frac=0.5):
+    """Aggregate growth rate g_eff = d lnM/dt, as the slope of lnM over the late
+    fraction `frac` of the trajectory (after the initial-condition transient)."""
+    late = t > (1.0 - frac) * t[-1]
+    return float(np.polyfit(t[late], lnM[late], 1)[0])
+
+
+def survivors(W, floor=1e-6):
+    """Boolean mask of firms whose share stays above `floor` across all of W
+    (relative size S_i = N w_i, so floor is a fraction of the average firm)."""
+    return W.min(axis=1) > floor

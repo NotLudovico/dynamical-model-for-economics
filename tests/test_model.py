@@ -32,3 +32,29 @@ def test_unknown_kind_raises():
     import pytest
     with pytest.raises(ValueError):
         coupling(10, 0.0, 1.0, kind="banana")
+
+
+from relative_glv.model import integrate, growth_rate, survivors
+
+
+def test_integrate_keeps_shares_on_the_simplex():
+    a = coupling(200, 1.0, 0.8, kind="fc", seed=0)
+    r = integrate(a, tmax=40.0, n_eval=200, seed=0)
+    assert r["success"]
+    assert r["W"].shape == (200, 200)
+    assert np.allclose(r["W"].sum(axis=0), 1.0, atol=1e-8)   # simplex preserved
+    assert np.isfinite(r["lnM"]).all()                        # ln M never overflows
+
+
+def test_relaxed_economy_grows_at_negative_mu():
+    # weak competition (mu small) in the relaxed phase -> aggregate grows: g_eff > 0
+    a = coupling(300, 0.0, 0.8, kind="fc", seed=1)
+    r = integrate(a, tmax=60.0, n_eval=300, seed=1)
+    assert growth_rate(r["t"], r["lnM"]) > 0.0
+
+
+def test_survivors_mask_length_and_dtype():
+    a = coupling(150, 1.0, 0.8, kind="fc", seed=2)
+    r = integrate(a, tmax=30.0, n_eval=150, seed=2)
+    m = survivors(r["W"])
+    assert m.shape == (150,) and m.dtype == bool
