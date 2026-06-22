@@ -81,17 +81,6 @@ def _simulate_msb(N, seed, store_shares=False):
     lh = t > 0.5 * t[-1]
     rec["g_eff"] = float(np.polyfit(t[lh], lnM[lh], 1)[0])
 
-    # Mid-window persistent survivors (for gstd_mid)
-    mid_mask = (t >= MID_WIN[0]) & (t <= MID_WIN[1])
-    sm = np.where(W[:, mid_mask].min(1) > 1e-6)[0]
-    if sm.size:
-        tgm = np.arange(MID_WIN[0], MID_WIN[1] + 1e-9, DT)
-        gm = np.diff(
-            np.array([np.interp(tgm, t, np.log(np.maximum(N * W[i], 1e-12))) for i in sm]),
-            axis=1,
-        )
-        rec["gstd_mid"] = float(gm.std())
-
     # Late-window survivors
     late_mask = (t >= LATE_WIN[0]) & (t <= LATE_WIN[1])
     surv_idx = np.where(W[:, late_mask].min(1) > 1e-6)[0]

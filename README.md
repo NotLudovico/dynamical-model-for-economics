@@ -20,9 +20,9 @@ Here $x_i$ is the absolute size of firm $i$, $m$ is the mean firm size, $\alpha$
 
 - **Size-variance exponent.** Firm growth volatility decays with firm size as $\sigma(S) \sim S^{-\beta}$. The model yields $\beta_\infty \approx 0.17$ in the limit $N \to \infty$, approaching the empirical range of $\beta \approx 0.15$-0.20 observed by Moran, Santos, and Bouchaud.
 
-- **Chaos onset.** The relaxed (chaotic) to fluctuating phase boundary occurs at $\sigma_c = \sqrt{2}$, independent of the mean competition $\mu$. Below this threshold, dynamics are chaotic but survival is deterministic; above it, market volatility becomes persistent.
+- **Phase transition.** The relaxed (single fixed point) to fluctuating (chaotic) phase boundary sits at $\sigma_c = \sqrt{2}$, independent of the mean competition $\mu$. Below it the relative sizes relax to a fixed point; above it they fluctuate persistently, and that fluctuating phase is where the MSB tent appears.
 
-- **DMFT validation.** The steady-state observables (survival fraction, growth rate, shape moments) match a derived Dynamic Mean-Field Theory solver to within 1 percent across the relaxed phase. See `solve_fixed_point()` and test results.
+- **DMFT validation.** The steady-state observables (survival fraction, growth rate, shape moments) agree closely with a derived Dynamic Mean-Field Theory solver in the relaxed phase: sub-percent at low $\sigma$, within a few percent approaching $\sigma_c$. See `solve_fixed_point()` and test results.
 
 See `story.ipynb` for detailed analysis: phase space, growth distributions, size-variance curves, and numerical validation against DMFT.
 
@@ -35,7 +35,7 @@ relative-glv/
   pyproject.toml                 Package configuration
   story.ipynb                    Explainer notebook: figures, analysis, narrative
   relative_glv/
-    __init__.py                  Package entry point; exports solve_fixed_point, sigma_c
+    __init__.py                  Package entry point; exports the public API: coupling, integrate, growth_rate, survivors, rescale, size_volatility, tent_stats, solve_fixed_point, sigma_c
     model.py                     Relative GLV dynamics: coupling, integrate, growth_rate
     msb.py                       Firm-growth statistics: rescale, size_volatility, tent_stats
     dmft.py                      DMFT fixed-point solver: solve_fixed_point, sigma_c
@@ -49,7 +49,7 @@ relative-glv/
   data/
     msb.npz                      Growth distributions and size-variance curves
     phase_diagram.npz            Phase-space observables (survival, growth, fluct.)
-    dmft_validation.npz          Convergence data for DMFT solver tests
+    dmft_validation.npz          Matched fully-connected simulation vs DMFT (backs the notebook validation figure)
 ```
 
 ## Install and Run
