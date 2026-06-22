@@ -102,7 +102,7 @@ def plot():
 
     # RAW cells -- no despeckle, no interpolation: every square is one measured cell.
     from matplotlib.colors import ListedColormap
-    COLS = ["#aebfd4", "#3f9b6e", "#e2948c", "#2f2f2f"]   # frozen, fluctuating, shrinking, divergent
+    COLS = ["#dddddd", "#0072B2", "#D55E00", "#1a1a1a"]   # frozen, fluctuating, shrinking, divergent
     mu_plot = -mus                                        # mu<0 (competitive) convention
     order = np.argsort(mu_plot)                           # ascending: most competitive on the left
     mu_s = mu_plot[order]; code_s = code[:, order]
@@ -121,9 +121,6 @@ def plot():
     fin = np.isfinite(geff_s)
     geff_s[~fin] = np.nanmax(geff_s[fin]) if fin.any() else 0.0
     ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="#6e1414", linewidths=2.0)
-    ax.axhline(np.sqrt(2), color="#1f6f8b", ls="--", lw=1.1)
-    ax.text(-mus[-1] + 0.05, np.sqrt(2) + 0.012, r"$\sigma_c=\sqrt{2}$ (DMFT)",
-            color="#1f6f8b", fontsize=8.5, va="bottom")
     ax.scatter([-op[0]], [op[1]], marker="*", s=520, edgecolor="gold",
                facecolor="none", linewidth=2.6, zorder=6)
     ax.annotate("operating point", (-op[0], op[1]), (-op[0], op[1] - 0.085),
