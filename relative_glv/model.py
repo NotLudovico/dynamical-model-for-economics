@@ -1,0 +1,65 @@
+"""The relative (scale-invariant) generalised Lotka-Volterra model.
+
+    x_i' = x_i [ 1 - x_i/m - (alpha x)_i / m ],   m = <x> = M/N.
+
+Interactions act on the MEAN firm m, so the competition term is O(M) not O(M^2):
+the aggregate M grows exponentially in physical time with no finite-time blow-up.
+We integrate in a share + log-scale split (shares w_i = x_i/M on the simplex,
+ln M separate), which is numerically unconditionally stable -- see `integrate`.
+
+Sign convention: mu > 0 is mean COMPETITION (it lowers the growth rate).
+"""
+import numpy as np
+import networkx as nx
+from scipy import sparse
+from scipy.integrate import solve_ivp
+
+_ALPHA_PL, _MEAN_DEGREE = 2.5, 100   # power-law degree exponent, target mean degree
+
+
+def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
+    """Interaction matrix alpha for the relative GLV.
+
+    Couplings are scaled so the mean field stays finite as connectivity grows:
+    per-interaction mean mu/C and std sigma/sqrt(C), with C the connectivity
+    (C = N fully connected, C = mean degree on the graph). gamma sets the
+    symmetric/antisymmetric correlation of the reciprocal pair via
+    alpha ~ sqrt(1+gamma) S +/- sqrt(1-gamma) V, S=(M+M^T)/sqrt2, V=(M-M^T)/sqrt2.
+
+    kind="fc":       fully-connected Gaussian, alpha_ij = mu/N + (sigma/sqrt N) z_ij,
+                     zero diagonal. The clean ensemble the DMFT is derived for.
+    kind="powerlaw": power-law configuration-model graph (exponent 2.5, mean
+                     degree ~100), Roy disorder per edge. The realistic ensemble.
+
+    Returns a dense ndarray (fc) or a scipy.sparse csr_array (powerlaw); both
+    support `alpha @ w`.
+    """
+    rng = np.random.default_rng(seed)
+    if kind == "fc":
+        z = rng.standard_normal((N, N))
+        a = mu / N + (sigma / np.sqrt(N)) * z
+        np.fill_diagonal(a, 0.0)
+        return a
+    if kind == "powerlaw":
+        C = min(_MEAN_DEGREE, N - 1)
+        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
+        deg = np.maximum(
+            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
+        if deg.sum() % 2:
+            deg[deg.argmin()] += 1
+        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
+        G.remove_edges_from(nx.selfloop_edges(G))
+        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        A.data[:] = 1.0
+        C_eff = float(np.asarray(A.sum(axis=1)).mean())
+        Au = sparse.triu(A, k=1).tocoo()
+        ei, ej, nE = Au.row, Au.col, Au.row.size
+        a, b = rng.normal(0, 1, nE), rng.normal(0, 1, nE)
+        sym, anti = (a + b) / np.sqrt(2), (a - b) / np.sqrt(2)
+        scale = sigma / np.sqrt(2 * C_eff)
+        w_ij = mu / C_eff + scale * (np.sqrt(1 + gamma) * sym + np.sqrt(1 - gamma) * anti)
+        w_ji = mu / C_eff + scale * (np.sqrt(1 + gamma) * sym - np.sqrt(1 - gamma) * anti)
+        rows = np.concatenate([ei, ej])
+        cols = np.concatenate([ej, ei])
+        return sparse.csr_array((np.concatenate([w_ij, w_ji]), (rows, cols)), shape=(N, N))
+    raise ValueError(f"unknown kind {kind!r} (expected 'fc' or 'powerlaw')")
