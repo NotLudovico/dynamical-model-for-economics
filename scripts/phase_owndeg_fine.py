@@ -100,34 +100,21 @@ def plot():
             else:
                 code[i, j] = 1
 
-    # despeckle: reassign an isolated cell to its neighbour-majority (>=6 of 8 agree), 2 passes.
-    # removes single near-frozen/divergent cells that flicker at a phase boundary (seed noise).
-    clean = code.copy()
-    for _ in range(2):
-        s0 = clean.copy()
-        for i in range(1, nS - 1):
-            for j in range(1, nM - 1):
-                nb = np.delete(s0[i-1:i+2, j-1:j+2].ravel(), 4)
-                v, c = np.unique(nb, return_counts=True)
-                if c.max() >= 6 and v[c.argmax()] != s0[i, j]:
-                    clean[i, j] = v[c.argmax()]
+    # RAW cells -- no despeckle, no interpolation: every square is one measured cell.
+    from matplotlib.colors import ListedColormap
+    COLS = ["#aebfd4", "#3f9b6e", "#e2948c", "#2f2f2f"]   # frozen, fluctuating, shrinking, divergent
+    mu_plot = -mus                                        # mu<0 (competitive) convention
+    order = np.argsort(mu_plot)                           # ascending: most competitive on the left
+    mu_s = mu_plot[order]; code_s = code[:, order]
 
-    # smooth regions: interpolate each regime's indicator, take argmax on a fine mesh
-    MU = np.linspace(mus[0], mus[-1], 420)
-    SG = np.linspace(sig[0], sig[-1], 420)
-    MM, SS = np.meshgrid(MU, SG)
-    pts = np.column_stack([SS.ravel(), MM.ravel()])
-    ind = np.stack([RegularGridInterpolator((sig, mus), (clean == r).astype(float),
-                    bounds_error=False, fill_value=None)(pts).reshape(SS.shape) for r in range(4)])
-    reg = ind.argmax(0)
-    COL = np.array([matplotlib.colors.to_rgb(c)            # frozen, fluctuating, shrinking, divergent
-                    for c in ["#aebfd4", "#3f9b6e", "#e2948c", "#2f2f2f"]])
-    img = COL[reg][:, ::-1]                                # flip mu axis: mu<0 (competitive) on the left
+    def edges(a):
+        a = np.asarray(a, float); m = (a[:-1] + a[1:]) / 2
+        return np.concatenate([[2 * a[0] - m[0]], m, [2 * a[-1] - m[-1]]])
 
     fig, ax = plt.subplots(figsize=(8.8, 6.2))
-    ax.imshow(img, origin="lower", aspect="auto", extent=[-mus[-1], -mus[0], sig[0], sig[-1]])
-    fge = RegularGridInterpolator((sig, mus), np.nan_to_num(geff), bounds_error=False, fill_value=None)
-    ax.contour(-MM, SS, fge(pts).reshape(SS.shape), levels=[0.0], colors="#6e1414", linewidths=1.4)
+    ax.pcolormesh(edges(mu_s), edges(sig), code_s, cmap=ListedColormap(COLS),
+                  vmin=-0.5, vmax=3.5, shading="flat", edgecolors="white", linewidth=0.3)
+    COL = np.array([matplotlib.colors.to_rgb(c) for c in COLS])
     ax.axhline(np.sqrt(2), color="#1f6f8b", ls="--", lw=1.1)
     ax.text(-mus[-1] + 0.05, np.sqrt(2) + 0.012, r"$\sigma_c=\sqrt{2}$ (DMFT)",
             color="#1f6f8b", fontsize=8.5, va="bottom")
