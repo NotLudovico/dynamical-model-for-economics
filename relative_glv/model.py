@@ -29,9 +29,18 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
     kind="fc":       fully-connected Gaussian, alpha_ij = mu/N + (sigma/sqrt N) z_ij,
                      zero diagonal. The clean ensemble the DMFT is derived for.
     kind="powerlaw": power-law configuration-model graph (exponent 2.5, mean
-                     degree ~100), Roy disorder per edge. The realistic ensemble.
+                     degree ~100), Roy disorder per edge, couplings normalised by
+                     the GLOBAL mean degree C_eff. The realistic ensemble.
+    kind="powerlaw_owndeg": same graph, but each row normalised by its OWN degree
+                     k_i (a_ij = mu/k_i + (sigma/sqrt(k_i)) z_ij), so every firm's
+                     disorder field has the same variance regardless of degree --
+                     the principled per-fan-in (mean-field 1/sqrt(connectivity))
+                     scaling on a heterogeneous graph. Unlike mean-degree, this
+                     keeps the size-volatility exponent beta sustained as N->inf
+                     (mean-degree over-couples the hubs and washes beta to 0).
+                     gamma must be 0 (couplings are independent/asymmetric).
 
-    Returns a dense ndarray (fc) or a scipy.sparse csr_array (powerlaw); both
+    Returns a dense ndarray (fc) or a scipy.sparse csr_array (powerlaw*); both
     support `alpha @ w`.
     """
     rng = np.random.default_rng(seed)
@@ -62,7 +71,25 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
         rows = np.concatenate([ei, ej])
         cols = np.concatenate([ej, ei])
         return sparse.csr_array((np.concatenate([w_ij, w_ji]), (rows, cols)), shape=(N, N))
-    raise ValueError(f"unknown kind {kind!r} (expected 'fc' or 'powerlaw')")
+    if kind == "powerlaw_owndeg":
+        if gamma != 0.0:
+            raise ValueError("powerlaw_owndeg supports only gamma=0 (asymmetric couplings)")
+        C = min(_MEAN_DEGREE, N - 1)
+        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
+        deg = np.maximum(
+            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
+        if deg.sum() % 2:
+            deg[deg.argmin()] += 1
+        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
+        G.remove_edges_from(nx.selfloop_edges(G))
+        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        ki = np.diff(A.indptr).astype(float)          # each node's own degree (fan-in)
+        ki[ki == 0] = 1.0
+        coo = A.tocoo()
+        z = rng.normal(size=coo.row.size)
+        vals = mu / ki[coo.row] + (sigma / np.sqrt(ki[coo.row])) * z
+        return sparse.csr_array((vals, (coo.row, coo.col)), shape=(N, N))
+    raise ValueError(f"unknown kind {kind!r} (expected 'fc', 'powerlaw' or 'powerlaw_owndeg')")
 
 
 def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,

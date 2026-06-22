@@ -34,6 +34,30 @@ def test_unknown_kind_raises():
         coupling(10, 0.0, 1.0, kind="banana")
 
 
+def test_powerlaw_owndeg_field_variance_is_degree_independent():
+    # The defining own-degree property: each row normalised by its OWN degree, so
+    # the disorder-field variance (row sum of squares) does NOT grow with degree --
+    # unlike mean-degree, where it scales with k_i and over-couples the hubs.
+    from scipy.stats import spearmanr
+    N = 1500
+    own = coupling(N, 1.0, 1.5, kind="powerlaw_owndeg", seed=3)
+    mean = coupling(N, 1.0, 1.5, kind="powerlaw", seed=3)
+    assert sparse.issparse(own) and own.shape == (N, N) and own.nnz > 0
+    deg = np.diff(own.indptr).astype(float)
+    own_ss = np.asarray(own.multiply(own).sum(1)).ravel()
+    mean_ss = np.asarray(mean.multiply(mean).sum(1)).ravel()
+    rho_own = spearmanr(deg, own_ss).correlation
+    rho_mean = spearmanr(np.diff(mean.indptr), mean_ss).correlation
+    assert abs(rho_own) < 0.3            # own-degree: ~flat in degree
+    assert rho_mean > 0.7               # mean-degree: grows with degree (the hub problem)
+
+
+def test_powerlaw_owndeg_rejects_gamma():
+    import pytest
+    with pytest.raises(ValueError):
+        coupling(50, 1.0, 1.0, kind="powerlaw_owndeg", gamma=0.5, seed=0)
+
+
 from relative_glv.model import integrate, growth_rate, survivors
 
 
