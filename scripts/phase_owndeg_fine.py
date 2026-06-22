@@ -102,7 +102,7 @@ def plot():
 
     # RAW cells -- no despeckle, no interpolation: every square is one measured cell.
     from matplotlib.colors import ListedColormap
-    COLS = ["#dddddd", "#0072B2", "#D55E00", "#1a1a1a"]   # frozen, fluctuating, shrinking, divergent
+    COLS = ["#e8e8e8", "#4878a8", "#c0744f", "#3a3a3a"]   # frozen, fluctuating, shrinking, divergent
     mu_plot = -mus                                        # mu<0 (competitive) convention
     order = np.argsort(mu_plot)                           # ascending: most competitive on the left
     mu_s = mu_plot[order]; code_s = code[:, order]
@@ -120,20 +120,23 @@ def plot():
     geff_s = geff[:, order].copy()
     fin = np.isfinite(geff_s)
     geff_s[~fin] = np.nanmax(geff_s[fin]) if fin.any() else 0.0
-    ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="#6e1414", linewidths=2.0)
-    ax.scatter([-op[0]], [op[1]], marker="*", s=520, edgecolor="gold",
-               facecolor="none", linewidth=2.6, zorder=6)
+    ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="0.2", linewidths=4.0)   # dark halo
+    ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="white", linewidths=2.0)  # white on top
+    ax.scatter([-op[0]], [op[1]], marker="*", s=560, edgecolor="white",
+               facecolor="black", linewidth=1.4, zorder=6)
     ax.annotate("operating point", (-op[0], op[1]), (-op[0], op[1] - 0.085),
-                fontsize=9, color="gold", ha="center", weight="bold")
+                fontsize=9, color="black", ha="center", weight="bold")
     ax.set_xlabel(r"mean interaction  $\mu$   ($\mu<0$ competitive)", fontsize=12)
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
     ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
     from matplotlib.lines import Line2D
+    from matplotlib.patheffects import withStroke
     leg = [Patch(facecolor=COL[1], label="fluctuating + growing (MSB regime)"),
            Patch(facecolor=COL[0], label="frozen (shares relax)"),
            Patch(facecolor=COL[2], label=r"shrinking ($g_{\rm eff}<0$)"),
            Patch(facecolor=COL[3], label="divergent (explodes)"),
-           Line2D([], [], color="#6e1414", lw=2.0, label=r"$g_{\rm eff}=0$ (grow/shrink)")]
+           Line2D([], [], color="white", lw=2.0, label=r"$g_{\rm eff}=0$ (grow/shrink)",
+                  path_effects=[withStroke(linewidth=3.6, foreground="0.2")])]
     ax.legend(handles=leg, loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=9, frameon=False)
     fig.tight_layout()
     out = os.path.join(DATA, "phase_owndeg_fine.png")
