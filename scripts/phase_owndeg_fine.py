@@ -122,8 +122,6 @@ def plot():
     geff_s[~fin] = np.nanmax(geff_s[fin]) if fin.any() else 0.0
     ax.contour(mu_s, sig, geff_s, levels=[0.0], colors="black", linewidths=2.2)
     ax.scatter([-op[0]], [op[1]], marker="*", s=520, color="black", zorder=6)
-    ax.annotate("operating point", (-op[0], op[1]), (-op[0], op[1] - 0.085),
-                fontsize=9, color="black", ha="center", weight="bold")
     ax.set_xlabel(r"mean interaction  $\mu$   ($\mu<0$ competitive)", fontsize=12)
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
     ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
