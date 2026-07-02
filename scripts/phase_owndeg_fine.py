@@ -108,7 +108,7 @@ def plot():
 
     # RAW cells -- no despeckle, no interpolation: every square is one measured cell.
     from matplotlib.colors import ListedColormap
-    COLS = ["#e8e8e8", "#4878a8", "#c0744f", "#3a3a3a"]   # frozen, fluctuating, shrinking, divergent
+    COLS = ["#e8e8e8", "#457b9d", "#e76f51", "#1d3557"]   # frozen, fluctuating, shrinking, divergent
     mu_plot = -mus                                        # mu<0 (competitive) convention
     order = np.argsort(mu_plot)                           # ascending: most competitive on the left
     mu_s = mu_plot[order]; code_s = code[:, order]
