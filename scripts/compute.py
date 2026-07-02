@@ -5,6 +5,8 @@
                           freeze-vs-persist trajectories.
   data/phase_diagram.npz  (mu, sigma) grid of growth rate g_eff and chaos amplitude.
   data/dmft_validation.npz  matched fully-connected sim vs DMFT (growth, survival, chaos onset).
+  data/dmft_twotime.npz   two-time DMFT (fluctuating phase, FC-Gaussian limit): autocorrelation
+                          C(tau), survival, and growth rate at six sigma across sigma_c.
 
 Dataset-oriented: compute once, store raw-enough results, replot freely in the notebook.
 
@@ -21,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from relative_glv.model import coupling, integrate, growth_rate, survivors
 from relative_glv import msb as msb_mod
 from relative_glv.dmft import solve_fixed_point, sigma_c
+from relative_glv import solve_twotime
 
 SMOKE = "--smoke" in sys.argv
 DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
@@ -518,6 +521,38 @@ def compute_dmft_validation():
 
 
 # ---------------------------------------------------------------------------
+# Block 4: two-time DMFT (fluctuating phase), for the notebook appendix
+# ---------------------------------------------------------------------------
+
+MU_2T = -0.5
+SIG_2T = [0.7, 1.0, 1.2, 1.6, 2.0, 2.5]
+
+
+def compute_twotime():
+    print(
+        f"[compute_twotime] mu={MU_2T}, sigma={SIG_2T}, gamma=0, sigma_c={sigma_c(0.0):.3f}",
+        flush=True,
+    )
+    t0 = time.time()
+
+    sol = [solve_twotime(MU_2T, s, seed=0) for s in SIG_2T]
+
+    np.savez(
+        os.path.join(DATA, "dmft_twotime.npz"),
+        sig_2t=np.array(SIG_2T),
+        Ctau=np.array([r["Ctau"] for r in sol], dtype=object),
+        dt=np.array([r["dt"] for r in sol]),
+        surv=np.array([r["surv"] for r in sol]),
+        g_eff=np.array([r["g_eff"] for r in sol]),
+        mu=MU_2T,
+    )
+    elapsed = (time.time() - t0) / 60.0
+    print(f"[compute_twotime] saved -> data/dmft_twotime.npz  ({elapsed:.1f} min)", flush=True)
+    print("wrote dmft_twotime.npz", flush=True)
+    return sol
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -531,6 +566,7 @@ if __name__ == "__main__":
     msb_out = compute_msb()
     G, F = compute_phase()
     sim_arr, mui_arr = compute_dmft_validation()
+    compute_twotime()
 
     total = (time.time() - t_start) / 60.0
     print("\n=== SUMMARY ===", flush=True)
