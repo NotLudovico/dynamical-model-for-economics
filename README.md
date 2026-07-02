@@ -1,6 +1,6 @@
 # relative-glv
 
-The relative (scale-invariant) generalised Lotka-Volterra model of firm growth. Interactions act on the mean firm, giving a self-consistently growing economy without finite-time blow-up. The model reproduces the stylized facts of firm-size dynamics observed in empirical firm-growth studies: a symmetric fat-tailed growth-rate distribution and a size-variance scaling exponent in the range of real data.
+The relative (scale-invariant) generalised Lotka-Volterra model of firm growth. Interactions act on the mean firm, giving a self-consistently growing economy without finite-time blow-up. The model reproduces the stylized facts of firm-size dynamics observed in empirical firm-growth studies: a symmetric fat-tailed growth-rate distribution, and a size-variance relation whose form (volatility declining with size) matches real data, though not yet its exponent.
 
 ## The Model
 
@@ -18,7 +18,7 @@ Here $x_i$ is the absolute size of firm $i$, $m$ is the mean firm size, $\alpha$
 
 - **Symmetric fat-tailed growth.** The distribution of firm-specific growth rates is symmetric around zero and fat-tailed (tent-shaped, closer to Laplace than Gaussian). See the notebook for growth distributions across parameter regimes.
 
-- **Size-variance exponent.** Firm growth volatility decays with firm size as $\sigma(S) \sim S^{-\beta}$. The model yields $\beta_\infty \approx 0.17$ in the limit $N \to \infty$, approaching the empirical range of $\beta \approx 0.15$-0.20 observed by Moran, Santos, and Bouchaud.
+- **Size-variance exponent.** Firm growth volatility decays with firm size as $\sigma(S) \sim S^{-\beta}$. The own-degree model reproduces the *form* of this relation but with $\beta \approx 0.6$-0.8, about $3\times$ the empirical $\beta \approx 0.15$-0.20 observed by Moran, Santos, and Bouchaud. This gap is structural: it is robust to parameters, network degree, and demographic noise, matching the MSB argument that the empirical exponent needs size-growing correlations beyond a single-level interaction model.
 
 - **Phase transition.** The relaxed (single fixed point) to fluctuating (chaotic) phase boundary sits at $\sigma_c = \sqrt{2}$, independent of the mean competition $\mu$. Below it the relative sizes relax to a fixed point; above it they fluctuate persistently, and that fluctuating phase is where the MSB tent appears.
 

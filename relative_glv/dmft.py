@@ -92,14 +92,6 @@ def solve_fixed_point(mu, sigma, gamma=0.0):
     )
 
 
-if __name__ == "__main__":
-    print(f"sigma_c(gamma=0) = {sigma_c(0.0):.6f}  (= sqrt(2) = {np.sqrt(2):.6f})")
-    for sig in (0.05, 0.5, 1.0, np.sqrt(2), 2.0):
-        s = solve_fixed_point(mu=0.5, sigma=sig)
-        print(f"  sigma={sig:5.3f}  Delta={s['delta']:+.3f}  phi={s['phi']:.3f}  "
-              f"q={s['q']:.3f}  g*={s['gstar']:+.3f}  g0={s['g0']:+.3f}  stable={s['stable']}")
-
-
 # ===================================================================== two-time DMFT
 # Above sigma_c the relaxed fixed point above is unstable: shares fluctuate forever,
 # C(t,s) does NOT freeze, and the single-site process must be solved self-consistently
@@ -217,3 +209,11 @@ def solve_twotime(mu, sigma, Nt=320, dt=0.2, n=4000, iters=34, burn=18, damp=0.4
     return dict(mu=mu, sigma=sigma, t=t, C=Cbar, Ctau=Ctau, dt=dt, lo=lo,
                 q=q, g_eff=g_eff, surv=surv, decorr=decorr, U=U, g_t=g_t,
                 Up=Up, U_list=U_pool, err=float(np.mean(hist[burn:])), iters=it, rel=rel)
+
+
+if __name__ == "__main__":
+    print(f"sigma_c(gamma=0) = {sigma_c(0.0):.6f}  (= sqrt(2) = {np.sqrt(2):.6f})")
+    for sig in (0.05, 0.5, 1.0, np.sqrt(2), 2.0):
+        s = solve_fixed_point(mu=0.5, sigma=sig)
+        print(f"  sigma={sig:5.3f}  Delta={s['delta']:+.3f}  phi={s['phi']:.3f}  "
+              f"q={s['q']:.3f}  g*={s['gstar']:+.3f}  g0={s['g0']:+.3f}  stable={s['stable']}")
