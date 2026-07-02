@@ -24,7 +24,7 @@ Here $x_i$ is the absolute size of firm $i$, $m$ is the mean firm size, $\alpha$
 
 - **DMFT validation.** The steady-state observables (survival fraction, growth rate, shape moments) agree closely with a derived Dynamic Mean-Field Theory solver in the relaxed phase: sub-percent at low $\sigma$, within a few percent approaching $\sigma_c$. See `solve_fixed_point()` and test results.
 
-See `story.ipynb` for detailed analysis: phase space, growth distributions, size-variance curves, and numerical validation against DMFT.
+See `story.ipynb` for detailed analysis: phase space, growth distributions, size-variance curves, the D2 multiscaling test (moment exponents vs $q$), numerical validation against DMFT, and a two-time DMFT appendix (fully-connected Gaussian limit) covering the fluctuating phase above $\sigma_c$.
 
 ## Repo Layout
 
@@ -35,10 +35,10 @@ relative-glv/
   pyproject.toml                 Package configuration
   story.ipynb                    Explainer notebook: figures, analysis, narrative
   relative_glv/
-    __init__.py                  Package entry point; exports the public API: coupling, integrate, growth_rate, survivors, rescale, size_volatility, tent_stats, solve_fixed_point, sigma_c
+    __init__.py                  Package entry point; exports the public API: coupling, integrate, growth_rate, survivors, rescale, size_volatility, tent_stats, solve_fixed_point, sigma_c, solve_twotime
     model.py                     Relative GLV dynamics: coupling, integrate, growth_rate
     msb.py                       Firm-growth statistics: rescale, size_volatility, tent_stats
-    dmft.py                      DMFT fixed-point solver: solve_fixed_point, sigma_c
+    dmft.py                      DMFT solver: solve_fixed_point, sigma_c, solve_twotime
   scripts/
     compute.py                   Heavy compute: generate phase diagrams and validation data
   tests/
@@ -50,6 +50,7 @@ relative-glv/
     msb.npz                      Growth distributions and size-variance curves
     phase_diagram.npz            Phase-space observables (survival, growth, fluct.)
     dmft_validation.npz          Matched fully-connected simulation vs DMFT (backs the notebook validation figure)
+    dmft_twotime.npz             Two-time DMFT autocorrelation and observables (fully-connected Gaussian limit, backs the notebook appendix figure)
 ```
 
 ## Install and Run
