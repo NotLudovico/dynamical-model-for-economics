@@ -9,6 +9,10 @@ NaN (flagged divergent), never crash the job; per-row checkpoint to the npz.
     uv run python scripts/phase_owndeg_fine.py            # compute (~2-3h) + plot
     uv run python scripts/phase_owndeg_fine.py --plot     # replot from the npz
     uv run python scripts/phase_owndeg_fine.py --smoke
+    uv run python scripts/phase_owndeg_fine.py --grid 20 --seeds 10   # finer + more seeds
+
+--grid/--seeds write to a tagged npz+png (phase_owndeg_fine_<nS>x<nM>_<seeds>s.*), so the
+banked default figure is never clobbered until you copy the new one over it.
 """
 import sys, os, time, signal
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,11 +23,13 @@ from relative_glv.msb import size_volatility
 
 DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 NPZ = os.path.join(DATA, "phase_owndeg_fine.npz")
+PNG_OUT = os.path.join(DATA, "phase_owndeg_fine.png")
 N, LAM = 4000, 1e-3
 TMAX, N_EVAL, LATE, DT = 400.0, 800, (320.0, 390.0), 0.5
-SIGMAS = np.round(np.linspace(1.40, 1.95, 14), 4)
-MUS = np.round(np.linspace(0.0, 2.5, 14), 4)        # code convention (mu>0 competitive)
-SEEDS, N_JOBS, TIMEOUT = 5, 6, 90
+GRID = 14                                            # cells per axis (override with --grid)
+SIGMAS = np.round(np.linspace(1.40, 1.95, GRID), 4)
+MUS = np.round(np.linspace(0.0, 2.5, GRID), 4)       # code convention (mu>0 competitive)
+SEEDS, N_JOBS, TIMEOUT = 5, 8, 90
 OP = (1.76, 1.75)                                    # operating point (mu_code, sigma)
 FREEZE_CHURN = 0.035
 
@@ -135,14 +141,26 @@ def plot():
             weight="bold")
     ax.text(-0.95, 1.46, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
     fig.tight_layout()
-    out = os.path.join(DATA, "phase_owndeg_fine.png")
-    fig.savefig(out, dpi=150, bbox_inches="tight")
-    print(f"[phase-fine] figure -> {out}")
+    fig.savefig(PNG_OUT, dpi=150, bbox_inches="tight")
+    print(f"[phase-fine] figure -> {PNG_OUT}")
+
+
+def _argval(flag, cast, default):
+    return cast(sys.argv[sys.argv.index(flag) + 1]) if flag in sys.argv else default
 
 
 if __name__ == "__main__":
     if "--smoke" in sys.argv:
         SIGMAS = np.array([1.45, 1.7, 1.9]); MUS = np.array([0.0, 1.0, 2.0]); SEEDS = 2
+    elif "--grid" in sys.argv or "--seeds" in sys.argv:
+        GRID = _argval("--grid", int, GRID)
+        SEEDS = _argval("--seeds", int, SEEDS)
+        SIGMAS = np.round(np.linspace(1.40, 1.95, GRID), 4)
+        MUS = np.round(np.linspace(0.0, 2.5, GRID), 4)
+        # tagged outputs so the banked default figure is never clobbered
+        tag = f"_{len(SIGMAS)}x{len(MUS)}_{SEEDS}s"
+        NPZ = os.path.join(DATA, f"phase_owndeg_fine{tag}.npz")
+        PNG_OUT = os.path.join(DATA, f"phase_owndeg_fine{tag}.png")
     if "--plot" not in sys.argv:
         compute()
     plot()

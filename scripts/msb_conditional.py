@@ -32,7 +32,7 @@ from relative_glv.msb import size_volatility, tent_stats
 DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 SMOKE = "--smoke" in sys.argv
 MU, SIGMA, LAM = 1.76, 1.75, 1e-3                 # locked operating point (own-degree phase diagram)
-N, SEEDS = (800, 3) if SMOKE else (4000, 8)
+N, SEEDS = (800, 3) if SMOKE else (4000, 40)
 TMAX, N_EVAL = (120.0, 600) if SMOKE else (400.0, 800)
 LATE, DT = ((95.0, 118.0) if SMOKE else (320.0, 390.0)), 0.5
 N_JOBS, TIMEOUT = 6, 120
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     # ---- save raw arrays so the notebook can replot (dataset-oriented) -------------------------
     grp = np.empty(rr.size, np.int8); grp[lo] = 0; grp[mid] = 1; grp[hi] = 2
     rng_ss = np.random.default_rng(0)
-    def _sub(x, n=8000):
+    def _sub(x, n=50000):
         x = x[np.isfinite(x)]
         return (x if x.size <= n else rng_ss.choice(x, n, replace=False)).astype(np.float32)
     np.savez(os.path.join(DATA, "msb_conditional.npz"),

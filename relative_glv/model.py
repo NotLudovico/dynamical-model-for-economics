@@ -17,7 +17,7 @@ from scipy.integrate import solve_ivp
 _ALPHA_PL, _MEAN_DEGREE = 2.5, 100   # power-law degree exponent, target mean degree
 
 
-def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
+def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
     """Interaction matrix alpha for the relative GLV.
 
     Couplings are scaled so the mean field stays finite as connectivity grows:
@@ -39,6 +39,16 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
                      keeps the size-volatility exponent beta sustained as N->inf
                      (mean-degree over-couples the hubs and washes beta to 0).
                      gamma must be 0 (couplings are independent/asymmetric).
+    kind="powerlaw_rowavg": EXPLORATORY variant. Same graph, but each interaction is the
+                     AVERAGE of O(1) couplings over the k_i neighbours,
+                     a_ij = (mu + sigma z_ij)/k_i. Mean field mu (as owndeg) but the noise
+                     self-averages as sigma/sqrt(k_i): the field variance falls as 1/k_i,
+                     so hubs are QUIETER and degree DRIVES the size-volatility law
+                     directly. gamma must be 0.
+
+    mean_degree overrides the target mean degree (default ~100) for the powerlaw* kinds:
+    lower C => sparser graph => each firm's field is a sum of fewer neighbours => fatter,
+    less-Gaussian fluctuations (own-degree departs from the fully-connected limit as C falls).
 
     Returns a dense ndarray (fc) or a scipy.sparse csr_array (powerlaw*); both
     support `alpha @ w`.
@@ -50,7 +60,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
         np.fill_diagonal(a, 0.0)
         return a
     if kind == "powerlaw":
-        C = min(_MEAN_DEGREE, N - 1)
+        C = min(mean_degree or _MEAN_DEGREE, N - 1)
         kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
         deg = np.maximum(
             (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
@@ -74,7 +84,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
     if kind == "powerlaw_owndeg":
         if gamma != 0.0:
             raise ValueError("powerlaw_owndeg supports only gamma=0 (asymmetric couplings)")
-        C = min(_MEAN_DEGREE, N - 1)
+        C = min(mean_degree or _MEAN_DEGREE, N - 1)
         kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
         deg = np.maximum(
             (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
@@ -89,7 +99,31 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0):
         z = rng.normal(size=coo.row.size)
         vals = mu / ki[coo.row] + (sigma / np.sqrt(ki[coo.row])) * z
         return sparse.csr_array((vals, (coo.row, coo.col)), shape=(N, N))
-    raise ValueError(f"unknown kind {kind!r} (expected 'fc', 'powerlaw' or 'powerlaw_owndeg')")
+    if kind == "powerlaw_rowavg":
+        # Exploratory variant: interaction = AVERAGE of O(1) couplings over the k_i
+        # neighbours, a_ij = (mu + sigma z)/k_i. Same graph build as powerlaw_owndeg;
+        # differs ONLY in the noise prefactor (sigma/k_i, not sigma/sqrt(k_i)), so the
+        # field noise self-averages as ~k^-1/2 and hubs are quieter (degree-driven beta).
+        if gamma != 0.0:
+            raise ValueError("powerlaw_rowavg supports only gamma=0 (asymmetric couplings)")
+        C = min(mean_degree or _MEAN_DEGREE, N - 1)
+        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
+        deg = np.maximum(
+            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
+        if deg.sum() % 2:
+            deg[deg.argmin()] += 1
+        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
+        G.remove_edges_from(nx.selfloop_edges(G))
+        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        ki = np.diff(A.indptr).astype(float)          # each node's own degree (fan-in)
+        ki[ki == 0] = 1.0
+        coo = A.tocoo()
+        z = rng.normal(size=coo.row.size)
+        vals = (mu + sigma * z) / ki[coo.row]         # per-edge std sigma/k_i -> field noise ~ 1/sqrt(k)
+        return sparse.csr_array((vals, (coo.row, coo.col)), shape=(N, N))
+    raise ValueError(
+        f"unknown kind {kind!r} "
+        "(expected 'fc', 'powerlaw', 'powerlaw_owndeg' or 'powerlaw_rowavg')")
 
 
 def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,

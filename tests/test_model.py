@@ -52,6 +52,22 @@ def test_powerlaw_owndeg_field_variance_is_degree_independent():
     assert rho_mean > 0.7               # mean-degree: grows with degree (the hub problem)
 
 
+def test_powerlaw_rowavg_field_variance_falls_with_degree():
+    # Row-average variant a_ij=(mu+sigma z)/k_i: the interaction is the MEAN of O(1)
+    # couplings over the k_i neighbours, so per-edge std ~ sigma/k_i and the field
+    # variance (row sum of squares) FALLS as 1/k_i -- hubs self-average their noise away
+    # (field noise ~ k^-1/2). Opposite extreme to mean-degree (grows with k) and distinct
+    # from own-degree CLT (flat in k).
+    from scipy.stats import spearmanr
+    N = 1500
+    a = coupling(N, 1.0, 1.5, kind="powerlaw_rowavg", seed=3)
+    assert sparse.issparse(a) and a.shape == (N, N) and a.nnz > 0
+    deg = np.diff(a.indptr).astype(float)
+    ss = np.asarray(a.multiply(a).sum(1)).ravel()
+    rho = spearmanr(deg, ss).correlation
+    assert rho < -0.7                    # field variance falls with degree (hubs quieter)
+
+
 def test_powerlaw_owndeg_rejects_gamma():
     import pytest
     with pytest.raises(ValueError):
