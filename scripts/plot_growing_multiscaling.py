@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "msb_conditional.npz")
 OUT = os.path.join(ROOT, "..", "glv", "thesis", "growing_multiscaling.png")
-COL = ("#1d3557", "#457b9d", "#e76f51", "#2a9d8f")            # q = 1, 2, 3, 4
+COL = ("#2a9d8f", "#457b9d", "#e76f51", "#1d3557")            # q = 1, 2, 3, 4 (teal-forward)
 MSB = np.array([0.20, 0.39, 0.51, 0.58])                     # Moran-Santos-Bouchaud 2024 zeta_1..4
 
 d = np.load(DATA)
