@@ -22,3 +22,16 @@ def test_survival_decreases_with_disorder():
     assert all(x > y for x, y in zip(phis, phis[1:]))
     assert solve_fixed_point(0.5, 1.0)["stable"] is True
     assert solve_fixed_point(0.5, 2.0)["stable"] is False
+
+
+def test_solve_twotime_freezes_below_and_decorrelates_above_sigma_c():
+    from relative_glv import solve_twotime, sigma_c
+    sc = sigma_c(0.0)
+    relaxed = solve_twotime(-0.5, 1.0, seed=0)   # sigma < sqrt(2): autocorr should stay high
+    fluct   = solve_twotime(-0.5, 2.0, seed=0)   # sigma > sqrt(2): autocorr should decay
+    for r in (relaxed, fluct):
+        assert {"Ctau", "dt", "surv", "g_eff"} <= set(r)
+        assert r["dt"] > 0 and r["Ctau"][0] > 0
+    # connected autocorrelation at the last lag: near 1 (frozen) vs clearly decayed
+    conn = lambda r: (r["Ctau"][-1] - 1.0) / (r["Ctau"][0] - 1.0)
+    assert conn(relaxed) > conn(fluct)
