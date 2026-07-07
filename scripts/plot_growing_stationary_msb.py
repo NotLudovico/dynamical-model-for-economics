@@ -17,7 +17,8 @@ from relative_glv import coupling, integrate, rescale
 from relative_glv.msb import size_volatility, tent_stats
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "..", "glv", "thesis", "growing_stationary_msb.png")
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
+OUT = os.path.join(ROOT, "figures", "growing_stationary_msb.png")
 MODEL, EMPIRICAL, REFERENCE, NEUTRAL = "#2a9d8f", "#e76f51", "black", "0.6"
 
 a = coupling(3000, mu=1.76, sigma=1.75, kind="powerlaw_owndeg", seed=1)

@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "msb_conditional.npz")
-OUT = os.path.join(ROOT, "..", "glv", "thesis", "growing_conditional.png")
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
+OUT = os.path.join(ROOT, "figures", "growing_conditional.png")
 COL = ("#2a9d8f", "#457b9d", "#e76f51")                        # small, mid, large (teal-forward)
 
 d = np.load(DATA)

@@ -15,18 +15,21 @@ import matplotlib.pyplot as plt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "msb_conditional.npz")
-OUT = os.path.join(ROOT, "..", "glv", "thesis", "growing_multiscaling.png")
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
+OUT = os.path.join(ROOT, "figures", "growing_multiscaling.png")
 COL = ("#2a9d8f", "#457b9d", "#e76f51", "#1d3557")            # q = 1, 2, 3, 4 (teal-forward)
 MSB = np.array([0.20, 0.39, 0.51, 0.58])                     # Moran-Santos-Bouchaud 2024 zeta_1..4
 
 d = np.load(DATA)
 S, M, cq = d["d2_S"], d["d2_M"], d["cq"]
+cqe = d["cq_err"] if "cq_err" in d.files else np.zeros(4)
+re = d["ratio_err"] if "ratio_err" in d.files else np.zeros(4)
 fig, ax = plt.subplots(1, 2, figsize=(14, 5.2))
 
 # ---- left: the four moments E[sigma^q|S] with power-law fits ------------------------------
 for q, col in zip((1, 2, 3, 4), COL):
     y = M[q - 1]; m = (S > 0) & (y > 0)
-    ax[0].loglog(S[m], y[m], "o", ms=4, color=col, label=fr"$q={q}$ ($\zeta_q={cq[q-1]:.2f}$)")
+    ax[0].loglog(S[m], y[m], "o", ms=4, color=col, label=fr"$q={q}$ ($\zeta_q={cq[q-1]:.2f}\pm{cqe[q-1]:.2f}$)")
     c = np.polyfit(np.log10(S[m]), np.log10(y[m]), 1)
     xx = np.array([S[m].min(), S[m].max()])
     ax[0].loglog(xx, 10 ** np.polyval(c, np.log10(xx)), "-", lw=1.2, color=col)
@@ -36,7 +39,7 @@ ax[0].legend(fontsize=10)
 
 # ---- right: normalized exponents vs q (model, data, granular) -----------------------------
 q = np.array([1, 2, 3, 4])
-ax[1].plot(q, cq / cq[0], "o-", color="#2a9d8f", lw=1.8, ms=7, label="own-degree model")
+ax[1].errorbar(q, cq / cq[0], yerr=re, fmt="o-", color="#2a9d8f", lw=1.8, ms=7, capsize=4, label="own-degree model")
 ax[1].plot(q, MSB / MSB[0], "s--", color="#e76f51", lw=1.8, ms=7, label="MSB data")
 ax[1].plot(q, np.ones_like(q), "^:", color="0.5", lw=1.8, ms=7, label="granular prediction")
 ax[1].set(xlabel="moment order $q$", ylabel=r"$\zeta_q/\zeta_1$ (normalized exponent)",

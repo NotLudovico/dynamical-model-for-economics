@@ -17,7 +17,8 @@ from cycler import cycler
 from relative_glv import coupling, integrate, growth_rate
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "..", "glv", "thesis", "growing_growth_churn.png")
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
+OUT = os.path.join(ROOT, "figures", "growing_growth_churn.png")
 plt.rcParams["axes.prop_cycle"] = cycler(color=["#2a9d8f", "#457b9d", "#e76f51", "#1d3557"])
 
 a = coupling(3000, mu=1.76, sigma=1.75, kind="powerlaw_owndeg", seed=1)

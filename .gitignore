@@ -6,3 +6,7 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 .DS_Store
+
+# Regenerable thesis-figure output (canonical copies live in the thesis)
+figures/
+scripts/*.npz
