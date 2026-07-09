@@ -5,35 +5,40 @@
 
 \title{Can a simple model explain economics?}
 \author{Ludovico Furlanetto}
-\date{June 2026}
+\date{July 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Firm growth shows two robust anomalies. First, volatility falls with size much more
-slowly than independence would predict: $\sigma(S)\sim S^{-\beta}$ with
-$\beta\approx0.15$--$0.20$ rather than $1/2$. Second, the
-growth-rate distribution is sharply peaked and fat-tailed rather than Gaussian.
-Standard explanations put the source of these effects inside each firm. We ask
-instead whether the same facts can emerge between firms, from a network of
-interacting companies in which no heterogeneity is imposed externally. We model the
-economy as a Generalized Lotka--Volterra system on a sparse random graph, held at its
-cooperative critical point $\mu_c$. This regime is hard to reach numerically: there
-the total abundance diverges in finite time and breaks explicit solvers. To get
-around this we split the dynamics into a bounded ``shape'' on the probability simplex
-and an unbounded ``scale,'' and rescale time so the blow-up turns into smooth
-asymptotic growth. The shape can then be integrated stably through the critical
-point, and it locates $\mu_c$ cheaply. Using this tool across regular, exponential,
-and power-law topologies, we find that the critical dynamics qualitatively reproduce the fat-tailed
-growth-rate distribution on the heterogeneous (exponential and power-law) graphs,
-though not on the homogeneous one. The size--variance relation, however, is not
-reproduced: in this deterministic critical model it is not a stationary law but a
-relaxation transient, a V whose minimum is set by the firms' initial sizes rather than
-by any intrinsic scale, so the model offers no size--variance exponent to compare with
-the data. Static topological criticality thus supplies the heavy tails but not the
-slow size--variance decay, which appears to need a genuinely nonstationary mechanism
-rather than a static critical one.
+Firm growth shows two robust anomalies: the volatility of a firm's growth rate falls
+with size far more slowly than independence would predict, $\sigma(S)\sim S^{-\beta}$
+with $\beta\approx0.15$--$0.20$ rather than $1/2$, and the growth-rate distribution is
+sharply peaked and fat-tailed rather than Gaussian. The standard explanations place the
+source inside each firm, in a heavy-tailed composition of internal sub-units, a granular
+picture that Moran et al.\ test against firm data and find fails; the missing
+ingredient, they argue, is correlations that grow with a firm's size. We ask instead
+whether a dynamical model of interacting firms can generate both facts on its own, without
+external noise.
+
+We model the economy as a Generalized Lotka--Volterra system on a sparse random graph, in
+which the interactions act on a firm's size relative to the average firm rather than on
+its absolute size. This makes the dynamics
+scale-invariant, so the economy grows exponentially, while in the strongly disordered
+regime its composition never settles but keeps churning chaotically. In this persistently
+fluctuating state both anomalies emerge together as stationary properties of the
+interactions, from a single deterministic ingredient, the disordered couplings, with no
+external noise. The size--variance relation is a clean, size-independent power law
+that falls with the empirical sign but comes out about four times too
+steep, $\beta\approx0.8\pm0.1$. Its higher moments reproduce the anomalous, order-dependent
+multiscaling the granular picture cannot: normalized by the first,
+$\zeta_q/\zeta_1\approx1,\,1.9,\,2.5,\,3.0$ lies almost on top of the empirical
+$1,\,2.0,\,2.6,\,2.9$, only the overall scale differing; the growth-rate distribution is
+symmetric (Bowley $\approx0$) and fat-tailed; and the heavy tails do not merely persist
+among the largest firms but strengthen with size, the excess kurtosis rising from about
+three to about six where an aggregate of independent parts would approach a Gaussian. The
+three effects survive across system sizes and across sampling intervals, and switching off
+the disorder removes them entirely.
 \end{abstract}
 
 \end{document}

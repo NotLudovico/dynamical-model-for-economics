@@ -83,8 +83,9 @@ if __name__ == "__main__":
     Sbar = np.concatenate([r["Sbar"] for r in recs])
     vol = np.concatenate([r["vol"] for r in recs])
     growth = np.vstack([r["growth"] for r in recs])           # (firms, increments) aligned to Sbar/vol
+    econ = np.concatenate([np.full(r["Sbar"].size, i) for i, r in enumerate(recs)])
     live = (vol > 0) & np.isfinite(vol) & (Sbar > 0)
-    Sbar, vol, growth = Sbar[live], vol[live], growth[live]
+    Sbar, vol, growth, econ = Sbar[live], vol[live], growth[live], econ[live]
     beta_med = float(np.median([r["beta"] for r in recs]))
     geff_med = float(np.median([r["g_eff"] for r in recs]))
     bowley_med = float(np.median([r["bowley"] for r in recs]))
@@ -111,6 +112,24 @@ if __name__ == "__main__":
         cq.append(c)
         print(f"     q={q}:  c_q = {c:+.3f}    (proportional -q*beta = {q*cq[0]:+.3f})")
     D2M = np.array(D2M)
+
+    # ---- bootstrap zeta_q over economies -> error bars for the figure --------------------------
+    _nfit = len(P)
+    def _cq_boot(Sx, vx):
+        ox = np.argsort(Sx); Px = np.array_split(np.arange(ox.size), _nfit)
+        bxx = np.array([Sx[ox][p].mean() for p in Px]); out = []
+        for qq in (1, 2, 3, 4):
+            byy = np.array([np.mean(vx[ox][p] ** qq) for p in Px]); mm = (bxx > 0) & (byy > 0)
+            out.append(-np.polyfit(np.log10(bxx[mm]), np.log10(byy[mm]), 1)[0])
+        return np.array(out)
+    _ue = np.unique(econ[dec]); _rbs = np.random.default_rng(0); _boot = []
+    for _ in range(300):
+        _pick = _rbs.choice(_ue, _ue.size, replace=True)
+        _ix = np.concatenate([np.where(econ[dec] == e)[0] for e in _pick])
+        _boot.append(_cq_boot(Sbar[dec][_ix], vol[dec][_ix]))
+    _boot = np.array(_boot); cq_err = _boot.std(0); ratio_err = (_boot / _boot[:, [0]]).std(0)
+    print(f"     bootstrap-over-economies (n={_ue.size}): zeta_q +/- {np.round(cq_err,3)}  "
+          f"ratio +/- {np.round(ratio_err,3)}")
 
     # ---- D1: rescaled-volatility collapse + tail (decline branch) ------------------------------
     sbar_S = np.interp(Sbar[dec], bxd, np.array([np.mean(vd[p]) for p in P]))
@@ -151,7 +170,7 @@ if __name__ == "__main__":
     np.savez(os.path.join(DATA, "msb_conditional.npz"),
              N=N, seeds=SEEDS, n_firms=int(Sbar.size), Scut=float(Scut),
              beta=beta_med, g_eff=geff_med, bowley=bowley_med, exk=exk_med,
-             d2_S=bxd, d2_M=D2M, cq=np.array(cq),
+             d2_S=bxd, d2_M=D2M, cq=np.array(cq), cq_err=cq_err, ratio_err=ratio_err,
              d1_r=rr.astype(np.float32), d1_group=grp,
              d1_p99_med=float(np.percentile(rr, 99) / np.median(rr)),
              d3_S=bxk, d3_kurt=bk, d3_trend=float(trend),
