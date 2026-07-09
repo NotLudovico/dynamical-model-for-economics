@@ -106,19 +106,32 @@ arrays and re-running every section at matched settings:
    decades, where a true `1/k` decay would drop by a factor 14. The field is *sub*-Gaussian and
    degree-flat. The neighbours a firm sums are coupled trajectories of one chaotic economy, never
    independent draws, so they do not centrally-limit as `k` grows.
-2. **The multiscaling does not track the degree tail** in the claimed direction. Every topology sits far
-   above the granular line (min ζ₄/ζ₁ = 2.26 vs 1.0), so `exponential` is not granular. ζ₄/ζ₁
-   *anticorrelates* with degree CV (Spearman ρ = −0.90, p = 0.04), and the `fc` control — **no graph
-   at all** — has the largest ratio, 3.52 ± 0.10. The topology dilutes the multiscaling; it does not
-   create it. `pl2.5` reading 2.90 against MSB's 2.9 is a coincidence of mid-pack placement (±0.26).
+2. **The pooled ζ_q estimator has no limit, and it produced every graph effect we believed in.**
+   `multiscaling()` concatenates economies before conditioning on S. Pooling 5 / 20 / 80 economies
+   gives ζ₄/ζ₁ = 3.34 / 2.89 / 2.53, and the spread across repeated draws never shrinks (sd·√n grows
+   0.52 → 2.15 — no CLT), because the pooled `E[σ⁴|S]` in a bin is an extreme-value statistic, not an
+   average. The reported "own-degree ζ₄/ζ₁ = 2.90 ≈ MSB's 2.9" is simply what the pooled curve returns
+   at the 20 seeds those notebooks ran. The apparent degree-tail ordering (ρ=−0.90, p=0.04) goes with
+   it.
+
+3. **The no-multiscaling null is ζ_q/ζ₁ = q, not 1,1,1,1.** Verified synthetically: σ = A·S^−β with
+   S-independent noise gives ζ_q = qβ exactly. The `1,1,1,1` "granular" line is the null of the
+   q-th-root convention, plotted against an estimator that uses the direct-moment convention.
+
+4. **So the model barely multiscales.** Quenched (per-economy median, 297 economies): ζ₄/ζ₁ = 3.769,
+   CI [3.73, 3.83] — ~6% concavity against MSB's 27%, about a fifth. Flat across N = 1000…8000 (3.78,
+   3.83, 3.61, 3.72) even as sd(β_e) falls 0.132 → 0.048, so the pooled–quenched gap is neither a
+   finite-size effect nor driven by β-spread. `fc` (no graph) sits at 4.03 ± 0.03: exactly simple
+   scaling. Whether the graph modulates the residual concavity is **unresolved** — five topologies give
+   ρ = −0.30, p = 0.62 (underpowered), yet `exponential` and `pl2.5` differ by ~4σ.
 
 The corrected claim: own-degree neutralizes the degree channel at the **second and fourth** moments
-alike. The graph sets no magnitude measured here — β is dynamics, the multiscaling is disorder plus
-dynamics. What the coupling realization sets is the **assignment of roles** (§4, quenched, ρ=0.93).
+alike. The graph sets no magnitude measured here — β is dynamics; the weak multiscaling that exists
+needs no graph. What the coupling realization sets is the **assignment of roles** (§4, quenched, ρ=0.93).
 "The graph sets who, not how much" survives, and is in fact stronger than intended.
 
-**Where the multiscaling comes from is now an open question.** `fc` multiscales best, pointing at the
-plain Gaussian-disorder relative GLV, where the DMFT already lives.
+**The open question is whether this model reproduces MSB's multiscaling at all** — it makes about a
+fifth of it — not why the degree tail tunes it.
 
 ### A third correction: the definition of β
 
