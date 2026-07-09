@@ -95,6 +95,54 @@ order parameters miss the multiscaling.
 
 Compressed: **the graph sets who, not how much.**
 
+### CORRECTION (added after implementation)
+
+The second bullet above is **wrong**, and building the notebook is what showed it. Reading the cached
+arrays and re-running every section at matched settings:
+
+1. **There is no `1/k` field granularity.** `field_granularity.npz` stores `slope_fexk = nan`, because
+   all 22 binned values of the field's excess kurtosis are **negative** (≈ −0.5) — a log-log slope
+   does not exist. Fit linearly against `log10(k)` instead and it is flat: −0.02 per decade over 1.15
+   decades, where a true `1/k` decay would drop by a factor 14. The field is *sub*-Gaussian and
+   degree-flat. The neighbours a firm sums are coupled trajectories of one chaotic economy, never
+   independent draws, so they do not centrally-limit as `k` grows.
+2. **The multiscaling does not track the degree tail** in the claimed direction. Every topology sits far
+   above the granular line (min ζ₄/ζ₁ = 2.26 vs 1.0), so `exponential` is not granular. ζ₄/ζ₁
+   *anticorrelates* with degree CV (Spearman ρ = −0.90, p = 0.04), and the `fc` control — **no graph
+   at all** — has the largest ratio, 3.52 ± 0.10. The topology dilutes the multiscaling; it does not
+   create it. `pl2.5` reading 2.90 against MSB's 2.9 is a coincidence of mid-pack placement (±0.26).
+
+The corrected claim: own-degree neutralizes the degree channel at the **second and fourth** moments
+alike. The graph sets no magnitude measured here — β is dynamics, the multiscaling is disorder plus
+dynamics. What the coupling realization sets is the **assignment of roles** (§4, quenched, ρ=0.93).
+"The graph sets who, not how much" survives, and is in fact stronger than intended.
+
+**Where the multiscaling comes from is now an open question.** `fc` multiscales best, pointing at the
+plain Gaussian-disorder relative GLV, where the DMFT already lives.
+
+### A third correction: the definition of β
+
+The folded-in `degree_volatility` notebook fitted `beta_pool` and its partial OLS across the **full**
+size range, rather than on the decline branch `S > S*` where `msb._decline_beta` and the §3
+multiscaling define β everywhere else in the repo.
+
+**This was a latent bug, not a standing error.** At the notebook's own settings (N=1500, 4 seeds,
+tmax=200, window 150–195) the peak of the binned σ(S) curve sits at bin 0 — there is no plateau, the
+decline branch *is* the full range, and both estimators return β = 0.784 with b(size) = −0.68 → size
+drives. Its published numbers and its conclusion were correct.
+
+It breaks only once the immigration floor λ has time to accumulate a population of frozen firms. At
+the upgraded settings adopted here (N=2000, 20 seeds, tmax=300, window 230–290) the peak moves to bin
+2, the plateau holds 14% of the firms, and the full-range fit collapses to β = 0.107 with a *positive*
+size partial (b = +0.02), reporting "degree is the stronger driver" — the opposite conclusion, with no
+error raised and a plausible-looking number. On the decline branch: β = 0.856 (R² = 0.98), b = −0.892
+(recovering −β), c = +0.147.
+
+Note that `sv["beta"]`, the decline-branch estimator `msb.size_volatility` actually exports, is stable
+across both regimes (0.816 vs 0.798). The old notebook computed and printed it; it simply used
+`beta_pool` for the figure title, the θ·β check and leg 3. `graph_role` §1 restricts all three legs to
+the decline branch and prints the full-range value alongside, so the gap is visible rather than latent.
+
 ## Verification
 
 - The notebook executes top to bottom from a cold cache-present state in seconds, no errors.
