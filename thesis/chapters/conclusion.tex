@@ -34,15 +34,23 @@ homogeneous graphs the multiscaling vanishes exactly, the conditional volatility
 a fixed shape at every size; as the degree distribution broadens the ratio curve bends
 toward the data, and only the scale-free graph reaches it. The size-dependent
 correlations that \citet{moran2024} name as the missing element of the granular picture
-are generated here between firms, by the network --- which is where shared customers and
-suppliers, the usual explanation for such correlations, live in the first place.
+are generated here between firms, by the network. That is where they locate them too: the
+correlations they invoke are attributed to ``supply chain effects affecting inputs or
+customers common to all sub-units'', which are relations between firms rather than inside
+one. A network account of the \emph{level} of firm volatility, resting on customer
+concentration, already exists \citep{herskovic2020}; what the present model adds is that
+the \emph{size-conditioned} statistics, the exponent and the multiscaling, follow from the
+heterogeneity of the interaction graph.
 
-Three qualifications bound the claim. First, the dynamics themselves are not new. The fluctuating
-regime is the chaotic phase of the disordered Lotka--Volterra model, equivalently the disordered
-replicator equation \citep{diederich1989,bunin2017,galla2018,roy2020}, and its
-finite-size fragility is already studied. What is specific here is the construction that
-turns that state into a growing economy, the relative interactions, and the finding that
-the graph's heterogeneity generates the discriminating firm-growth statistics. Second,
+Three qualifications bound the claim. First, neither the dynamics nor the construction is new,
+and Chapter~\ref{chap:background} places both in their lineage: the fluctuating
+regime is the chaotic phase of the disordered Lotka--Volterra model \citep{diederich1989,bunin2017,galla2018,roy2020},
+and the scale invariance and mean-coupling are those of the econophysics models of wealth and
+firm sizes \citep{bouchaudmezard2000,malcai2002}. What is
+specific here is the combination: self-limitation and disordered interactions made relative
+together, so that a network of competing firms grows endogenously and fluctuates from the
+interactions alone, and the finding that the graph's heterogeneity generates the discriminating
+firm-growth statistics. Second,
 the quantitative match is partial, and the way it falls short is informative. The
 multiscaling ratios and the conditional tests --- the shape of the size-conditioned
 statistics --- are reproduced and are converged in system size. The absolute scale is
@@ -56,10 +64,12 @@ realizations. None of this undoes the qualitative result, but each qualification
 how far it still is from a quantitative theory.
 
 The next steps follow from these limits. The exponent's slow upward drift asks for its
-limit --- whether it stops near $\beta \approx 1/2$, the central-limit value of an
-increasingly Gaussian environment, or below it --- and for the size distribution of the
+limit, and for the size distribution of the
 model's firms, whose tail would tie the exponent's scale to the Zipf law the data pair
-it with. The correlation structure matters more than
+it with. The plateau the immigration floor imposes on the smallest firms is worth a second
+look as well, now that \citet{fontanelli2025} report an empirical size--volatility relation
+that steepens for small firms and flattens for large ones rather than following a single
+power law. The correlation structure matters more than
 either: the match shown here is in the marginal facts and their moments, whereas the
 size-dependent correlations that \citet{moran2024} call for are generated directly by
 the model and can be measured firm by firm, on the network. That measurement is the

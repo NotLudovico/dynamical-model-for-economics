@@ -91,26 +91,41 @@ predicts.
 The last new prediction is on the higher moments of the size--variance distribution. Each moment
 of that spread falls with size as its own power law, $E[\sigma^q \mid S] \sim S^{-\zeta_q}$, and
 the first exponent is the size--variance law again, $\zeta_1 = \beta$. What the test turns on is
-how the higher exponents depend on the order $q$. If a firm's volatility is built from a sum of
-independent parts, the firm has a single volatility scale, and every moment is a fixed power of
-that one scale. The exponents are then locked to the first, $\zeta_q = q\,\zeta_1$, a straight
-line in $q$, which the data do not follow. Their $\zeta_q$ still rises with $q$, but more slowly
-than $q\,\zeta_1$, so it bends away from the straight line, and a single scale cannot bend it.
-This bending is what multiscaling means. The volatility is governed not by one scale but by a
-range of them, and the range widens as the firm grows. Granularity by itself is therefore not
-enough. \citet{moran2024} read this multiscaling as the fingerprint of correlations between a
-firm's parts that grow stronger as the firm grows.
+how the higher exponents depend on the order $q$. The granular models make a sharp prediction
+here. Because a firm assembled from few sub-units keeps a volatility that does not shrink with
+its size, the conditional distribution of volatility at a given size carries a heavy tail whose
+weight, not whose position, is what varies with size. Every moment beyond the first is then
+dominated by that same tail, and the exponents collapse onto a single value independent of the
+order, $\zeta_q = \zeta_{q'}$ for all $q, q' \ge 2$. The data refuse this. Their exponents keep
+rising with the order, $\zeta_1,\dots,\zeta_4 \approx 0.20,\,0.39,\,0.51,\,0.58$
+\citep{moran2024}, a clear dependence on $q$ that the granular composition cannot produce. We
+will refer to this $q$-dependence throughout as the multiscaling of the size-conditioned
+volatility: the volatility at a given size is governed not by one scale but by a distribution of
+them, whose shape changes as the firm grows.
+
+Two reference behaviours bound the effect and will recur. A conditional volatility with a single
+scale, a fixed distributional shape whose level alone slides with size, gives exponents locked
+to the first, $\zeta_q = q\,\zeta_1$, a straight line in $q$. The granular tail, at the other
+extreme, flattens them to a constant beyond $q = 1$. The data lie between the two, rising but
+sublinearly; \citet{moran2024} attribute the shortfall below the straight line to subleading
+corrections from the incipient tail of their volatility distribution. Whatever its asymptotic
+fate, the measured $q$-dependence is the observable that separates the data from the granular
+composition, and it is the one this thesis sets out to generate. As to what the data do require,
+\citet{moran2024} conclude that the missing ingredient is correlation: that the shocks hitting a
+firm become ``more and more correlated as its size increases, due either to supply chain effects
+affecting inputs or customers common to all sub-units'', pointing at relations between firms
+rather than inside them.
 
 \section{A model of interacting firms}
 \label{sec:intro-move}
 
 The sources usually called on for these correlations, shared customers and suppliers, are in
-truth links between firms rather than inside one. That firm-to-firm links carry aggregate
-structure is the premise of the production-network account of the macroeconomy, where
-idiosyncratic shocks propagate along input--output linkages instead of averaging away, and so
-shape fluctuations at the level of the whole economy \citep{acemoglu2012, carvalho2019}. We take
-the same starting point one level down, at the firm-growth statistics. We treat the firms
-themselves as the interacting parts and the economy as the aggregate, and look for the
+truth links between firms rather than inside one --- the premise of the production-network
+account of the macroeconomy, and of the one existing network model of firm volatility
+(Chapter~\ref{chap:background}). The granular models, by contrast, place no relation between
+firms at all: they are, in the phrase of \citet{moran2024}, ``island models''. We take that
+premise one level down, to the firm-growth statistics themselves. We treat the
+firms as the interacting parts and the economy as the aggregate, and look for the
 size-dependent correlations between companies rather than within a single one.
 
 Concretely, we model the economy as a network of interacting firms, each node a company and
@@ -119,9 +134,15 @@ interaction matrix. The dynamics are those of the Generalized Lotka--Volterra sy
 theoretical ecology, each firm growing logistically and coupled to its neighbours through that
 matrix. On its own this system is bounded. Even in the disordered regime where its dynamics stay
 chaotic, firm sizes remain bounded rather than growing, so it cannot represent a steadily
-expanding economy. The model of this thesis provides one. Its defining change is that the self-limitation and the
+expanding economy. The model of this thesis provides one. Its defining change is that the
+self-limitation and the
 interactions act on each firm's size relative to the average firm rather than on its absolute
-size, which makes the dynamics scale-invariant. The model also adds a small immigration term, a
+size, which makes the dynamics scale-invariant. Scale invariance under a rescaling of all sizes,
+and the mean-coupled form it takes, are inherited from the econophysics models of wealth and
+firm sizes (Chapter~\ref{chap:background}); what those models leave out, and what we add, is that
+the fluctuations are not an injected external noise but are generated by the disordered
+interactions themselves, in a persistently fluctuating state from which we read off the growth
+statistics of the firms. The model also adds a small immigration term, a
 firm-entry rate that keeps firms from reaching exact extinction.
 Total output then grows exponentially without diverging, and in the strongly disordered regime
 the composition of the economy never settles but keeps changing chaotically. It is in this

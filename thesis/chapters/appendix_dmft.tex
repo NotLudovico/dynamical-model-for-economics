@@ -138,7 +138,99 @@ that close the noise and the memory, and the last fixes the common drift. The cl
 $g$ is forced rather than chosen. We have $\dot M_1 = \E[yF] - g M_1$, and demanding $\dot M_1 = 0$
 at $M_1 = 1$ gives $g(t) = \E[yF]$. This has the structure of a solvable random-replicator
 model, here carrying the GLV self-limitation as well. Solving these self-consistency
-conditions is the standard replicator mean-field problem \citep{galla2018,roy2020}; in the
-main text we take the freezing threshold and the firm-growth statistics directly from
-simulation instead.
+conditions is the standard replicator mean-field problem \citep{galla2018,roy2020}; the
+freezing threshold is taken from simulation in the main text. What the single-site
+process does deliver analytically is the structure of the size--volatility statistics,
+set out next.
 
+
+\section{From the single-site process to the size--volatility statistics}
+\label{sec:dmft-beta}
+
+The couplings of the simulations are fully asymmetric, $\gamma = 0$, so the memory term
+of \eqref{eq:dmft-singlesite} drops and the single-site process in log-size reads
+\begin{equation}
+    \frac{d\ln y}{dt} = A(t) - y,
+    \qquad A(t) = 1 + \mu - g(t) + \sigma\,\eta(t),
+    \label{eq:dmft-logprocess}
+\end{equation}
+with $\eta$ the self-consistent Gaussian field, correlated over the churn time
+$\tau_c = O(1)$ of the population autocorrelation ($y$ here is the relative size, the
+$S$ of the main text). The three ingredients of what follows --- a self-limitation whose
+restoring rate grows with the abundance, a coloured field of finite correlation time, and
+a floor that keeps the smallest firms alive --- are those of the fluctuating-phase
+single-species process studied by \citet{arnouxbunin2024}, and the damping of the most
+abundant species by their own self-limitation is the effect \citet{mallmin2024} describe
+in the chaotic turnover regime. What we add is the consequence for the size-conditioned
+volatility. Conditional on a firm's window-averaged level $\bar y$, the
+fluctuations of $\ln y$ obey an Ornstein--Uhlenbeck equation whose damping rate is
+$\bar y$ itself --- the self-limitation stiffens with size --- driven by a noise whose
+amplitude does not depend on the level. Two regimes follow. Small firms,
+$\bar y\,\tau_c \ll 1$, relax more slowly than the field varies, and the variance of
+their growth over a fixed horizon is level-independent: a plateau. Large firms,
+$\bar y\,\tau_c \gg 1$, track the fluctuating field adiabatically, $\delta y \sim
+\sigma\,\delta\eta$ whatever the level, so $\delta\ln y \propto 1/\bar y$ and
+\begin{equation}
+    \sigma_{\mathrm{vol}}(\bar y) \propto \bar y^{-1}:
+    \qquad \beta_{\mathrm{hom}} = 1,
+\end{equation}
+with the knee between the two regimes at $\bar y \sim 1/\tau_c \approx 1$. Both
+predictions are borne out on the homogeneous graphs of
+Section~\ref{sec:growing-graph}: the measured exponents are $1.02 \pm 0.003$ (fully
+connected) and $0.94 \pm 0.004$ (regular), and the plateau--decline knee sits at
+$\bar S \approx 1$ in every size--volatility figure.
+
+The same argument fixes the higher moments on a homogeneous graph. The single-site
+process carries one noise scale, so conditional on the level the volatility is
+deterministic, $E[\sigma^q \mid \bar y] = \sigma_{\mathrm{vol}}(\bar y)^q$, and every
+moment is a power of the first:
+\begin{equation}
+    \zeta_q = q\,\zeta_1
+\end{equation}
+exactly, whatever the local slope. This is the fixed-shape line of the main text, and
+it is a parameter-free prediction: the fully-connected control measures
+$\zeta_q/\zeta_1 = 1,\,2.00,\,3.01,\,4.00$ and the regular graph
+$1,\,1.99,\,2.95,\,3.87$ (Table~\ref{tab:growing-topology}). The mean-field theory
+thus accounts quantitatively for the homogeneous rows of that table, and locates the
+empirical statistics in the departure from it.
+
+On the heterogeneous graph the departure enters through one channel. The noise a firm
+feels is its own neighbourhood sum, of variance
+$(\sigma^2/C)\sum_{j\in\partial i} y_j^2 \propto k_i/C$; this is the degree-dependent
+amplitude $\sqrt{k_i/C}$ that \citet{aguirrelopez} carries through the heterogeneous
+mean-field theory, there evaluated at the fixed points of the non-growing model. Applying
+the single-site argument firm by firm with that amplitude predicts the bridge law
+\begin{equation}
+    \sigma_i \;\propto\; k_i^{1/2}\; \bar y_i^{\,-a},
+    \label{eq:dmft-bridge}
+\end{equation}
+with $a$ the effective damping exponent over the fitted range ($a = 1$ in the
+adiabatic limit). A bivariate fit across the firms of twelve economies at $N = 8000$
+gives $b = 0.486 \pm 0.012$ for the degree exponent, confirming the predicted
+$\tfrac12$ with no adjustable parameter, and measures $a = 0.588 \pm 0.015$ --- the
+fitted decade $\bar S \sim 1$--$10$ straddles the plateau--adiabatic crossover, so the
+effective damping exponent sits below its asymptotic value; it is a measured quantity
+here, not a derived one.
+
+The bridge law converts the size-conditioned moments into joint degree--size
+statistics: $E[\sigma^q \mid \bar S] = \bar S^{-qa}\, E[k^{qb} \mid \bar S]$, and
+writing $E[k^{qb} \mid \bar S] \sim \bar S^{\,\varphi(q)}$ for the alignment of the
+degree and size hierarchies,
+\begin{equation}
+    \boxed{\;\zeta_q = q\,a - \varphi(q), \qquad \beta = a - \varphi(1).\;}
+    \label{eq:dmft-zeta-decomposition}
+\end{equation}
+The ratios $\zeta_q/\zeta_1$ deviate from the fixed-shape line precisely when
+$\varphi$ is superlinear in $q$, that is, when the spread of degrees widens among
+larger firms; on a homogeneous graph $\varphi \equiv 0$ and the fixed-shape result is
+recovered for any $a$. Measured on the same twelve economies, $\varphi$ is strongly
+superlinear, and the decomposition closes: the reconstructed exponents
+$\zeta_{1..4} = 0.405,\,0.769,\,1.087,\,1.357$ (each $\pm 0.01$--$0.06$) against the
+directly measured $0.400,\,0.747,\,1.032,\,1.258$, with
+$\beta = 0.405 \pm 0.013$ reconstructed against $0.400 \pm 0.013$ measured. Within
+this decomposition the content of Section~\ref{sec:growing-graph} is quantitative:
+the degree--noise coupling $k^{1/2}$ is derived and confirmed, the size--variance
+exponent is the damping exponent lowered by the degree--size alignment, and the
+multiscaling is the superlinearity of that alignment --- a property of the quenched
+joint law of degree and size on the scale-free graph, which remains the object a full
+theory would have to compute.

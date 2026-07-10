@@ -86,17 +86,22 @@ reported only for comparison.
 
 The size--variance exponent is only the first moment of a richer object, the distribution
 of growth volatility conditional on size, and it is on the higher moments that the
-granular models break. \citet{moran2024} show that the $q$-th moment of the
-size-conditioned volatility decays as a power law, $E[\sigma^q \mid S] \sim S^{-\zeta_q}$,
-but with an exponent that depends on the order $q$. In the data
-$\zeta_1,\dots,\zeta_4 \approx 0.20,\,0.39,\,0.51,\,0.58$, rising with $q$ but more
-slowly than $q\,\zeta_1$. As the introduction set out, the discriminating comparison is
-against two null lines: a granular composition of independent sub-units predicts a
-$q$-independent exponent (a flat ratio curve), and any model in which the conditional
-volatility has a single scale --- a fixed distributional shape whose level slides with
-size --- predicts the straight line $\zeta_q = q\,\zeta_1$. The data bend below the
-straight line, and that bending is the multiscaling, the fingerprint
-\citet{moran2024} read as correlations that grow with firm size.
+granular models break. \citet{moran2024} measure the $q$-th moment of the
+size-conditioned volatility, $E[\sigma^q \mid S] \sim S^{-\zeta_q}$, and find an exponent
+that depends on the order $q$: in the data
+$\zeta_1,\dots,\zeta_4 \approx 0.20,\,0.39,\,0.51,\,0.58$. Their granular models predict
+instead that the three higher moments ``decay with size all with the same scaling'', a
+$q$-independent exponent, and it is this prediction the data contradict. As the
+introduction set out, two reference lines bound the observable. The granular tail flattens
+the ratio curve $\zeta_q/\zeta_1$ to a constant beyond $q=1$; a conditional volatility
+with a single scale --- a fixed distributional shape whose level alone slides with size ---
+locks the exponents to the first, $\zeta_q = q\,\zeta_1$, a straight line. The data lie
+between them, rising with $q$ but sublinearly, and it is this $q$-dependence, which we
+call the multiscaling of the size-conditioned volatility, that a model of firm growth must
+reproduce. (\citet{moran2024} read the shortfall below the straight line as a subleading
+correction from the incipient tail of their volatility distribution; whether the empirical
+sublinearity survives asymptotically is open, and our comparisons are made at the moments
+and sizes that are measured.)
 
 The model reproduces it. Figure~\ref{fig:growing-multiscaling} measures
 the first four moments of the size-conditioned volatility and fits each economy on
@@ -109,11 +114,14 @@ empirical $1,\,2.0,\,2.6,\,2.9$ through $q = 3$ and slightly above it at $q = 4$
 separated from the fixed-shape line $\zeta_q/\zeta_1 = q$ by many standard errors at
 every $q \ge 2$ (right panel). The model
 produces the same anomalous scaling of the higher moments as the data, with no internal
-firm structure and nothing put in by hand. The size-growing correlations the granular
-picture must assume are generated here by the interactions. One difference in shape
-remains honest to record: the empirical curve saturates hard after $q = 3$ while the
-model's bends more gently, so the model matches the data's values rather than its
-curvature at the highest moment measured.
+firm structure and nothing put in by hand: the correlations that \citet{moran2024} name as
+the missing ingredient of the granular picture, ``shocks hitting a firm's sub-units
+[becoming] more and more correlated as its size increases'', are generated here by the
+interactions between firms. Two differences in shape remain honest to record: the
+empirical curve saturates hard after $q = 3$ while the model's bends more gently, so the
+model matches the data's values rather than its curvature at the highest moment measured;
+and the empirical exponents themselves are about half the model's, the magnitude gap
+of Section~\ref{sec:growing-finite-size}.
 
 \begin{figure}[htbp]
     \centering
@@ -182,7 +190,9 @@ The couplings put two distinct ingredients into the model, the quenched disorder
 edges and the heterogeneous degrees of the graph that carries them, and the two can be
 separated. Under the standard normalization \eqref{eq:coupling-global} every edge is
 divided by the same mean degree, so the variance of the disorder field a firm feels
-grows with its own degree, $\mathrm{Var}\,h_i \propto k_i/C$: the degree distribution of
+grows with its own degree, $\mathrm{Var}\,h_i \propto k_i/C$, the same degree-dependent
+field that the heterogeneous mean-field theory of \citet{aguirrelopez} carries as a factor
+$\sqrt{k_i/C}$ on its noise: the degree distribution of
 the graph is printed directly onto the distribution of firm-level noise. If the
 multiscaling is really the shape of the volatility distribution broadening with size,
 this is the channel that can produce it, and switching the heterogeneity off should
@@ -299,6 +309,15 @@ multiscaling --- that the data show.
     \label{tab:growing-ablation}
 \end{table}
 
+Appendix~\ref{sec:dmft-beta} makes the homogeneous half of this statement
+quantitative: the mean-field single-site process predicts $\beta = 1$ with a plateau
+below $\bar S \sim 1$ and exactly fixed-shape ratios on homogeneous graphs --- the
+measured $1.02$/$0.94$ and $4.00$/$3.87$ of Table~\ref{tab:growing-topology} --- and,
+on the heterogeneous graph, a firm-level bridge law $\sigma_i \propto
+\sqrt{k_i}\,\bar S_i^{-a}$ whose degree exponent is confirmed at $0.486 \pm 0.012$
+and through which the measured exponents decompose into damping and degree--size
+alignment, reconstructing $\beta$ within errors.
+
 The same separation explains why the per-firm normalization mentioned in
 Section~\ref{sec:growing-estimator} shows no multiscaling. Dividing each firm's
 couplings by its own degree, $\alpha_{ij} = \mu/k_i + (\sigma/\sqrt{k_i})z_{ij}$,
@@ -346,7 +365,10 @@ size ($7.1$ at $N = 16000$ against $11.6$ at $N = 8000$), decelerating toward a 
 still well above the Laplace reference, while the tent's shape --- the exponential
 flanks, the symmetry --- is stable. We therefore quote the ratio curve and the
 conditional tests as predictions of the model, and the absolute exponent and kurtosis
-as finite-size quantities reported at stated $N$.
+as finite-size quantities reported at stated $N$. Appendix~\ref{app:scaling} carries this
+finite-size study across all five topologies of Section~\ref{sec:growing-graph}: the ratio is
+flat in $N$ for every one of them, while $\beta$ drifts upward but toward a limit the degree
+distribution sets, converged just above the empirical band for the most heterogeneous graph.
 
 \begin{figure}[htbp]
     \centering
