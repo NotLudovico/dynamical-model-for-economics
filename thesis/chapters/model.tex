@@ -59,7 +59,7 @@ traced out as an arbitrary initial condition relaxes onto the critical attractor
 every growth rate vanishes. We need, then, two things the absolute model lacks, invariance under
 rescaling and a state that keeps fluctuating rather than relaxing.
 
-\subsection{Making the dynamics scale-invariant}
+\subsection{The relative model}
 \label{sec:relative-derivation}
 
 Scale invariance alone fixes the form of the change. For the dynamics to be unchanged under
@@ -67,77 +67,144 @@ $x \to c\,x$ the right-hand side of \eqref{eq:abs-glv} must be homogeneous of de
 and while the growth term $x_i$ already is, the self-limitation $x_i^2$ and the interaction
 $x_i (Wx)_i$ are both of degree two. To bring them back to degree one we divide each by a quantity
 that scales like a size, and the natural one is the average firm $m = \langle x\rangle$, the
-typical firm that each one competes against. Dividing the self-limitation and the interactions by
-it while keeping the same matrix $W$ gives
+typical firm that each one competes against. One further term completes the model. Left to
+itself the chaotic flow drives some firms arbitrarily close to zero size, and a firm that
+reaches zero stays there, so diversity erodes and the state never becomes stationary. As is
+standard in the disordered Lotka--Volterra literature \citep{bunin2017,roy2020} we add a small
+immigration term, an entry flow of small firms at a rate set by the size of the economy itself,
+which prevents exact extinction. The model of this thesis is then, in its entirety,
 \begin{equation}
-    \dot{x}_i = x_i \left( 1 - \frac{x_i}{m} + \frac{(Wx)_i}{m} \right),
-    \qquad m = \frac{1}{N}\sum_j x_j .
+    \dot{x}_i \;=\; x_i \left( 1 - \frac{x_i}{m} + \frac{(Wx)_i}{m} \right)
+    \;+\; \lambda\,( m - x_i ),
+    \qquad m = \frac{1}{N}\sum_j x_j ,
     \label{eq:relative-glv}
 \end{equation}
-The only change from \eqref{eq:abs-glv} is the two factors of $1/m$, and by construction they make
-the right-hand side homogeneous, since under $x \to c\,x$ the mean $m$ scales in the same way, the
-ratios $x_i/m$ and $(Wx)_i/m$ are unchanged, and the whole equation simply rescales, so that if
-$x(t)$ is a solution then so is $c\,x(t)$, and the economy no longer has a preferred size. The change
+with $W_{ij} = A_{ij}\,\alpha_{ij}$ the disordered couplings \eqref{eq:coupling-global} on the
+scale-free graph, and $\lambda = 10^{-3}$ the immigration rate. The immigration term reads as
+entry plus turnover: split as $+\lambda m - \lambda x_i$, it is a constant influx of small firms
+at rate $\lambda m$ together with a uniform exit of every firm at rate $\lambda$, and it sums to
+zero over the economy, so it reshuffles mass without changing the total. Although it nominally
+pulls firms above the mean downward, its per-capita effect on a large firm is bounded by
+$\lambda = 10^{-3}$, uniform across all large firms and three orders of magnitude below the
+interaction-driven fluctuations, so it cannot tilt the size-conditioned statistics; where it
+bites is at the bottom, where the influx $\lambda m$ outlives the vanishing multiplicative terms
+and sets the floor that keeps firms from exact extinction --- its entire measurable footprint is
+the small-firm plateau excluded from the fits of Chapter~\ref{chap:firmgrowth}. The only changes
+from the
+standard system \eqref{eq:abs-glv} are the two factors of $1/m$ and the immigration term, and
+every term is now homogeneous of degree one: under $x \to c\,x$ the mean $m$ scales the same
+way, the ratios $x_i/m$ and $(Wx)_i/m$ are unchanged, the immigration flow $\lambda(m - x_i)$
+rescales with the economy, and so if $x(t)$ is a solution then so is $c\,x(t)$. The economy no
+longer has a preferred size. The change
 is also the economically natural one, since a competitor's pressure on firm $i$ is now set by its
 market share $x_j/m$ rather than by its absolute size, and a firm's own crowding is measured
 against the typical firm rather than against a fixed ceiling, so what drives the dynamics is
 relative standing in the market. The intrinsic Malthusian rate $1$ is left untouched and remains
 the engine of growth, while the interactions, now made relative, only regulate it.
 
-\subsection{Growth and churn}
+\subsection{The couplings and the graph}
+\label{sec:completing-model}
+
+The couplings retain the standard normalization \eqref{eq:coupling-global}: every edge is divided
+by the (realized) mean degree $C$, the same for every firm, exactly as in the disordered
+Lotka--Volterra literature. The graph is a configuration model with a power-law degree
+distribution of exponent $2.5$. On such a heterogeneous graph the standard normalization has a
+consequence on which the results of Chapter~\ref{chap:firmgrowth} will turn: a firm with $k_i$
+neighbours sums $k_i$ independent couplings of variance $\sigma^2/C$, so the variance of the
+disorder field it feels grows with its own connectivity, $\mathrm{Var}\,h_i \propto k_i/C$. The
+degree distribution of the graph is thereby printed onto the distribution of firm-level
+noise --- hubs live in louder environments --- and this is the channel through which the
+topology reaches the firm-growth statistics. (An alternative, which an earlier stage of
+this work explored, normalizes each firm by its own degree,
+$\alpha_{ij} = \mu/k_i + (\sigma/\sqrt{k_i})\,z_{ij}$, equalizing the field variance
+across firms; Chapter~\ref{chap:firmgrowth} shows that this cancels the graph out of the
+size-conditioned statistics and with it the multiscaling, so we set it aside.)
+
+Under the standard normalization the mean degree must scale with the system,
+$C \propto N$, the usual dilute-coupling prescription whose fully-connected limit is the
+$C = N$ Gaussian ensemble; we hold the dilution fixed at $C = N/40$. On the power-law
+graph this keeps the whole degree hierarchy at fixed fractions of $N$ --- the largest hub
+saturates the natural cutoff at $k \approx N$, and the over-coupling of the hubs relative
+to the mean, of order $k_{\max}/C = N/C$, stays finite as the economy grows. At fixed $C$,
+by contrast, the hub over-coupling grows without bound and the size--variance law washes
+out with system size.
+
+\subsection{A convenient change of variables}
 \label{sec:growth-churn}
 
-Because the relative model is scale-invariant, the composition of the economy evolves on its own,
-without reference to its overall size, so it is natural to follow the two separately. We split
-each firm's size into the total size of the economy $M = \sum_j x_j$ and the firm's share of it
-$y_i = x_i/M$, writing $x_i = M y_i$. The average firm is then $m = M/N$, so a firm's size in units
-of the average is $x_i/m = N y_i$. The shares are non-negative and sum to one, so $y$ lives on
-the simplex, the set of vectors with non-negative entries summing to one. This split separates the
-two things the relative model does. The scale grows steadily. With the shorthands
-$y^{\!\top} W y = \sum_{i,j} y_i W_{ij} y_j$ and $y^{\!\top} y = \sum_i y_i^2$, the sum of
-\eqref{eq:relative-glv} over $i$ gives
+Because the model is scale-invariant, a firm's size matters only relative to the average
+firm, and the convenient variables are exactly the ones the data use: the scale of the
+economy, and each firm's size in units of that scale,
 \begin{equation}
-    \dot{M} = M \left[\, 1 + N\big( y^{\!\top} W y - y^{\!\top} y \big)\,\right]
-            \equiv M\, g_{\mathrm{eff}}(y).
+    S_i = \frac{x_i}{m}, \qquad \langle S \rangle = 1,
+\end{equation}
+where $\langle\,\cdot\,\rangle$ denotes the average over firms. The relative sizes carry
+the composition of the economy, their mean pinned to one by construction, and the average
+firm $m$ carries its overall scale. The split separates the two things the model does, and
+no system-size factor appears in either piece.
+
+The scale grows steadily. Averaging \eqref{eq:relative-glv} over firms, the immigration
+term drops (it conserves the total), and
+\begin{equation}
+    \dot{m} = m\, g_{\mathrm{eff}},
+    \qquad
+    g_{\mathrm{eff}} = \langle S f \rangle
+                     = 1 + \langle S\,(WS) \rangle - \langle S^2 \rangle ,
     \label{eq:Mdot-relative}
 \end{equation}
-Summing the absolute model \eqref{eq:abs-glv} instead leaves a right-hand side with a term in
-$M^2$, the quadratic feedback responsible for the finite-time singularity, whereas dividing the
-interactions by $m$ removes one power of $M$, so the quadratic term becomes linear and
-\eqref{eq:Mdot-relative} is the equation of exponential growth, with no singularity. The rate
-$g_{\mathrm{eff}}(y)$ fluctuates as the composition churns, but its time-average is a small
-positive constant, so $\log M$ climbs at a steady slope over unbounded time.
+the size-weighted average fitness of the firms. Averaging the absolute model
+\eqref{eq:abs-glv} instead leaves a right-hand side quadratic in the scale, the feedback
+responsible for the finite-time singularity, whereas dividing the interactions by $m$
+removes one power of it, so \eqref{eq:Mdot-relative} is the equation of exponential
+growth, with no singularity. The rate
+$g_{\mathrm{eff}}$ fluctuates as the composition churns, but its time-average is a small
+positive constant, so $\log m$ climbs at a steady slope over unbounded time.
 
-The composition, by contrast, never settles. From \eqref{eq:relative-glv} and the quotient rule
-the shares obey
+The composition, by contrast, never settles. From \eqref{eq:relative-glv} and the quotient
+rule the relative sizes obey
 \begin{equation}
     \begin{gathered}
-        \dot{y}_i = y_i \left( f_i - \langle f \rangle \right), \\
-        f_i = 1 - N y_i + N (Wy)_i,
-        \qquad \langle f \rangle = \sum_j y_j f_j = g_{\mathrm{eff}},
+        \dot{S}_i = S_i \left( f_i - g_{\mathrm{eff}} \right)
+                    + \lambda\,( 1 - S_i ), \\
+        f_i = 1 - S_i + (WS)_i ,
     \end{gathered}
-    \label{eq:replicator-shape}
+    \label{eq:replicator}
 \end{equation}
-with the linear fitness $f_i$ and its share-weighted average $\langle f \rangle$. Substituting
-$f_i$ into that average and using $\sum_j y_j = 1$ gives
-$\langle f \rangle = 1 + N( y^{\!\top} W y - y^{\!\top} y )$, exactly the growth rate
-$g_{\mathrm{eff}}$ of \eqref{eq:Mdot-relative}, so the economy grows at the average fitness of its
-firms. This is a
-replicator equation, the canonical description of frequency-dependent selection in which a firm
-gains share precisely when its fitness exceeds the market average $\langle f \rangle$, and it is
-the standard correspondence between Lotka--Volterra and replicator dynamics \citep{hofbauer81}.
-Because the relative model does not blow up, it is written in the same physical time $t$ in which
-$M$ grows, with no time rescaling. Above the disorder threshold $\sigma_c$
-\citep{diederich1989,opperdiederich1992} the replicator flow does not relax to a fixed point but stays chaotic, so
-the growth rates $\dot y_i / y_i = f_i - \langle f\rangle$ never vanish, which is the persistently
-fluctuating state we needed.
+with the linear fitness $f_i$ and the same size-weighted average
+$g_{\mathrm{eff}} = \langle S f\rangle$ as in \eqref{eq:Mdot-relative}, so the economy
+grows at the average fitness of its firms. This is a
+replicator equation, the canonical description of frequency-dependent selection in which a
+firm gains relative size precisely when its fitness exceeds the market average, plus the
+immigration flow pulling each firm toward the mean size one; it is
+the standard correspondence between Lotka--Volterra and replicator dynamics
+\citep{hofbauer81}. Note that $N$ appears nowhere in
+\eqref{eq:Mdot-relative}--\eqref{eq:replicator}: the number of firms enters the model only
+through the construction of the couplings (the graph and its mean degree $C = N/40$) and
+as the number of degrees of freedom, not through the form of the dynamics.
+Because the relative model does not blow up, these equations are written in the same
+physical time $t$ in which
+$m$ grows, with no time rescaling. Above the disorder threshold $\sigma_c$
+\citep{diederich1989,opperdiederich1992} the replicator flow does not relax to a fixed
+point but stays chaotic, so
+the growth rates never vanish, which is the persistently fluctuating state we needed.
 
-Figure~\ref{fig:growing-churn} shows a single run in this regime. The total abundance (left)
-climbs as a straight line in $\log M$ over the whole integration, the steady exponential growth
-of \eqref{eq:Mdot-relative}, with no sign of a blow-up. The relative firm sizes $S_i = N y_i$, each
-firm's size in units of the average firm (right), do not settle; after an initial transient they
+The practical payoff of the split is numerical. We integrate \eqref{eq:replicator}
+together with $\mathrm{d}\ln m/\mathrm{d}t = g_{\mathrm{eff}}$
+directly in physical time, keeping the composition in its bounded variables (the relative
+sizes have fixed mean one) and the scale in its
+logarithm, so nothing overflows however large $m$ becomes even though the economy grows by
+many orders of magnitude over a run; the explicit solver and its cost
+are specified in Appendix~\ref{app:numerics}.
+
+Figure~\ref{fig:growing-churn} shows a single run in this regime. The total abundance
+(left)
+climbs as a straight line in its logarithm over the whole integration, the steady
+exponential growth
+of \eqref{eq:Mdot-relative}, with no sign of a blow-up. The relative firm sizes
+$S_i = x_i/m$ (right) do not settle; after an initial transient they
 keep exchanging rank and spanning orders
-of magnitude, the persistent chaos of the $\sigma > \sigma_c$ phase. The economy grows while its
+of magnitude, the persistent chaos of the $\sigma > \sigma_c$ phase. The economy grows
+while its
 composition keeps turning over.
 
 \begin{figure}[htbp]
@@ -145,55 +212,12 @@ composition keeps turning over.
     \includegraphics[width=\linewidth]{growing_growth_churn.png}
     \caption{A single run of the relative model \eqref{eq:relative-glv} at $\mu = -1.76$,
     $\sigma = 1.75$, $\lambda = 10^{-3}$ on a power-law graph with $N = 6400$. \panel{Left}: the
-    total abundance grows exponentially in physical time, $\log_{10} M(t)$ rising
+    total abundance grows exponentially in physical time, its logarithm rising
     linearly, with no finite-time divergence. \panel{Right}: a sample of relative firm sizes
-    $S_i = N y_i$, which keep fluctuating and exchanging rank rather than relaxing to a
+    $S_i = x_i/m$, which keep fluctuating and exchanging rank rather than relaxing to a
     fixed point.}
     \label{fig:growing-churn}
 \end{figure}
-
-\subsection{Completing the specification}
-\label{sec:completing-model}
-
-Two details remain before the model can be integrated. The first prevents firms from going
-extinct. Left to itself the chaotic flow drives some shares arbitrarily close to zero, and a
-share that reaches zero stays there, so diversity erodes and the state never becomes stationary.
-As is standard in the disordered Lotka--Volterra literature \citep{bunin2017,roy2020} we add a
-small immigration term that pulls each share toward $1/N$, setting a lower cutoff on each share
-and preventing exact extinction. The shape dynamics we integrate are then
-\begin{equation}
-    \begin{gathered}
-        \dot{y}_i = y_i \left( f_i - \langle f \rangle \right) + \lambda\!\left( \tfrac{1}{N} - y_i \right), \\
-        f_i = 1 - N y_i + N (Wy)_i,
-        \qquad \langle f \rangle = \sum_j y_j f_j = g_{\mathrm{eff}},
-    \end{gathered}
-    \label{eq:replicator}
-\end{equation}
-with a rate $\lambda = 10^{-3}$. The immigration term conserves $\sum_i y_i = 1$, so it leaves
-the growth equation \eqref{eq:Mdot-relative} untouched; in size-space it is the scale-invariant
-influx $\dot{x}_i = x_i ( 1 - x_i/m + (Wx)_i/m ) + \lambda(m - x_i)$, an entry of small firms at a
-rate set by the size of the economy itself.
-
-The second detail is the normalization of the couplings on a heterogeneous graph, and it is what
-controls the firm-growth statistics of the next chapter. The usual form \eqref{eq:coupling-global}
-divides by the mean degree $C$, the same for every firm, but when degrees vary we instead
-normalize each firm by its own degree $k_i$,
-\begin{equation}
-    \alpha_{ij} = \frac{\mu}{k_i} + \frac{\sigma}{\sqrt{k_i}}\,z_{ij},
-    \label{eq:normalizations}
-\end{equation}
-with $k_i$ the degree of firm $i$ and the $z_{ij}$ the same standard Gaussian disorder as above.
-Under this choice both the mean pressure and the disorder are divided over a firm's own
-neighbours, so that every firm carries a field of the same variance whatever its connectivity. On
-a regular graph, where all degrees equal $C$, it reduces to \eqref{eq:coupling-global}, which is
-the case the mean-field theory of Appendix~\ref{app:dmft} treats; the two differ on the
-heterogeneous graphs we use for the measurements, where the own-degree choice is the one that
-keeps the disorder field comparable across firms of unequal connectivity.
-
-We integrate \eqref{eq:replicator} together with $\mathrm{d}\ln M/\mathrm{d}t = g_{\mathrm{eff}}$
-directly in physical time, keeping the shape on the bounded simplex and the scale in its
-logarithm so that nothing overflows however large $M$ becomes; the explicit solver and its cost
-are specified in Appendix~\ref{app:numerics}.
 
 \section{Phases of the model}
 \label{sec:model-phases}
@@ -227,10 +251,15 @@ describes the behaviour of the model and not a single tuned operating point.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{phase_diagram.png}
-    \caption{Phase diagram of the relative model \eqref{eq:relative-glv} under the
-    own-degree normalization, over the mean interaction $\mu$ (competitive for $\mu < 0$)
+    \caption{Phase diagram of the relative model \eqref{eq:relative-glv}, over the mean
+    interaction $\mu$ (competitive for $\mu < 0$)
     and the disorder $\sigma$, classified from the late-time dynamics ($N = 4000$, a
-    $20 \times 20$ grid with ten realizations per cell). At low disorder the shape relaxes and nothing fluctuates
+    $20 \times 20$ grid with ten realizations per cell). The diagram was mapped under the
+    per-firm normalization noted in Section~\ref{sec:completing-model}; under the standard
+    normalization used throughout this thesis the same qualitative structure holds but the
+    fluctuating band is somewhat narrower --- at the operating point every realization at
+    $N \ge 8000$ persists (Chapter~\ref{chap:firmgrowth}), while stronger disorder
+    ($\sigma = 2.0$) already loses most realizations to the collapsed corner. At low disorder the shape relaxes and nothing fluctuates
     (frozen). Above it the dynamics are chaotic, and the solid black line marks the growth
     boundary $g_{\mathrm{eff}} = 0$, which separates the shrinking region ($g_{\mathrm{eff}}
     < 0$) from the fluctuating, growing band in which the firm-growth statistics are
