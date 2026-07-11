@@ -14,8 +14,8 @@ provides the homogeneous control at the largest sizes.
 
 Two patterns separate cleanly. The multiscaling ratio (right panel) is flat in $N$ for every
 topology to within its error: the homogeneous graphs sit on the fixed-shape value $4$ at every
-size, and each heterogeneous graph holds its own value --- $\zeta_4/\zeta_1 \approx 3.4$ for the
-power-law-$3.5$ graph, $\approx 3.1$ for power-law-$2.5$, $\approx 2.7$ for power-law-$2.2$ ---
+size, and each heterogeneous graph holds its own value ($\zeta_4/\zeta_1 \approx 3.4$ for the
+power-law-$3.5$ graph, $\approx 3.1$ for power-law-$2.5$, $\approx 2.7$ for power-law-$2.2$)
 across the whole range from $N = 8000$ to $32000$. The multiscaling is thus a genuine
 thermodynamic property of each ensemble, set by the degree distribution and not by the system
 size, and the empirical value $2.9$ is bracketed between the power-law-$2.5$ and
@@ -23,8 +23,7 @@ power-law-$2.2$ graphs at every $N$ measured.
 
 The size--variance exponent (left panel) behaves differently. It drifts upward with $N$ for
 every topology, but the drift and its limit are organized by the degree distribution. On the
-homogeneous graphs $\beta$ is already at or approaching its adiabatic value $1$
-(Appendix~\ref{sec:dmft-beta}) and barely moves --- the fully-connected graph holds
+homogeneous graphs $\beta$ is already at or close to $1$ and barely moves: the fully-connected graph holds
 $1.02$, the regular graph creeps from $0.94$ to $0.99$. As the degree distribution broadens the
 exponent both drops and, for the most heterogeneous graph, settles: the power-law-$2.2$ graph
 rises from $0.16$ at $N = 8000$ to $0.22$ at $16000$ and $0.23$ at $32000$, the last two
@@ -60,14 +59,14 @@ data.
         & & $N=8000$ & $N=16000$ & $N=32000$ \\
         \hline
         \multirow{5}{*}{$\beta$}
-          & fully connected & $1.02$ & $1.02$ & --- \\
+          & fully connected & $1.02$ & $1.02$ & n/a \\
           & regular         & $0.94$ & $0.98$ & $0.99$ \\
           & power law $3.5$ & $0.73$ & $0.77$ & $0.80$ \\
           & power law $2.5$ & $0.43$ & $0.43$ & $0.49$ \\
           & power law $2.2$ & $0.16$ & $0.22$ & $0.23$ \\
         \hline
         \multirow{5}{*}{$\zeta_4/\zeta_1$}
-          & fully connected & $4.00$ & $4.01$ & --- \\
+          & fully connected & $4.00$ & $4.01$ & n/a \\
           & regular         & $3.87$ & $3.95$ & $3.90$ \\
           & power law $3.5$ & $3.49$ & $3.42$ & $3.43$ \\
           & power law $2.5$ & $3.11$ & $3.09$ & $3.06$ \\
@@ -80,6 +79,8 @@ data.
     $\beta \approx 0.15$--$0.20$ and $\zeta_4/\zeta_1 \approx 2.9$). The ratio is flat in $N$ for
     every topology; $\beta$ drifts upward but its value is set by the degree distribution, and
     for the power-law-$2.2$ graph it has converged just above the empirical band. The
+    ensembles here are independent of those behind the main-text figures; where the same
+    quantity appears in both, the values agree within the quoted errors. The
     fully-connected graph is dense and is not run at $N = 32000$.}
     \label{tab:scaling}
 \end{table}

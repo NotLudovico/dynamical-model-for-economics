@@ -88,8 +88,10 @@ pulls firms above the mean downward, its per-capita effect on a large firm is bo
 $\lambda = 10^{-3}$, uniform across all large firms and three orders of magnitude below the
 interaction-driven fluctuations, so it cannot tilt the size-conditioned statistics; where it
 bites is at the bottom, where the influx $\lambda m$ outlives the vanishing multiplicative terms
-and sets the floor that keeps firms from exact extinction --- its entire measurable footprint is
-the small-firm plateau excluded from the fits of Chapter~\ref{chap:firmgrowth}. The only changes
+and sets the floor that keeps firms from exact extinction. Its direct dynamical footprint is
+the small-firm plateau excluded from the fits of Chapter~\ref{chap:firmgrowth}; the
+floor it sets doubles, however, as the survival boundary against which
+Section~\ref{sec:growing-degree-size} measures which firms persist. The only changes
 from the
 standard system \eqref{eq:abs-glv} are the two factors of $1/m$ and the immigration term, and
 every term is now homogeneous of degree one: under $x \to c\,x$ the mean $m$ scales the same
@@ -113,8 +115,10 @@ consequence on which the results of Chapter~\ref{chap:firmgrowth} will turn: a f
 neighbours sums $k_i$ independent couplings of variance $\sigma^2/C$, so the variance of the
 disorder field it feels grows with its own connectivity, $\mathrm{Var}\,h_i \propto k_i/C$. The
 degree distribution of the graph is thereby printed onto the distribution of firm-level
-noise --- hubs live in louder environments --- and this is the channel through which the
-topology reaches the firm-growth statistics. (An alternative, which an earlier stage of
+noise (hubs live in louder environments), and this is one channel through which the
+topology reaches the firm-growth statistics; a second, the coherent competitive
+pressure that also grows with a firm's degree, surfaces in the survival analysis of
+Section~\ref{sec:growing-degree-size}. (An alternative, which an earlier stage of
 this work explored, normalizes each firm by its own degree,
 $\alpha_{ij} = \mu/k_i + (\sigma/\sqrt{k_i})\,z_{ij}$, equalizing the field variance
 across firms; Chapter~\ref{chap:firmgrowth} shows that this cancels the graph out of the
@@ -123,7 +127,7 @@ size-conditioned statistics and with it the multiscaling, so we set it aside.)
 Under the standard normalization the mean degree must scale with the system,
 $C \propto N$, the usual dilute-coupling prescription whose fully-connected limit is the
 $C = N$ Gaussian ensemble; we hold the dilution fixed at $C = N/40$. On the power-law
-graph this keeps the whole degree hierarchy at fixed fractions of $N$ --- the largest hub
+graph this keeps the whole degree hierarchy at fixed fractions of $N$: the largest hub
 saturates the natural cutoff at $k \approx N$, and the over-coupling of the hubs relative
 to the mean, of order $k_{\max}/C = N/C$, stays finite as the economy grows. At fixed $C$,
 by contrast, the hub over-coupling grows without bound and the size--variance law washes
@@ -257,7 +261,7 @@ describes the behaviour of the model and not a single tuned operating point.
     $20 \times 20$ grid with ten realizations per cell). The diagram was mapped under the
     per-firm normalization noted in Section~\ref{sec:completing-model}; under the standard
     normalization used throughout this thesis the same qualitative structure holds but the
-    fluctuating band is somewhat narrower --- at the operating point every realization at
+    fluctuating band is somewhat narrower: at the operating point every realization at
     $N \ge 8000$ persists (Chapter~\ref{chap:firmgrowth}), while stronger disorder
     ($\sigma = 2.0$) already loses most realizations to the collapsed corner. At low disorder the shape relaxes and nothing fluctuates
     (frozen). Above it the dynamics are chaotic, and the solid black line marks the growth

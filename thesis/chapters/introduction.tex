@@ -29,6 +29,9 @@ difficulty is to produce them together.
 \section{The granular explanation and where it fails}
 \label{sec:intro-granular}
 
+\subsection{The granular model}
+\label{sec:intro-granular-model}
+
 The standard explanation treats a firm as an aggregate of many smaller units, each carrying
 its own idiosyncratic shock. Write the firm's size as the
 total over its $K$ sub-units, $S = \sum_{i=1}^{K} s_i$. Over a year each sub-unit grows by an
@@ -52,7 +55,8 @@ exponent, so the shares cannot be even. $H$ has to decay more slowly than $1/S$,
 and this happens only when a few large units carry a finite share of the firm and their shocks
 dominate the sum.
 
-The same mechanism was established first at the level of the whole economy by
+That heavy-tailed composition is the content of the model. The mechanism was established first
+at the level of the whole economy by
 \citet{gabaix2011}, with the units being firms and the aggregate GDP. Firm sizes follow a
 Zipf-like law \citep{axtell2001}, a heavy tail $P(s > x) \sim x^{-\nu}$ with $\nu$ close to one, and for such a
 tail the Herfindahl index does not vanish as $1/N$ but much more slowly,
@@ -69,64 +73,74 @@ $\sigma(S) \propto S^{-(1 - 1/\nu)}$, so
   \label{eq:intro-beta-nu}
 \end{equation}
 which lands anywhere between $0$ and $1/2$ as the tail runs from Zipf ($\nu \to 1$) to thin
-($\nu \to 2$). A heavy-tailed distribution of sub-unit sizes thus delivers both facts at once. It
+($\nu \to 2$). A heavy-tailed distribution of sub-unit sizes thus delivers both starting facts
+from a single assumption. It
 gives a variance that falls too slowly with size, and a growth distribution that stays
-fat-tailed because the sum in $g$ is carried by a handful of dominant units. This is the granular
-model, and it reproduces both facts.
+fat-tailed because the sum in $g$ is carried by a handful of dominant units. Fixed to the
+empirical size distribution, $\nu \approx 1$, it even lands the size--variance exponent in the
+right range. On the two facts we began with, the granular model works.
 
-\citet{moran2024} extract further predictions from the model, and when these predictions are
-tested on the data the model fails. The first new prediction comes from dividing each firm's
-growth rate by its own volatility. This cancels the firm-to-firm difference, and what remains
-is an average of the firm's own independent shocks. By the central limit theorem this average
-is closer to Gaussian the more sub-units the firm has, so the largest firms should be the
-closest to a Gaussian. The data show the opposite, the rescaled growth staying fat-tailed at
-every size, with the largest firms no nearer a Gaussian than the smallest. The second new
-prediction comes from dividing each firm's volatility by the typical volatility of firms its
-size. This strips out the size--variance trend and leaves only the spread from one firm to the
-next, which in the model carries no size dependence of its own, so the distribution of these
-ratios should look the same at every size. This part is borne out in the data. What fails is
-the tail of that distribution, which in the data is far thinner than the granular model
-predicts.
+\subsection{Where it fails: conditioning on size}
+\label{sec:intro-granular-fail}
 
-The last new prediction is on the higher moments of the size--variance distribution. Each moment
-of that spread falls with size as its own power law, $E[\sigma^q \mid S] \sim S^{-\zeta_q}$, and
-the first exponent is the size--variance law again, $\zeta_1 = \beta$. What the test turns on is
-how the higher exponents depend on the order $q$. The granular models make a sharp prediction
-here. Because a firm assembled from few sub-units keeps a volatility that does not shrink with
-its size, the conditional distribution of volatility at a given size carries a heavy tail whose
-weight, not whose position, is what varies with size. Every moment beyond the first is then
-dominated by that same tail, and the exponents collapse onto a single value independent of the
-order, $\zeta_q = \zeta_{q'}$ for all $q, q' \ge 2$. The data refuse this. Their exponents keep
-rising with the order, $\zeta_1,\dots,\zeta_4 \approx 0.20,\,0.39,\,0.51,\,0.58$
-\citep{moran2024}, a clear dependence on $q$ that the granular composition cannot produce. We
-will refer to this $q$-dependence throughout as the multiscaling of the size-conditioned
-volatility: the volatility at a given size is governed not by one scale but by a distribution of
-them, whose shape changes as the firm grows.
+Those two facts are \emph{marginal}: each averages over all firms of a given size, reporting a
+typical volatility and a pooled growth distribution. \citet{moran2024} sharpen the test by
+conditioning on size and asking about the whole distribution of growth and volatility within
+each size class, not merely its typical value. The granular composition makes definite
+predictions there, and on three of them the data break it.
 
-Two reference behaviours bound the effect and will recur. A conditional volatility with a single
-scale, a fixed distributional shape whose level alone slides with size, gives exponents locked
-to the first, $\zeta_q = q\,\zeta_1$, a straight line in $q$. The granular tail, at the other
-extreme, flattens them to a constant beyond $q = 1$. The data lie between the two, rising but
-sublinearly; \citet{moran2024} attribute the shortfall below the straight line to subleading
-corrections from the incipient tail of their volatility distribution. Whatever its asymptotic
-fate, the measured $q$-dependence is the observable that separates the data from the granular
-composition, and it is the one this thesis sets out to generate. As to what the data do require,
-\citet{moran2024} conclude that the missing ingredient is correlation: that the shocks hitting a
-firm become ``more and more correlated as its size increases, due either to supply chain effects
-affecting inputs or customers common to all sub-units'', pointing at relations between firms
-rather than inside them.
+The first follows from the central limit theorem. Divide each firm's growth rate by its own
+volatility; this cancels the firm-to-firm differences and leaves an average of the firm's own
+independent shocks, which is closer to Gaussian the more sub-units the firm has. The largest
+firms should therefore be the most Gaussian. The data show the opposite: the rescaled growth
+stays fat-tailed at every size, the largest firms no nearer a Gaussian than the smallest.
+
+The second concerns the spread of volatilities among firms of the same size. Divide each firm's
+volatility by the typical volatility of firms its size; the granular model makes the resulting
+distribution size-independent, which the data confirm, but with a tail far thinner than the
+model predicts, since the model's few-sub-unit firms should populate a heavy tail of anomalously
+volatile large firms that the data do not show.
+
+The third, and the one this thesis takes up, is on the higher moments of the volatility
+distribution. Each moment falls with size as its own power law,
+$E[\sigma^q \mid S] \sim S^{-\zeta_q}$, the first exponent being the size--variance law again,
+$\zeta_1 = \beta$. Everything turns on how the exponents depend on the order $q$. The granular
+model predicts no dependence: because a firm of few sub-units keeps a volatility that does not
+shrink with its size, the conditional volatility distribution carries a heavy tail whose weight,
+not whose position, changes with size, so every moment beyond the first is dominated by that
+same tail and the exponents collapse to a single value, $\zeta_q = \zeta_{q'}$ for all
+$q, q' \ge 2$. The data refuse this. Their exponents keep rising with the order,
+$\zeta_1,\dots,\zeta_4 \approx 0.20,\,0.39,\,0.51,\,0.58$ \citep{moran2024}. We call this
+$q$-dependence the multiscaling of the size-conditioned volatility: the volatility at a given
+size is governed not by one scale but by a distribution of them, whose shape changes as the firm
+grows.
+
+Two reference behaviours bound the multiscaling and will recur through the thesis. A conditional
+volatility with a single scale (a fixed distributional shape whose level alone slides with
+size) gives exponents locked to the first, $\zeta_q = q\,\zeta_1$, a straight line in $q$. The
+granular tail, at the other extreme, flattens them to a constant beyond $q = 1$. The data lie
+between the two, rising but sublinearly; \citet{moran2024} attribute the shortfall below the
+straight line to subleading corrections from the incipient tail of their volatility
+distribution. Whatever its asymptotic fate, the measured $q$-dependence is the observable that
+separates the data from the granular composition, and it is the one this thesis sets out to
+generate.
+
+The three failures share a diagnosis. \citet{moran2024} conclude that the granular models lack a
+correlation the data possess: that the shocks hitting a firm become ``more and more correlated
+as its size increases, due either to supply chain effects affecting inputs or customers common
+to all sub-units''. The missing ingredient is a correlation that grows with firm size, and its
+proposed sources point at relations between firms rather than inside them.
 
 \section{A model of interacting firms}
 \label{sec:intro-move}
 
-The sources usually called on for these correlations, shared customers and suppliers, are in
-truth links between firms rather than inside one --- the premise of the production-network
-account of the macroeconomy, and of the one existing network model of firm volatility
-(Chapter~\ref{chap:background}). The granular models, by contrast, place no relation between
-firms at all: they are, in the phrase of \citet{moran2024}, ``island models''. We take that
-premise one level down, to the firm-growth statistics themselves. We treat the
-firms as the interacting parts and the economy as the aggregate, and look for the
-size-dependent correlations between companies rather than within a single one.
+Those sources (shared customers, common suppliers) are precisely the premise of the
+production-network account of the macroeconomy, and of the one existing network model of firm
+volatility (Chapter~\ref{chap:background}). The granular models cannot reach them: with no
+relation between firms at all, they are, in the phrase of \citet{moran2024}, ``island models''.
+We take the between-firm premise one level down, to the firm-growth statistics themselves,
+treating the firms as the interacting parts and the economy as the aggregate, and looking for
+the size-dependent correlations between companies rather than within a single one.
 
 Concretely, we model the economy as a network of interacting firms, each node a company and
 each edge a signed competitive or cooperative coupling, drawn at random into a disordered
@@ -150,7 +164,7 @@ state that the two facts appear together, and switching off the disorder removes
 origin lies in the interactions and not in any single firm. The model recovers the
 anomalous multiscaling of the higher moments, the test the granular picture fails, and passes
 the other two size-conditioned tests of \citet{moran2024} as well; the size--variance exponent
-comes out with the right sign as a clean power law, $\beta \approx 0.45$ at our largest sizes
+comes out with the right sign as a clean power law, $\beta \approx 0.45$ at $N = 16000$
 against the empirical $0.15$--$0.20$, closer than before but still not matched in magnitude.
 The thesis's sharpest finding is about the mechanism: the size-conditioned statistics are
 generated by the degree heterogeneity of the network. Under the standard dilute normalization a
@@ -170,7 +184,9 @@ separate the data from the granular models, and then dissects the mechanism: swa
 degree distribution of the graph while holding everything else fixed shows the heterogeneity
 to be what generates the size-conditioned statistics. Chapter~\ref{chap:conclusion} draws
 the results together and points to what would tie the model more tightly to the data, in
-particular a direct measurement of the size-dependent correlations it generates. Two
+particular a direct measurement of the correlations between firms' growth rates that it
+generates. Three
 appendices hold the supporting material: a dynamical mean-field theory of the relative model,
-derived in Appendix~\ref{app:dmft}, and the numerical methods
+derived in Appendix~\ref{app:dmft}, a finite-size scaling study of the exponents across
+topologies (Appendix~\ref{app:scaling}), and the numerical methods
 and measurement protocol (Appendix~\ref{app:numerics}).

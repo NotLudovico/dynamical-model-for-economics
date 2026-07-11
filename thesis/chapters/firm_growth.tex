@@ -64,7 +64,7 @@ firms with a loud economy's small ones, which injects size-independent variance 
 every conditional moment. The injected variance flattens the fitted slopes, more
 strongly the higher the moment, so the pooled estimator biases every $\zeta_q$ downward,
 bends the ratio curve $\zeta_q/\zeta_1$, and the bias does not shrink as more
-realizations are added --- pooling more economies is not more data for this purpose but
+realizations are added: pooling more economies is not more data for this purpose but
 more mixing.
 
 We therefore use the quenched estimator throughout: each exponent is fitted inside a
@@ -77,7 +77,7 @@ the disagreement is larger still, large enough to reverse a verdict. A per-firm
 (own-degree) normalization of the couplings, which an earlier stage of this work
 employed, appears to reproduce the empirical ratio curve when measured pooled, while the
 quenched estimator shows its conditional volatility to have a size-independent shape,
-$\zeta_q = q\,\zeta_1$ --- no multiscaling at all. The apparent match was manufactured
+$\zeta_q = q\,\zeta_1$, no multiscaling at all. The apparent match was manufactured
 by the estimator. All claims below are therefore quenched, and the pooled values are
 reported only for comparison.
 
@@ -94,7 +94,7 @@ instead that the three higher moments ``decay with size all with the same scalin
 $q$-independent exponent, and it is this prediction the data contradict. As the
 introduction set out, two reference lines bound the observable. The granular tail flattens
 the ratio curve $\zeta_q/\zeta_1$ to a constant beyond $q=1$; a conditional volatility
-with a single scale --- a fixed distributional shape whose level alone slides with size ---
+with a single scale (a fixed distributional shape whose level alone slides with size)
 locks the exponents to the first, $\zeta_q = q\,\zeta_1$, a straight line. The data lie
 between them, rising with $q$ but sublinearly, and it is this $q$-dependence, which we
 call the multiscaling of the size-conditioned volatility, that a model of firm growth must
@@ -147,8 +147,8 @@ other two as well (Fig.~\ref{fig:growing-conditional}).
 The second asks how the spread of firm volatilities depends on size. Divide each firm's
 volatility by the mean volatility at its size, $\sigma_i/\bar\sigma(S)$, and the resulting
 distribution should be the same at every size, with a bounded tail. The model reproduces this
-collapse onto a single size-independent shape, with a thin tail --- the $99$th percentile
-sits at $2.2$ times the median when the rescaling is done per economy --- and the collapse
+collapse onto a single size-independent shape, with a thin tail (the $99$th percentile
+sits at $2.2$ times the median when the rescaling is done per economy), and the collapse
 tightens, rather than degrading, as the system grows. The granular models predict a
 second feature here: large firms built from only a few sub-units keep a fixed volatility that
 does not shrink with size, which would show up as a hump in the rescaled distribution.
@@ -174,9 +174,9 @@ fit, but every conditional test by which the data reject them.
     \centering
     \includegraphics[width=\linewidth]{meandeg_conditional.png}
     \caption{The other two discriminating tests of \citet{moran2024}, twenty economies of
-    $N = 16000$. Left (second test): the per-firm volatility distribution, rescaled by its
+    $N = 16000$. \panel{Left} (second test): the per-firm volatility distribution, rescaled by its
     size-conditional mean $\sigma_i/\bar\sigma(S)$, collapses onto a single size-independent
-    shape with a bounded tail. Right (third test): the size-unmixed growth $(g-\bar g)/\sigma_i$
+    shape with a bounded tail. \panel{Right} (third test): the size-unmixed growth $(g-\bar g)/\sigma_i$
     stays fat-tailed at every size, well above the Gaussian, and the larger firms are
     fatter, the excess kurtosis rising with size in every realization; an aggregate of
     independent parts would approach a Gaussian.}
@@ -195,23 +195,23 @@ field that the heterogeneous mean-field theory of \citet{aguirrelopez} carries a
 $\sqrt{k_i/C}$ on its noise: the degree distribution of
 the graph is printed directly onto the distribution of firm-level noise. If the
 multiscaling is really the shape of the volatility distribution broadening with size,
-this is the channel that can produce it, and switching the heterogeneity off should
+this is a channel that can produce it, and switching the heterogeneity off should
 switch the multiscaling off.
 
 It does. Figure~\ref{fig:growing-topology} repeats the full measurement with the degree
-distribution swapped and everything else held fixed --- the same disorder, the same
+distribution swapped and everything else held fixed: the same disorder, the same
 operating point, the same mean degree $C = N/40$. On the homogeneous graphs the
 multiscaling vanishes exactly: the fully-connected control gives ratios
 $1,\,2.00,\,3.01,\,4.00$ and the regular graph $1,\,1.99,\,2.95,\,3.87$, the
 fixed-shape line to within error. As the degree distribution broadens the ratio curve
 bends away from that line, and only the power-law graph with infinite degree variance
 (exponent $2.5$, the graph of every other figure in this chapter) reaches the empirical
-curve. The size--variance exponent moves with the same lever, from $\beta \approx 1$ on
+curve. The size--variance exponent moves with the same parameter, from $\beta \approx 1$ on
 the homogeneous graphs down through $0.73$ (power-law $3.5$) and $0.43$ (power-law $2.5$)
 to $0.17$ (power-law $2.2$), inside the empirical band at this size:
 degree heterogeneity is what pushes the exponent down toward, and through, the empirical
-range. The tail exponent of the graph is thus a single dial that carries both
-size-conditioned observables across the empirical values --- the data are bracketed
+range. The tail exponent of the graph is thus a single control parameter that carries both
+size-conditioned observables across the empirical values: the data are bracketed
 between exponent $2.2$, where $\beta$ is right and the ratios run slightly low, and
 $2.5$, where the ratios are right and $\beta$ is high. Pushing the tail harder still
 (exponent $2.1$ and below) overshoots: $\beta$ falls below the band while half the
@@ -221,6 +221,22 @@ growth tent, by contrast, is indifferent to all of it, fat and symmetric on ever
 topology including the fully-connected one, so the tent belongs to the disorder alone
 while the size-conditioned structure belongs to the graph.
 
+The power-law-$2.2$ graph, the bracketing partner that carries the empirical exponent,
+passes the full battery of conditional tests as well. Run at the same operating point
+and size as the headline measurements ($N = 16000$, twenty economies, all surviving),
+it gives $\beta = 0.21 \pm 0.07$, inside the empirical band at a size where
+Appendix~\ref{app:scaling} shows this exponent converged; quenched ratios
+$1,\,1.79,\,2.36,\,2.72$, tracking the empirical curve from below; a
+rescaled-volatility collapse as tight as the headline graph's (tail $P_{99}$/median
+$2.0$ against $2.0$ at exponent $2.5$, with size-independent medians); a size-unmixed
+kurtosis rising with size at $+5.8 \pm 0.6$ per decade, positive in nineteen of the
+twenty economies; and a symmetric fat tent (Bowley $+0.02$, excess kurtosis $10.5$).
+The two bracketing exponents therefore fail in different places and by very different
+margins: at $2.2$ the worst deviation is the highest ratios running $5$--$7\%$ below
+the data, while at $2.5$ the ratios sit on the data but the exponent overshoots the
+empirical band by a factor of two and is still drifting. Every conditional test is
+passed at both.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{meandeg_topology.png}
@@ -228,7 +244,7 @@ while the size-conditioned structure belongs to the graph.
     distributions at the same operating point, mean degree and disorder, twenty economies
     each ($N = 8000$; the ordering is unchanged at $N = 16000$). \panel{Left}: quenched
     multiscaling ratios. The homogeneous graphs (fully connected, regular) sit on the
-    fixed-shape line $\zeta_q/\zeta_1 = q$ --- no multiscaling --- and the curve bends
+    fixed-shape line $\zeta_q/\zeta_1 = q$ (no multiscaling) and the curve bends
     toward the data as the degree distribution broadens (CV is the coefficient of
     variation of the degrees); only the infinite-variance power-law graphs reach the
     neighbourhood of the empirical curve. \panel{Right}: the size--variance exponent falls from $\beta \approx 1$
@@ -280,8 +296,8 @@ disorder. With no noise in the model, the fluctuations can come only from the di
 and removing it removes them entirely. The two ablations together assign the phenomena
 to their sources: the disorder makes the economy fluctuate and gives the growth
 distribution its heavy tails; the degree heterogeneity of the graph turns those
-fluctuations into the size-conditioned structure --- the low exponent and the
-multiscaling --- that the data show.
+fluctuations into the size-conditioned structure (the low exponent and the
+multiscaling) that the data show.
 
 \begin{table}[h]
     \centering
@@ -309,19 +325,10 @@ multiscaling --- that the data show.
     \label{tab:growing-ablation}
 \end{table}
 
-Appendix~\ref{sec:dmft-beta} makes the homogeneous half of this statement
-quantitative: the mean-field single-site process predicts $\beta = 1$ with a plateau
-below $\bar S \sim 1$ and exactly fixed-shape ratios on homogeneous graphs --- the
-measured $1.02$/$0.94$ and $4.00$/$3.87$ of Table~\ref{tab:growing-topology} --- and,
-on the heterogeneous graph, a firm-level bridge law $\sigma_i \propto
-\sqrt{k_i}\,\bar S_i^{-a}$ whose degree exponent is confirmed at $0.486 \pm 0.012$
-and through which the measured exponents decompose into damping and degree--size
-alignment, reconstructing $\beta$ within errors.
-
 The same separation explains why the per-firm normalization mentioned in
 Section~\ref{sec:growing-estimator} shows no multiscaling. Dividing each firm's
 couplings by its own degree, $\alpha_{ij} = \mu/k_i + (\sigma/\sqrt{k_i})z_{ij}$,
-equalizes the field variance across firms by construction --- it cancels the degree out
+equalizes the field variance across firms by construction: it cancels the degree out
 of the noise, and with it the channel through which the graph reaches the firm-level
 statistics. Under that normalization the exponent is steep ($\beta \approx 0.8$) and
 identical across all five topologies, and the quenched ratio curve sits on the
@@ -339,6 +346,105 @@ and the slow size--variance decay arise together from the disordered
 interactions, and the size-conditioned structure from the topology that carries them,
 which is the size-dependent correlation mechanism \citet{moran2024}
 identify as the one the granular models lack.
+
+\section{From degree to size: survival under competition}
+\label{sec:growing-degree-size}
+
+The previous section identified the channel through which the graph reaches the
+statistics, the degree-dependent variance of the disorder field. This section follows
+that channel down to the individual firm and asks what a firm's connectivity does to
+its own fortunes. The answer has two parts that at first sight sit oddly together: degree
+sets size but barely touches volatility, and it sets size not by advantaging the
+connected firm but by widening the spread of outcomes among connected firms, most of
+which lose.
+
+The first part is the observation (Fig.~\ref{fig:growing-degree-size}). Measured per
+economy at the operating point, a firm's mean size rises with its degree, Spearman
+correlation $+0.41$ (range $+0.37$ to $+0.44$ across ten economies of $N = 16000$),
+positive in every realization, and the relation is a power law,
+$\bar S \sim k^{\delta}$ with $\delta = 0.56 \pm 0.02$. Unlike the size--variance
+exponent, $\delta$ is converged at our sizes: it is $0.57 \pm 0.03$ at $N = 8000$ and
+unchanged at $N = 16000$. The firm's volatility, by contrast, is nearly flat in its
+degree (Spearman $+0.16$, right panel), and the flatness is a near-cancellation of two
+opposing dependences. Fitted jointly across the firms of twelve economies at
+$N = 8000$, the volatility scales as $\sigma_i \propto k_i^{\,b}\,\bar S_i^{-a}$ with
+$b = 0.486 \pm 0.012$ and $a = 0.588 \pm 0.015$: at fixed size a hub is noisier, the
+$k_i/C$ field variance of Section~\ref{sec:growing-graph} surfacing directly, but the
+size that noise procures quiets the firm through the size--variance law, and the two
+compose to $\sigma \propto k^{\,b - a\delta} \approx k^{+0.16}$ with $\delta = 0.56$,
+the weak residual the figure shows. Degree acts on size; the
+volatility inherits only what the size--variance law leaves over.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{meandeg_degree_size.png}
+    \caption{Degree and the individual firm, ten economies of $N = 16000$ ($C = 400$),
+    each economy's sizes and volatilities normalized by its own median. \panel{Left}:
+    mean size against degree; the binned median (across all economies) rises as a power
+    law $\bar S \sim k^{\delta}$, $\delta = 0.56 \pm 0.02$, per-economy Spearman
+    correlation $+0.41$. \panel{Right}: volatility against degree is nearly flat
+    (Spearman $+0.16$), the residual $\sigma \sim k^{+0.16}$ left after the two
+    opposing degree dependences, the noise rising with degree and the size it procures
+    quieting the firm, nearly cancel.}
+    \label{fig:growing-degree-size}
+\end{figure}
+
+The second part is the mechanism, and under competition ($\mu < 0$) it is not the
+obvious one, since a hub has more competitors and feels a mean suppression that grows
+with its connectivity. The starting point is a balance law that the stationary state
+enforces exactly. For any firm that persists through the measurement window the time
+average of $\mathrm{d}\ln S_i/\mathrm{d}t$ vanishes, so its mean fitness equals the
+economy's, which rearranges to
+\begin{equation}
+    \bar S_i \;=\; (1 - \bar g) \;+\; \bar h_i,
+    \label{eq:balance-law}
+\end{equation}
+with $\bar h_i$ the time-averaged interaction field the firm sits in and
+$\bar g$ the aggregate growth rate. The law is parameter-free and the simulation
+satisfies it to numerical precision (slope $0.999 \pm 0.001$, $R^2 = 1.000$ across ten
+economies of $N = 8000$): a surviving firm's size is its realized field, reflected, and
+nothing else about the firm enters. The field itself splits into the two ingredients of
+the couplings. Its coherent part, $\mu\,(k_i/C)\,\langle \bar S \rangle_{\partial i}$,
+is the expected suppression, negative and growing linearly with degree (measured
+exponent $1.01 \pm 0.01$); its disorder part is a quenched, zero-mean random offset
+whose spread grows as the square root (measured $0.50 \pm 0.02$), the same
+$\sqrt{k_i/C}$ amplitude as the temporal noise. Degree therefore does two things to a
+firm at once: it deepens the suppression the firm should expect, linearly, and it widens
+the spread of the field it actually receives, as $\sqrt{k}$.
+
+Selection converts that widening into the size law. The typical hub loses:
+the survival probability falls monotonically with degree, from $0.22 \pm 0.05$ in the
+lowest degree bin to $0.02 \pm 0.02$ in the highest. Conditioning on survival then
+reverses the field--degree relation, from negative over all firms ($-0.27$) to positive
+among the survivors ($+0.35$): the hubs that remain are precisely those whose quenched
+draw came out favourable, and through \eqref{eq:balance-law} their anomalously
+favourable fields are their anomalously large sizes. The exponent $\delta$ is the
+extreme-value scaling of this truncation. Treating the disorder offset as Gaussian
+predicts the survival falloff but only half the size exponent ($\delta = 0.29 \pm
+0.04$ against the measured $0.53 \pm 0.08$ in the same binning); the offset is in fact
+fat-tailed, since it is a sum over neighbours weighted by their heavy-tailed sizes, and
+the largest survivors live in exactly that tail. Using the empirical field distribution
+instead, together with a survival criterion that admits a firm only if its balance
+margin exceeds its own field's temporal spread ($1.16 \pm 0.08$ standard deviations,
+one constant calibrated to the aggregate survival rate alone), reproduces the survival
+curve and $\delta = 0.46 \pm 0.06$, and identifies three quarters of the individual
+surviving firms. The temporal fluctuations thus enter the degree--size law through the
+culling, a marginal firm whose field swings are larger than its margin is eventually
+dipped below the floor, and not through the sizes themselves: adding the field's
+temporal variance to the regression behind \eqref{eq:balance-law} contributes nothing
+once its mean is fixed.
+
+A final control assigns the diversity itself to the competition. Setting $\mu = 0$ at
+the same disorder removes the coherent suppression, and with it the coexistence: the
+economy condenses onto a handful of firms (survival below $0.2\%$ in every
+realization). The penalty that eliminates the typical hub is the same force that holds
+two thousand firms in coexistence. Connectivity in this economy is therefore not an
+advantage but an amplifier: it widens the quenched draw a firm receives, competition
+removes most of the widened draws, and the surviving tail is large in proportion to the
+widening. This degree--size alignment is the quenched joint structure a full theory of
+the size-conditioned statistics would have to compute, and one more instance of the
+pattern of Section~\ref{sec:growing-graph}: the firm-to-firm structure is quenched, frozen into
+the realized couplings, and the dynamics select and expose it rather than create it.
 
 \section{Finite size}
 \label{sec:growing-finite-size}
@@ -361,9 +467,11 @@ sizes). The size--variance exponent is not: it rises from $0.30$ at $N = 2000$ t
 $0.43$--$0.45$ at $N = 8000$--$16000$ to $0.49$ at $N = 32000$, a drift that slows with
 size and is consistent with settling near $\beta \approx 0.45$--$0.5$, but whose limit
 our sizes do not pin down. The excess kurtosis of the growth tent likewise falls with
-size ($7.1$ at $N = 16000$ against $11.6$ at $N = 8000$), decelerating toward a value
-still well above the Laplace reference, while the tent's shape --- the exponential
-flanks, the symmetry --- is stable. We therefore quote the ratio curve and the
+size (pooled values, $7.1$ at $N = 16000$ against $11.6$ at $N = 8000$; the
+per-economy median at $N = 8000$ is the $8$ of Table~\ref{tab:growing-topology}),
+decelerating toward a value
+still well above the Laplace reference, while the tent's shape (the exponential
+flanks, the symmetry) is stable. We therefore quote the ratio curve and the
 conditional tests as predictions of the model, and the absolute exponent and kurtosis
 as finite-size quantities reported at stated $N$. Appendix~\ref{app:scaling} carries this
 finite-size study across all five topologies of Section~\ref{sec:growing-graph}: the ratio is
@@ -386,7 +494,7 @@ operating point ($\sigma$ from $1.5$ to $2.0$, $\mu$ from $-1.4$ to $-2.1$) leav
 ratio curve bent below the fixed-shape line everywhere the fluctuating state survives
 (ratios $3.2$--$3.6$ at $q=4$), while the exponent moves substantially
 ($\beta = 0.28$--$0.79$) and the strongest disorder kills most realizations. The
-mechanism --- heterogeneity-generated multiscaling --- is a property of the phase; the
+mechanism (heterogeneity-generated multiscaling) is a property of the phase; the
 particular exponent values are properties of the operating point.
 
 \section{Discussion}
@@ -414,7 +522,7 @@ and the interactions made relative so that the aggregate grows,
 as a model of firm growth, and the finding that the graph's heterogeneity generates
 precisely the size-conditioned statistics that discriminate among firm-growth theories.
 Second, the quantitative match is partial. The multiscaling ratios lie on the data;
-the absolute exponent does not, $\beta \approx 0.45$ at our largest sizes against the
+the absolute exponent does not, $\beta \approx 0.45$ at $N = 16000$ ($0.49$ at $N = 32000$) against the
 empirical $0.15$--$0.20$, still drifting slowly upward with size, and the growth tent's
 kurtosis is likewise a finite-size quantity. What the model reproduces robustly is the
 shape of the size-conditioned statistics, not their absolute scale.
@@ -423,13 +531,14 @@ strong disorder or a lighter-tailed graph pushes realizations into freezing, so 
 phenomenology, though it occupies an extended region, does not fill the plane.
 
 The next steps follow from these limits. The drift of the exponent invites a larger-size
-study and, more useful, an understanding of its limit --- whether the slow approach
+study and, more useful, an understanding of its limit: whether the slow approach
 toward $\beta \approx 1/2$ is the central-limit value of the densifying field or stops
 short of it. The correlation structure matters more than
-either: the match shown here is in the marginal facts and their moments, whereas the
-size-dependent correlations that
-\citet{moran2024} call for are generated directly by the model and can be measured firm
-by firm. That measurement points to the model's distinctive prediction, that the
+either: the match shown here is in the marginal facts and their moments, together with
+the degree--size and survival structure of Section~\ref{sec:growing-degree-size},
+whereas the correlations between the growth rates of individual firms that
+\citet{moran2024} call for remain to be measured directly. That measurement points to
+the model's distinctive prediction, that the
 correlations live between firms, on the network, rather than inside them. Further out,
 replacing the schematic disordered graph with couplings closer to the real economy, its
 input--output linkages, supply networks, and shared markets, would take the model from

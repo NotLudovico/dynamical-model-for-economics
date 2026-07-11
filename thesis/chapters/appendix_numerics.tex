@@ -6,11 +6,11 @@
 The relative model is integrated in physical time, the composition kept in its bounded
 variables and the scale carried in its logarithm, so that nothing overflows
 however large the economy becomes. Internally the solver evolves the shares
-$y_i = S_i/N$, which live on the probability simplex and are renormalized onto it at
+$w_i = S_i/N$, which live on the probability simplex and are renormalized onto it at
 each output time; we integrate \eqref{eq:replicator} in this form
 together with $\mathrm{d}\ln m/\mathrm{d}t = g_{\mathrm{eff}}$ with an explicit
 Runge--Kutta solver throughout. At the system sizes reached in the text ($N$ up to
-$1.3\times10^4$) the implicit solvers tried first switched to a dense Jacobian and became
+$3.2\times10^4$) the implicit solvers tried first switched to a dense Jacobian and became
 prohibitively slow, whereas the explicit method integrates one run to $t = 250$ in about
 ten seconds at $N = 10^4$.
 
