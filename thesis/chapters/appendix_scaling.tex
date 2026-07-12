@@ -13,23 +13,38 @@ carried past $N = 16000$ on the available hardware; the regular graph, homogeneo
 provides the homogeneous control at the largest sizes.
 
 Two patterns separate cleanly. The multiscaling ratio (right panel) is flat in $N$ for every
-topology to within its error: the homogeneous graphs sit on the fixed-shape value $4$ at every
-size, and each heterogeneous graph holds its own value ($\zeta_4/\zeta_1 \approx 3.4$ for the
-power-law-$3.5$ graph, $\approx 3.1$ for power-law-$2.5$, $\approx 2.7$ for power-law-$2.2$)
-across the whole range from $N = 8000$ to $32000$. The multiscaling is thus a genuine
-thermodynamic property of each ensemble, set by the degree distribution and not by the system
-size, and the empirical value $2.9$ is bracketed between the power-law-$2.5$ and
-power-law-$2.2$ graphs at every $N$ measured.
+topology to within its error above $N \approx 8000$: the homogeneous graphs sit on the
+fixed-shape value $4$ at every size, and each heterogeneous graph holds its own value
+($\zeta_4/\zeta_1 \approx 3.4$ for the power-law-$3.5$ graph, $\approx 3.1$ for power-law-$2.5$,
+$\approx 2.7$ for power-law-$2.2$) across the range $N = 8000$ to $32000$. Carried down to
+$N = 2000$, the sparse graphs tell the rest of the story: below $N \approx 8000$ their ratios
+converge toward one another near the fixed-shape value (the power-law-$2.5$ graph rises from its
+$3.1$ plateau to $3.3$ at $N = 4000$ and $3.8$ at $N = 2000$, and the regular and power-law-$3.5$
+graphs bunch nearby), so the separation of the plateaus by degree distribution is itself a
+large-$N$ effect that finite size washes out. The multiscaling is
+thus a genuine thermodynamic property of each ensemble, set by the degree distribution and not
+by the system size, and the empirical value $2.9$ is bracketed between the power-law-$2.5$ and
+power-law-$2.2$ graphs at every $N$ where the plateaus have separated.
 
-The size--variance exponent (left panel) behaves differently. It drifts upward with $N$ for
-every topology, but the drift and its limit are organized by the degree distribution. On the
-homogeneous graphs $\beta$ is already at or close to $1$ and barely moves: the fully-connected graph holds
-$1.02$, the regular graph creeps from $0.94$ to $0.99$. As the degree distribution broadens the
-exponent both drops and, for the most heterogeneous graph, settles: the power-law-$2.2$ graph
-rises from $0.16$ at $N = 8000$ to $0.22$ at $16000$ and $0.23$ at $32000$, the last two
-agreeing within their errors, so that its exponent has essentially converged just above the
-empirical band $0.15$--$0.20$. The power-law-$2.5$ and power-law-$3.5$ graphs are still drifting
-at $N = 32000$ and their limits are not pinned by these sizes. What the sweep establishes is
+The size--variance exponent (left panel) behaves differently. It creeps upward with $N$ for
+every topology across the whole range $N = 2000$ to $32000$, but the drift and its limit are
+organized by the degree distribution. On the homogeneous graphs $\beta$ is already near $1$ and
+nearly flat: the fully-connected graph sits at $\approx 1.02$, the regular graph creeps from
+$0.73$ at $N = 2000$ to $0.99$ at $32000$ and levels off. The heterogeneous graphs climb further but level off more slowly:
+the power-law-$3.5$ graph runs from $0.61$ to $0.80$ and the power-law-$2.5$ graph from $0.32$ at
+$N = 2000$ through $0.43$ at $8000$--$16000$ to $0.49$ at $32000$. The step in $\beta$ per doubling
+of $N$ shrinks along each curve, the signature of a finite-size approach to a limit rather than
+an unbounded drift, and extrapolating in $1/N$ (the form that pins the regular graph at
+$\beta_\infty = 1.00$, $R^2 = 0.999$) sends every topology to a finite value: $\beta_\infty
+\approx 0.8$ for power-law-$3.5$ and $\approx 0.5$ for power-law-$2.5$, though for the heavier tail
+the limit is only loosely constrained by these sizes. The power-law-$2.2$ graph converges
+fastest and is already flat over the measured range: $0.16$ at $N = 8000$, $0.22$ at $16000$,
+$0.23$ at $32000$, the last two agreeing within their errors, its exponent essentially settled
+just above the empirical band $0.15$--$0.20$. (It is not carried below $N = 8000$: the most
+heterogeneous graph is also the most fragile, and at $N = 2000$--$4000$ most of its realizations
+freeze, leaving a survivor-biased handful with anomalously high exponents.) Every topology thus
+appears to approach a finite large-$N$ exponent set by its degree tail; only for the heavy-tailed
+graphs is that limit still loosely pinned at the sizes reached here. What the sweep establishes is
 therefore not a single matched exponent but a monotonic control: the degree-tail exponent sets
 where $\beta$ lands, spanning the whole range from $1$ down through the empirical band, while it
 leaves the multiscaling ratio fixed. The size-conditioned \emph{shape} is the converged
@@ -41,14 +56,23 @@ data.
     \centering
     \includegraphics[width=\linewidth]{meandeg_scaling_topology.png}
     \caption{Finite-size scaling of the exponents at fixed dilution $C = N/40$, for the five
-    degree distributions of Section~\ref{sec:growing-graph} (12--20 economies per point).
+    degree distributions of Section~\ref{sec:growing-graph} (7--20 economies per point), with the
+    fully-connected, regular, power-law-$3.5$ and power-law-$2.5$ curves carried down to
+    $N = 2000$ to show the finite-size approach; the power-law-$2.2$ graph freezes at these small
+    sizes and is not carried below $N = 8000$.
     \panel{Left}: the size--variance exponent $\beta$ against $N$; it drifts upward for every
     topology, but the drift shrinks and the value falls as the degree distribution broadens,
     from $\beta \approx 1$ on the homogeneous graphs to $\beta \approx 0.23$, converged, on the
-    power-law-$2.2$ graph, just above the empirical band. \panel{Right}: the highest
-    multiscaling ratio $\zeta_4/\zeta_1$ against $N$; flat in $N$ for every topology, set by the
-    degree distribution, with the empirical value bracketed between the power-law-$2.5$ and
-    power-law-$2.2$ graphs. The fully-connected graph, dense, is not run beyond $N = 16000$.}
+    power-law-$2.2$ graph, just above the empirical band. \panel{Middle}: the highest
+    multiscaling ratio $\zeta_4/\zeta_1$ against $N$; flat in $N$ above $N \approx 8000$ for every
+    topology, set by the degree distribution, with the empirical value bracketed between the
+    power-law-$2.5$ and power-law-$2.2$ graphs. \panel{Right}: the same exponents plotted against
+    $1/N$, where the infinite-size limit is the intercept at $1/N = 0$ (stars); the dashed lines
+    are linear fits, which send every graph to a finite $\beta_\infty$ (the same fit pins the
+    regular graph at $1.00$, the power-law-$3.5$ at $0.79$ and the power-law-$2.5$ at $0.47$),
+    evidence that $\beta$ approaches a finite topology-set limit rather than drifting without
+    bound. The fully-connected graph, dense, is not run
+    beyond $N = 16000$.}
     \label{fig:scaling-topology}
 \end{figure}
 

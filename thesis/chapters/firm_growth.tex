@@ -59,7 +59,7 @@ than transients of a relaxation.
 \label{sec:growing-estimator}
 
 Every exponent in this chapter is measured over many graph realizations, and how the
-realizations are combined is not an innocent choice. Each economy carries its own
+realizations are combined affects the result. Each economy carries its own
 overall volatility scale, set by its particular draw of the couplings, and these scales
 differ by large factors from one realization to the next. The obvious estimator pools
 the firms of all economies into one sample and fits the size-conditioned moments once.
@@ -77,12 +77,8 @@ averaged over realizations, with the quoted uncertainty the standard error of th
 average. The two estimators disagree materially. At the operating point of
 Figure~\ref{fig:growing-msb} the pooled ratios come out $1,\,1.77,\,2.32,\,2.67$ while
 the quenched ratios are $1,\,1.84,\,2.51,\,3.02$; on other normalizations of the model
-the disagreement is larger still, large enough to reverse a verdict. A per-firm
-(own-degree) normalization of the couplings, which an earlier stage of this work
-employed, appears to reproduce the empirical ratio curve when measured pooled, while the
-quenched estimator shows its conditional volatility to have a size-independent shape,
-$\zeta_q = q\,\zeta_1$, no multiscaling at all. The apparent match was manufactured
-by the estimator. All claims below are therefore quenched, and the pooled values are
+the disagreement is larger still, large enough to reverse a verdict.
+All claims below are therefore quenched, and the pooled values are
 reported only for comparison.
 
 \section{Higher moments and the multiscaling}
@@ -118,10 +114,7 @@ empirical $1,\,2.0,\,2.6,\,2.9$ through $q = 3$ and slightly above it at $q = 4$
 separated from the fixed-shape line $\zeta_q/\zeta_1 = q$ by many standard errors at
 every $q \ge 2$ (right panel). The model
 produces the same anomalous scaling of the higher moments as the data, with no internal
-firm structure and nothing put in by hand: the correlations that \citet{moran2024} name as
-the missing ingredient of the granular picture, ``shocks hitting a firm's sub-units
-[becoming] more and more correlated as its size increases'', are generated here by the
-interactions between firms. Two differences in shape remain honest to record: the
+firm structure. Two differences in shape remain: the
 empirical curve saturates hard after $q = 3$ while the model's bends more gently, so the
 model matches the data's values rather than its curvature at the highest moment measured;
 and the empirical exponents themselves are about half the model's, the magnitude gap
@@ -344,12 +337,10 @@ explanatory work.
 The interactions-only origin also separates this model from the simplest alternatives. A
 growing economy with
 a stationary heavy-tailed size distribution can be had from a mean-field multiplicative
-model with injected noise \citep{bouchaudmezard2000}, but there the fluctuations are put
-in by hand and there is no network. Here the same growing aggregate, the heavy tails,
+model with injected noise \citep{bouchaudmezard2000}, but there the fluctuations are
+external and there is no network. Here the same growing aggregate, the heavy tails,
 and the slow size--variance decay arise together from the disordered
-interactions, and the size-conditioned structure from the topology that carries them,
-which is the size-dependent correlation mechanism \citet{moran2024}
-identify as the one the granular models lack.
+interactions, and the size-conditioned structure from the topology that carries them.
 
 \section{From degree to size: survival under competition}
 \label{sec:growing-degree-size}
@@ -456,8 +447,7 @@ the realized couplings, and the dynamics select and expose it rather than create
 The chaotic state above is not equally robust at all system sizes. At small $N$ the
 persistent chaos is fragile: for many graph
 realizations the shape, after fluctuating for a while, collapses onto a fixed
-point and freezes, the known finite-size metastability of the fluctuating phase
-\citep{roy2020,altieri2021}. At $N = 2000$ nearly half the realizations die this way;
+point and freezes. At $N = 2000$ nearly half the realizations die this way;
 from $N = 8000$ upward every realization in our ensembles persists. All measurements
 quoted in this chapter are therefore taken at $N \ge 8000$, where the fluctuating state
 is the generic outcome.

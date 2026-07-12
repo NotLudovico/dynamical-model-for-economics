@@ -67,9 +67,8 @@ $x \to c\,x$ the right-hand side of \eqref{eq:abs-glv} must be homogeneous of de
 and while the growth term $x_i$ already is, the self-limitation $x_i^2$ and the interaction
 $x_i (Wx)_i$ are both of degree two. To bring them back to degree one we divide each by a quantity
 that scales like a size, and the natural one is the average firm $m = \langle x\rangle$, the
-typical firm that each one competes against. One further term completes the model. Left to
-itself the chaotic flow drives some firms arbitrarily close to zero size, and a firm that
-reaches zero stays there, so diversity erodes and the state never becomes stationary. As is
+typical firm that each one competes against. The chaotic flow also drives some firms to
+zero size, where they stay, so as is
 standard in the disordered Lotka--Volterra literature \citep{bunin2017,roy2020} we add a small
 immigration term, an entry flow of small firms at a rate set by the size of the economy itself,
 which prevents exact extinction. The model of this thesis is then, in its entirety,
@@ -86,8 +85,8 @@ at rate $\lambda m$ together with a uniform exit of every firm at rate $\lambda$
 zero over the economy, so it reshuffles mass without changing the total. Although it nominally
 pulls firms above the mean downward, its per-capita effect on a large firm is bounded by
 $\lambda = 10^{-3}$, uniform across all large firms and three orders of magnitude below the
-interaction-driven fluctuations, so it cannot tilt the size-conditioned statistics; where it
-bites is at the bottom, where the influx $\lambda m$ outlives the vanishing multiplicative terms
+interaction-driven fluctuations, so it cannot tilt the size-conditioned statistics; its effect
+is confined to small firms, where the influx $\lambda m$ dominates the vanishing multiplicative terms
 and sets the floor that keeps firms from exact extinction. Its direct dynamical footprint is
 the small-firm plateau excluded from the fits of Chapter~\ref{chap:firmgrowth}; the
 floor it sets doubles, however, as the survival boundary against which
@@ -96,8 +95,8 @@ from the
 standard system \eqref{eq:abs-glv} are the two factors of $1/m$ and the immigration term, and
 every term is now homogeneous of degree one: under $x \to c\,x$ the mean $m$ scales the same
 way, the ratios $x_i/m$ and $(Wx)_i/m$ are unchanged, the immigration flow $\lambda(m - x_i)$
-rescales with the economy, and so if $x(t)$ is a solution then so is $c\,x(t)$. The economy no
-longer has a preferred size. The change
+rescales with the economy, and so if $x(t)$ is a solution then so is $c\,x(t)$, leaving the
+economy with no preferred size. The change
 is also the economically natural one, since a competitor's pressure on firm $i$ is now set by its
 market share $x_j/m$ rather than by its absolute size, and a firm's own crowding is measured
 against the typical firm rather than against a fixed ceiling, so what drives the dynamics is
@@ -192,7 +191,7 @@ $m$ grows, with no time rescaling. Above the disorder threshold $\sigma_c$
 point but stays chaotic, so
 the growth rates never vanish, which is the persistently fluctuating state we needed.
 
-The practical payoff of the split is numerical. We integrate \eqref{eq:replicator}
+The numerical payoff of the split is that we can integrate \eqref{eq:replicator}
 together with $\mathrm{d}\ln m/\mathrm{d}t = g_{\mathrm{eff}}$
 directly in physical time, keeping the composition in its bounded variables (the relative
 sizes have fixed mean one) and the scale in its

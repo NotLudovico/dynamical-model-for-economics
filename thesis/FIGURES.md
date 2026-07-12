@@ -17,6 +17,7 @@ Own-degree (`kind="powerlaw_owndeg"`) survives only as the contrast in
 | `meandeg_conditional.png` | same npz | `scripts/thesis_meandeg_figures.py` (copies `_conditional_N16000.png`, D1/D3) |
 | `meandeg_topology.png` | `data/meandeg_topology.npz` (5 topologies, N=8000; 16k stability in `data/meandeg_topology_16k.npz`) | ratios-by-topology + beta-by-topology panels (`notebooks/meandeg_topology.ipynb`) |
 | `meandeg_beta_vs_N.png` | `data/meandeg_beta_vs_N.npz` | copy of `data/meandeg_beta_vs_N.png` (finite-size: beta drift + converged zeta4/zeta1) |
+| `between_firm_corr.png` (appendix, correlations vs size/degree) | `data/between_firm_corr.npz` | `scripts/between_firm_correlations.py` (committed; market co-movement + same-bin pairwise corr, binned by size and degree; N=16000, 10 econ) |
 | `meandeg_scaling_topology.png` (appendix B, finite-size beta/ratio vs N) | published tab:scaling values (hardcoded) + `data/scaling_lowN.npz` for the pl2.5 N=2k/4k points | `scripts/plot_scaling_topology.py` (committed). Low-N points from `scripts/scaling_lowN_splice.py` (`P_TOPOS=pl2.5 P_SEEDS=20`). NOTE: 8k/16k/32k are the patchwork published values, kept fixed; only pl2.5 extended to 2k/4k (pl2.2 freezes at small N — survival bias, not run). |
 | `phase_diagram.png` | (own-degree mapping, caption notes this) | unchanged |
 | `robustness_protocol.png` (App. numerics) | `data/appendix_robustness.npz` (10 econ, N=8000, C=200) | `scripts/appendix_robustness.py` (~4 min; `--replot` refigures from npz) |

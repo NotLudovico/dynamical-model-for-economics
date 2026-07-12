@@ -9,12 +9,15 @@ ln M separate), which is numerically unconditionally stable -- see `integrate`.
 
 Sign convention: mu > 0 is mean COMPETITION (it lowers the growth rate).
 """
+import os
 import numpy as np
 import networkx as nx
 from scipy import sparse
 from scipy.integrate import solve_ivp
 
-_ALPHA_PL, _MEAN_DEGREE = 2.5, 100   # power-law degree exponent, target mean degree
+# power-law degree exponent (env-overridable so a whole figure run can be pinned to a
+# different tail without editing callers), target mean degree
+_ALPHA_PL, _MEAN_DEGREE = float(os.environ.get("RGLV_ALPHA_PL", 2.5)), 100
 
 
 def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
