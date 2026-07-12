@@ -20,7 +20,31 @@ from scipy.integrate import solve_ivp
 _ALPHA_PL, _MEAN_DEGREE = float(os.environ.get("RGLV_ALPHA_PL", 2.5)), 100
 
 
-def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
+def _powerlaw_adjacency(N, C, rng, seed, min_degree):
+    tail = (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))
+    if min_degree is None:
+        degree = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1) * tail
+        floor = 1
+    else:
+        if not 1 <= min_degree < C:
+            raise ValueError("min_degree must be at least 1 and below mean_degree")
+        offset = float(min_degree)
+        scale = (C - offset) * (_ALPHA_PL - 2)
+        degree = offset + scale * (tail - 1)
+        floor = int(min_degree)
+    deg = np.maximum(
+        degree.round().astype(int),
+        floor,
+    )
+    if deg.sum() % 2:
+        deg[deg.argmin()] += 1
+    graph = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
+    graph.remove_edges_from(nx.selfloop_edges(graph))
+    return nx.to_scipy_sparse_array(graph, format="csr", dtype=float)
+
+
+def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
+             min_degree=None):
     """Interaction matrix alpha for the relative GLV.
 
     Couplings are scaled so the mean field stays finite as connectivity grows:
@@ -53,6 +77,10 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
     lower C => sparser graph => each firm's field is a sum of fewer neighbours => fatter,
     less-Gaussian fluctuations (own-degree departs from the fully-connected limit as C falls).
 
+    min_degree optionally uses a shifted power law with a requested degree floor while
+    retaining the target mean degree and tail exponent. The default None preserves the
+    legacy cutoff proportional to the mean degree.
+
     Returns a dense ndarray (fc) or a scipy.sparse csr_array (powerlaw*); both
     support `alpha @ w`.
     """
@@ -64,14 +92,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
         return a
     if kind == "powerlaw":
         C = min(mean_degree or _MEAN_DEGREE, N - 1)
-        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
-        deg = np.maximum(
-            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
-        if deg.sum() % 2:
-            deg[deg.argmin()] += 1
-        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
-        G.remove_edges_from(nx.selfloop_edges(G))
-        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        A = _powerlaw_adjacency(N, C, rng, seed, min_degree)
         A.data[:] = 1.0
         C_eff = float(np.asarray(A.sum(axis=1)).mean())
         Au = sparse.triu(A, k=1).tocoo()
@@ -88,14 +109,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
         if gamma != 0.0:
             raise ValueError("powerlaw_owndeg supports only gamma=0 (asymmetric couplings)")
         C = min(mean_degree or _MEAN_DEGREE, N - 1)
-        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
-        deg = np.maximum(
-            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
-        if deg.sum() % 2:
-            deg[deg.argmin()] += 1
-        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
-        G.remove_edges_from(nx.selfloop_edges(G))
-        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        A = _powerlaw_adjacency(N, C, rng, seed, min_degree)
         ki = np.diff(A.indptr).astype(float)          # each node's own degree (fan-in)
         ki[ki == 0] = 1.0
         coo = A.tocoo()
@@ -110,14 +124,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None):
         if gamma != 0.0:
             raise ValueError("powerlaw_rowavg supports only gamma=0 (asymmetric couplings)")
         C = min(mean_degree or _MEAN_DEGREE, N - 1)
-        kmin = C * (_ALPHA_PL - 2) / (_ALPHA_PL - 1)
-        deg = np.maximum(
-            (kmin * (1 - rng.uniform(size=N)) ** (-1 / (_ALPHA_PL - 1))).round().astype(int), 1)
-        if deg.sum() % 2:
-            deg[deg.argmin()] += 1
-        G = nx.Graph(nx.configuration_model(deg.tolist(), seed=int(seed)))
-        G.remove_edges_from(nx.selfloop_edges(G))
-        A = nx.to_scipy_sparse_array(G, format="csr", dtype=float)
+        A = _powerlaw_adjacency(N, C, rng, seed, min_degree)
         ki = np.diff(A.indptr).astype(float)          # each node's own degree (fan-in)
         ki[ki == 0] = 1.0
         coo = A.tocoo()

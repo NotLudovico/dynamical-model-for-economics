@@ -28,6 +28,14 @@ def test_powerlaw_is_sparse_square_zero_diagonal():
     assert a.nnz > 0
 
 
+def test_powerlaw_with_min_degree_one_includes_low_degree_nodes():
+    a = coupling(2_000, 1.0, 1.5, kind="powerlaw", seed=4, mean_degree=100, min_degree=1)
+    degree = np.diff(a.indptr)
+
+    assert degree.min() <= 2
+    assert (degree < 10).any()
+
+
 def test_unknown_kind_raises():
     import pytest
     with pytest.raises(ValueError):

@@ -3,13 +3,12 @@
 \providecommand{\Dz}{\mathcal{D}z}
 \providecommand{\E}{\mathbb{E}}
 
-This note derives a dynamical mean-field theory (DMFT) for the scale-invariant model of
-the growing-economy chapter, in which the interactions act on the average firm rather
-than on absolute abundances. The model turns out to be a disordered replicator equation,
-so its DMFT is the heterogeneous single-site process already used to locate $\mu_c$
-\citep{aguirrelopez}, with two small additions that the scale invariance forces. The
-reduction to a replicator and the resulting effective single-site process and its
-self-consistency conditions are set out below.
+This appendix derives a dynamical mean-field theory (DMFT) for the scale-invariant model of
+the growing-economy chapter, where interactions act on the average firm rather than on absolute
+abundances. The model reduces to a disordered replicator equation. Its DMFT is therefore the
+heterogeneous single-site process used to locate $\mu_c$ by \citet{aguirrelopez}, with two
+additions required by scale invariance. We derive the reduction, the effective single-site process,
+and the associated self-consistency conditions.
 
 \section{The model and its reduction to a replicator}
 \label{sec:dmft-model}
@@ -62,13 +61,13 @@ replicator, and it is the term that turns the equation for absolute size into on
 relative size. From \eqref{eq:dmft-g}, $g(t) = \langle yF\rangle = \sum_j w_j F_j$ is the
 share-weighted average fitness of the whole economy, with shares $w_j = y_j/N = x_j/M$,
 and it equals the growth rate of the aggregate, $g(t) = d\ln M/dt$. Every firm feels the
-same $g(t)$. It is a global field common to all firms rather than something private to firm $i$. A firm therefore
+same $g(t)$: it is a global field rather than something private to firm $i$. A firm therefore
 gains relative size, $\dot y_i > 0$, only when its own fitness $F_i$ exceeds the
 economy-wide average $g(t)$, so $-g(t)$ encodes the requirement to beat the field in
 order to gain ground. Its role is to enforce the constraint $\langle y\rangle = 1$. One
 checks from \eqref{eq:dmft-replicator} that $\frac{d}{dt}\langle y\rangle = \langle
 yF\rangle - g\langle y\rangle = g\,(1 - \langle y\rangle)$, so $\langle y\rangle = 1$ is
-preserved, and $g(t) = \langle yF\rangle$ is precisely the value that keeps it preserved.
+preserved, and $g(t) = \langle yF\rangle$ is precisely the value required to do so.
 Because it is an average over the whole population, $g(t)$ self-averages. Its fluctuations
 are of order $1/\sqrt N$ and vanish in the thermodynamic limit, so it enters the mean-field
 description as a deterministic common drift rather than as a source of noise.
@@ -128,7 +127,7 @@ $M_1\equiv 1$, rather than left free.
 \section{Self-consistency}
 \label{sec:dmft-selfconsistency}
 
-The disorder average is now carried by four functionals of the single-site law of
+The disorder average is described by four functionals of the single-site law of
 \eqref{eq:dmft-singlesite}:
 \begin{equation}
     M_1(t) = \E[y(t)] = 1,\qquad

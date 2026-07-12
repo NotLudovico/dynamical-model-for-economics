@@ -42,6 +42,7 @@ relative-glv/
   scripts/
     compute.py                   Heavy compute: generate phase diagrams and validation data
     phase_owndeg_fine.py         (mu, sigma) phase diagram, own-degree normalization
+    survival_by_degree.py        Conditional survival probability by network degree
     msb_conditional.py           MSB conditional statistics (D1/D2/D3) over many economies
     plot_growing_*.py            Thesis main-text figure generators (see below)
     plot_dmft_*.py               Thesis DMFT-appendix figure generators (see below)

@@ -1,14 +1,12 @@
 \chapter{Between-firm growth correlations}
 \label{app:correlations}
 
-The granular models fail, \citet{moran2024} argue, because they lack a correlation between the
-growth rates of different firms, and they conjecture that this correlation grows with firm size:
-the missing ingredient is that ``the correlation of a firm's growth rate with that of the whole
-economy and the correlation of the growth rate of firms of similar sizes clearly grow with their
-size''. The body of this thesis reproduces the size-conditioned statistics through the degree
-heterogeneity of the interaction graph. That leaves a direct question, which this appendix
-settles: does the model reproduce the empirical facts by the route \citet{moran2024} conjecture,
-through correlations that grow with size, or by another?
+\citet{moran2024} argue that granular models fail because they omit a correlation between firms'
+growth rates that strengthens with firm size: ``the correlation of a firm's growth rate with that
+of the whole economy and the correlation of the growth rate of firms of similar sizes clearly grow
+with their size''. The model studied here reproduces the size-conditioned statistics through the
+degree heterogeneity of its interaction graph. The natural question is whether it does so through
+the same size-growing correlations or through a different channel.
 
 We measure two correlations from the per-firm growth time series $g_i(t) = \Delta \ln S_i$ in the
 fluctuating state, on the thesis graph (power-law $2.5$, mean degree $C = N/40$, $N = 16000$, ten
@@ -20,29 +18,26 @@ $\mathrm{corr}_t\!\big(g_i(t),\,g_j(t)\big)$ among firms that fall in the same b
 analogue of \citet{moran2024}'s ``correlation of firms of similar sizes''. Each is binned both by
 firm size and by degree.
 
-Both correlations are small and, to the precision reached here, flat
-(Figure~\ref{fig:correlations}). The co-movement with the aggregate sits at $\rho \approx 0.09$
-and is independent of size and of degree across the ranges resolved. The same-bin pairwise
-correlation is an order of magnitude smaller, $\approx 0.01$, also flat, with at most a weak rise
-to $\approx 0.018$ among the very largest firms. The correlations \citet{moran2024} name are thus
-present but modest, and they do not grow appreciably with either size or degree.
+Both measures are small and, within the resolved range, nearly flat
+(Figure~\ref{fig:correlations}). Co-movement with the aggregate is about $\rho \approx 0.09$,
+with no visible dependence on size or degree. The same-bin pairwise correlation is roughly an
+order of magnitude smaller, $\approx 0.01$, with at most a weak rise to $\approx 0.018$ among the
+largest firms. The correlations identified by \citet{moran2024} are therefore present but modest,
+and they do not increase appreciably with either size or degree.
 
-The model therefore reproduces the size-conditioned anomalies \emph{without} the size-growing
-correlations \citet{moran2024} conjecture. Its mechanism is instead the degree-dependence of the
-noise \emph{amplitude}: under the dilute normalization a firm's own idiosyncratic noise variance
-grows with its connectivity (Section~\ref{sec:growing-graph}), a single-firm property, riding on a
-flat and modest between-firm correlation background. The model is in this sense an alternative to
-\citet{moran2024}'s hypothesis rather than a realization of it: the anomalies need not come from
-correlations that strengthen with size.
+The size-conditioned anomalies therefore arise here \emph{without} the size-growing correlations
+conjectured by \citet{moran2024}. Instead, the dilute normalization makes the amplitude of a
+firm's idiosyncratic noise increase with its connectivity
+(Section~\ref{sec:growing-graph}). That is a single-firm mechanism operating against a modest,
+largely flat background of between-firm correlations. The model is thus an alternative to
+\citet{moran2024}'s hypothesis, rather than a realization of it.
 
-Two limits qualify the null result. The pairwise measure averages over same-bin pairs that are
-almost all unconnected on the sparse graph, so it understates the correlation between direct
-trading partners, which a production-network reading of the model would emphasize. And the
-survival mechanism of Section~\ref{sec:growing-degree-size} removes the extreme hubs from the
-fluctuating state: the live-firm degree axis reaches only $k \approx 470$ although the graph's
-tail extends beyond $k \approx 3000$, so the most connected firms, where any correlation would be
-strongest, are absent from the measurement. A direct test on firm-level data with a known
-interaction network, where both restrictions could be lifted, remains open.
+Two qualifications matter. The pairwise measure averages over same-bin pairs that are almost all
+unconnected on the sparse graph, so it may understate correlations between direct trading partners.
+Moreover, the survival mechanism of Section~\ref{sec:growing-degree-size} removes the extreme
+hubs from the fluctuating state: the live-firm degree axis reaches only $k \approx 470$, although
+the graph tail extends beyond $k \approx 3000$. A direct test on firm-level data with a known
+interaction network would remove both restrictions.
 
 \begin{figure}[htbp]
     \centering

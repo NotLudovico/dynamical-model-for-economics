@@ -3,14 +3,14 @@
 
 \section{Integration}
 
-The relative model is integrated in physical time, the composition kept in its bounded
-variables and the scale carried in its logarithm, so that nothing overflows
-however large the economy becomes. Internally the solver evolves the shares
+The relative model is integrated in physical time, with the composition kept in bounded
+variables and the aggregate scale carried in its logarithm. This avoids numerical overflow despite
+exponential aggregate growth. Internally the solver evolves the shares
 $w_i = S_i/N$, which live on the probability simplex and are renormalized onto it at
 each output time; we integrate \eqref{eq:replicator} in this form
 together with $\mathrm{d}\ln m/\mathrm{d}t = g_{\mathrm{eff}}$ with an explicit
 Runge--Kutta solver throughout. At the system sizes reached in the text ($N$ up to
-$3.2\times10^4$) the implicit solvers tried first switched to a dense Jacobian and became
+$3.2\times10^4$) the implicit solvers we tried switched to a dense Jacobian and became
 prohibitively slow, whereas the explicit method integrates one run to $t = 250$ in about
 ten seconds at $N = 10^4$.
 
@@ -27,10 +27,9 @@ standard deviation for robustness against the fat tails of the growth rates.
 \section{Size--volatility fit}
 
 The immigration floor makes the smallest firms quiet, producing a plateau at the bottom
-of the size range. The size--volatility relation $\sigma(\bar S)$ is therefore fitted
-only over its power-law range, the monotone decline above that plateau, and we report the
-coefficient of determination $R^2$ of the fit rather than forcing a single slope across a
-shape that is not a power law. The exponent quoted in the text, $\beta = 0.45 \pm 0.06$, is
+of the size range. We therefore fit $\sigma(\bar S)$ only along the monotone decline above the
+plateau and report the coefficient of determination $R^2$, rather than impose one slope on a
+curve that is not a power law throughout. The exponent quoted in the text, $\beta = 0.45 \pm 0.06$, is
 the median and economy-to-economy standard deviation of this decline-branch slope over
 twenty independent disorder realizations at $N = 16000$; the spread is set by the disorder
 realization rather than the fit, whose pooled-decline $R^2$ is $0.99$. All exponents,
@@ -61,12 +60,11 @@ spread, and the median volatility saturates accordingly. The correlation time is
 on the same trajectories: the firm-averaged autocorrelation of $\ln S$ is $0.82$ at lag
 $1$, $0.54$ at lag $2$ and $0.18$ at lag $4$, a half-life of $2.3 \pm 0.3$ time units, so
 the flat range $\Delta t \le 1$ sits below half the correlation time and the drift sets
-in where $C(\Delta t)$ decays. The horizon is therefore part of
-the definition of $\beta$, as it is in the data, where the exponent is reported at the
-yearly horizon; the ratios $\zeta_q/\zeta_1$ carry no such dependence, one more sense in
-which they are the sharper diagnostic. Identifying the production horizon
-$\Delta t = 0.5$ with one year places the firm memory time at four to six years, and
-hides no tuning: every horizon below the correlation time returns the same exponent. The excess kurtosis falls from $9.2$ to $4.2$
+in where $C(\Delta t)$ decays. The horizon is therefore part of the definition of $\beta$, as it
+is in the data, where the exponent is reported at a yearly horizon. The ratios
+$\zeta_q/\zeta_1$ show no comparable dependence. Identifying the production horizon
+$\Delta t = 0.5$ with one year places the firm memory time at four to six years; every horizon
+below that time returns the same exponent. The excess kurtosis falls from $9.2$ to $4.2$
 over the same range as successive increments aggregate toward the Gaussian; the tent
 stays above the Laplace reference at every lag.
 

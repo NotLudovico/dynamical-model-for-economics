@@ -1,9 +1,12 @@
-"""Thesis Fig 2.2 (growing_growth_churn.png): a single own-degree run, growth + churn.
+"""Thesis Fig 2.2 (growing_growth_churn.png): a single mean-degree run, growth + churn.
 
-Verbatim port of the story.ipynb "live simulation" cell: one economy
-(N=3000, kind="powerlaw_owndeg", mu=1.76, sigma=1.75, lam=1e-3). Left: log10 M(t)
-rising linearly (exponential growth, no blow-up). Right: a 40-firm sample of relative
-sizes S_i = N w_i, fluctuating and exchanging rank. Teal-forward palette.
+One economy of the thesis model (mean-degree normalization, kind="powerlaw",
+N=8000, C=N/40=200, mu=-1.76, sigma=1.75, lam=1e-3) at the operating point. Left:
+log10 M(t) rising linearly (exponential growth, no blow-up). Right: a 40-firm sample
+of relative sizes S_i = N w_i, fluctuating and exchanging rank. Teal-forward palette.
+
+N=8000 is the floor at which every mean-degree realization persists (below it the
+standard normalization can collapse); the run is illustrative and normalization-insensitive.
 
     uv run python scripts/plot_growing_growth_churn.py
 """
@@ -21,7 +24,10 @@ os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 OUT = os.path.join(ROOT, "figures", "growing_growth_churn.png")
 plt.rcParams["axes.prop_cycle"] = cycler(color=["#2a9d8f", "#457b9d", "#e76f51", "#1d3557"])
 
-a = coupling(3000, mu=1.76, sigma=1.75, kind="powerlaw_owndeg", seed=1)
+N, C = 8000, 200                                  # mean-degree dilution C = N/40
+# mu=+1.76 in the code's coupling convention (alpha = mu/C + ...); the thesis reports
+# this operating point as mu=-1.76 under its competitive-is-negative sign convention.
+a = coupling(N, mu=1.76, sigma=1.75, kind="powerlaw", mean_degree=C, seed=1)
 r = integrate(a, tmax=400, n_eval=1000, lam=1e-3, seed=1,
               method="RK45", rtol=1e-4, atol=1e-7)
 
@@ -43,6 +49,7 @@ for i in sample:
     ax[1].plot(t, np.log10(np.maximum(N_sim * W[i], 1e-8)), lw=0.6, alpha=0.7)
 ax[1].set(xlabel="$t$", ylabel=r"$\log_{10} S_i$",
           title=r"Relative firm sizes $S_i = N w_i$ (40-firm sample) -- persistent churn")
+ax[1].set_ylim(bottom=-4)   # hide occasional dips to the 1e-8 log-floor clip
 
 plt.tight_layout()
 plt.savefig(OUT, dpi=140)

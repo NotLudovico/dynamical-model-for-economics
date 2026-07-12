@@ -18,10 +18,13 @@ Own-degree (`kind="powerlaw_owndeg"`) survives only as the contrast in
 | `meandeg_topology.png` | `data/meandeg_topology.npz` (5 topologies, N=8000; 16k stability in `data/meandeg_topology_16k.npz`) | ratios-by-topology + beta-by-topology panels (`notebooks/meandeg_topology.ipynb`) |
 | `meandeg_beta_vs_N.png` | `data/meandeg_beta_vs_N.npz` | copy of `data/meandeg_beta_vs_N.png` (finite-size: beta drift + converged zeta4/zeta1) |
 | `between_firm_corr.png` (appendix, correlations vs size/degree) | `data/between_firm_corr.npz` | `scripts/between_firm_correlations.py` (committed; market co-movement + same-bin pairwise corr, binned by size and degree; N=16000, 10 econ) |
+| `survival_by_degree.png` (appendix D, survival by degree) | `data/survival_by_degree_N10000.npz` (N=10000, 10 economies) | `scripts/survival_by_degree.py` (`SBD_N=10000 SBD_SEEDS=10 SBD_TAG=_N10000`) |
+| `reentry_by_degree.png` (appendix D, threshold re-entry by degree) | `data/reentry_by_degree_N10000.npz` (N=10000, 10 economies) | `scripts/reentry_by_degree.py` (`RBD_N=10000 RBD_SEEDS=10`) |
+| `size_distribution_N10000.png` (appendix E, firm-size distribution) | `data/size_distribution_N10000.npz` (N=10000, 10 economies) | `scripts/size_distribution.py` (`SD_N=10000 SD_SEEDS=10 SD_TAG=_N10000`) |
 | `meandeg_scaling_topology.png` (appendix B, finite-size beta/ratio vs N) | published tab:scaling values (hardcoded) + `data/scaling_lowN.npz` for the pl2.5 N=2k/4k points | `scripts/plot_scaling_topology.py` (committed). Low-N points from `scripts/scaling_lowN_splice.py` (`P_TOPOS=pl2.5 P_SEEDS=20`). NOTE: 8k/16k/32k are the patchwork published values, kept fixed; only pl2.5 extended to 2k/4k (pl2.2 freezes at small N — survival bias, not run). |
 | `phase_diagram.png` | (own-degree mapping, caption notes this) | unchanged |
 | `robustness_protocol.png` (App. numerics) | `data/appendix_robustness.npz` (10 econ, N=8000, C=200) | `scripts/appendix_robustness.py` (~4 min; `--replot` refigures from npz) |
-| `growing_growth_churn.png` | own-degree single run | unchanged — illustrates growth+churn, normalization-insensitive; regenerate mean-degree before final |
+| `growing_growth_churn.png` | mean-degree single run (N=8000, C=200, mu=+1.76 code / −1.76 thesis sign, seed=1) | `scripts/plot_growing_growth_churn.py` (regenerated 2026-07-13 mean-degree; g_eff≈0.11, 4096/8000 survivors) |
 
 ## Superseded by the 2026-07-10 revision (files kept, no longer referenced)
 

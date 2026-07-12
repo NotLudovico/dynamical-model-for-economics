@@ -7,8 +7,8 @@ a large collection of firms that each grow on their own and interact in pairs, w
 carrying its own logistic growth and self-limitation and every competitive or cooperative link a
 single entry of a signed interaction matrix. This is the natural model of a large disordered
 community, the same one used for interacting species in theoretical ecology \citep{may1972}. The standard form of these dynamics cannot represent
-a growing economy, and this chapter builds the model that can by changing the standard form one
-step at a time, fixing each defect as it appears. The result is then analysed in
+a growing economy for two reasons, and this chapter corrects each in turn to arrive at the model
+we use. The result is then analysed in
 Section~\ref{sec:model-phases}, where we locate the growing, fluctuating regime in which the
 firm-growth statistics of Chapter~\ref{chap:firmgrowth} are measured.
 
@@ -109,7 +109,15 @@ the engine of growth, while the interactions, now made relative, only regulate i
 The couplings retain the standard normalization \eqref{eq:coupling-global}: every edge is divided
 by the (realized) mean degree $C$, the same for every firm, exactly as in the disordered
 Lotka--Volterra literature. The graph is a configuration model with a power-law degree
-distribution of exponent $2.5$. On such a heterogeneous graph the standard normalization has a
+distribution of exponent $\alpha = 2.5$, built as follows: each firm draws a target degree
+$k_i = C\,\frac{\alpha-2}{\alpha-1}\,u_i^{-1/(\alpha-1)}$ rounded to the nearest integer, with
+$u_i$ uniform on $(0,1)$ --- the Pareto distribution with tail exponent $\alpha$ and mean $C$,
+whose support therefore starts at $k_{\min} = C\,\frac{\alpha-2}{\alpha-1}$, a third of the mean
+degree at $\alpha = 2.5$, so the ensemble contains no weakly connected firms; the sequence is
+wired by the configuration model and the graph made simple by deleting self-loops and merging
+multiple edges \citep{catanzaro2005,britton2006}, and the realized mean degree of the simple
+graph is the $C$ of the coupling normalization. The graphs of other exponents compared in
+Chapter~\ref{chap:firmgrowth} change only $\alpha$ in this construction. On such a heterogeneous graph the standard normalization has a
 consequence on which the results of Chapter~\ref{chap:firmgrowth} will turn: a firm with $k_i$
 neighbours sums $k_i$ independent couplings of variance $\sigma^2/C$, so the variance of the
 disorder field it feels grows with its own connectivity, $\mathrm{Var}\,h_i \propto k_i/C$. The
@@ -214,7 +222,7 @@ composition keeps turning over.
     \centering
     \includegraphics[width=\linewidth]{growing_growth_churn.png}
     \caption{A single run of the relative model \eqref{eq:relative-glv} at $\mu = -1.76$,
-    $\sigma = 1.75$, $\lambda = 10^{-3}$ on a power-law graph with $N = 6400$. \panel{Left}: the
+    $\sigma = 1.75$, $\lambda = 10^{-3}$ on a power-law graph with $N = 8000$. \panel{Left}: the
     total abundance grows exponentially in physical time, its logarithm rising
     linearly, with no finite-time divergence. \panel{Right}: a sample of relative firm sizes
     $S_i = x_i/m$, which keep fluctuating and exchanging rank rather than relaxing to a
