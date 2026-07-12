@@ -12,12 +12,14 @@ Own-degree (`kind="powerlaw_owndeg"`) survives only as the contrast in
 
 | thesis figure | source data | generator |
 |---|---|---|
-| `meandeg_stationary_msb.png` | `data/meandeg_characterize_N16000.npz` (20 econ, N=16000, C=400) | session script from npz (size-vol + tent panels; regenerate via `MC_N=16000 notebooks/meandeg_characterize.ipynb`) |
-| `meandeg_multiscaling.png` | same npz | moments + quenched ratio panels |
-| `meandeg_conditional.png` | same npz | copy of `data/meandeg_characterize_conditional_N16000.png` (D1/D3) |
+| `meandeg_stationary_msb.png` | `data/meandeg_characterize_N16000.npz` (20 econ, N=16000, C=400) | `scripts/thesis_meandeg_figures.py` (committed generator; splits the characterize npz into the thesis panels). Regenerate the npz first via `MC_N=16000 .venv/bin/jupyter nbconvert --execute notebooks/meandeg_characterize.ipynb`. Exponent switch: `RGLV_ALPHA_PL=2.2`. |
+| `meandeg_multiscaling.png` | same npz | `scripts/thesis_meandeg_figures.py` (moments + quenched ratio panels) |
+| `meandeg_conditional.png` | same npz | `scripts/thesis_meandeg_figures.py` (copies `_conditional_N16000.png`, D1/D3) |
 | `meandeg_topology.png` | `data/meandeg_topology.npz` (5 topologies, N=8000; 16k stability in `data/meandeg_topology_16k.npz`) | ratios-by-topology + beta-by-topology panels (`notebooks/meandeg_topology.ipynb`) |
 | `meandeg_beta_vs_N.png` | `data/meandeg_beta_vs_N.npz` | copy of `data/meandeg_beta_vs_N.png` (finite-size: beta drift + converged zeta4/zeta1) |
+| `meandeg_scaling_topology.png` (appendix B, finite-size beta/ratio vs N) | published tab:scaling values (hardcoded) + `data/scaling_lowN.npz` for the pl2.5 N=2k/4k points | `scripts/plot_scaling_topology.py` (committed). Low-N points from `scripts/scaling_lowN_splice.py` (`P_TOPOS=pl2.5 P_SEEDS=20`). NOTE: 8k/16k/32k are the patchwork published values, kept fixed; only pl2.5 extended to 2k/4k (pl2.2 freezes at small N — survival bias, not run). |
 | `phase_diagram.png` | (own-degree mapping, caption notes this) | unchanged |
+| `robustness_protocol.png` (App. numerics) | `data/appendix_robustness.npz` (10 econ, N=8000, C=200) | `scripts/appendix_robustness.py` (~4 min; `--replot` refigures from npz) |
 | `growing_growth_churn.png` | own-degree single run | unchanged — illustrates growth+churn, normalization-insensitive; regenerate mean-degree before final |
 
 ## Superseded by the 2026-07-10 revision (files kept, no longer referenced)

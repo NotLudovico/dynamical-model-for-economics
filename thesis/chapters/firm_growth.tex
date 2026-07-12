@@ -18,7 +18,11 @@ restricted to firms that persist across it.
 Two cautions, detailed in Appendix~\ref{app:numerics}, shape the measurement. The
 per-firm volatility is a mean-absolute-deviation estimator robust to the fat tails, and
 the size--volatility relation is fitted only over its power-law range, the decline above
-the small-firm plateau set by the immigration floor.
+the small-firm plateau set by the immigration floor. The same appendix varies the
+horizon $\Delta t$ and the solver tolerance. The moment ratios are insensitive to both;
+$\beta$ is stable for horizons up to the correlation time and drifts upward beyond it,
+and the kurtosis falls with the horizon throughout, so the values quoted below refer to
+the yearly horizon, as the empirical ones do.
 
 Figure~\ref{fig:growing-msb} shows both observables at the operating point
 $\mu = -1.76$, $\sigma = 1.75$ marked in Figure~\ref{fig:phase-diagram}, in the

@@ -37,6 +37,59 @@ realization rather than the fit, whose pooled-decline $R^2$ is $0.99$. All expon
 including the higher moments $\zeta_q$, are fitted per economy and averaged
 (Section~\ref{sec:growing-estimator}); pooled fits are quoted only for comparison.
 
+\section{Robustness of the measurement protocol}
+\label{sec:robustness-protocol}
+
+The protocol of Chapter~\ref{chap:firmgrowth} contains two arbitrary numerical choices:
+growth rates are read over the fixed horizon $\Delta t = 0.5$, and the trajectories are
+integrated at relative tolerance $10^{-4}$. This section varies both on the graph of the
+main text (power law $2.5$, $C = N/40$) at $N = 8000$, ten economies, and re-measures the
+three headline statistics: the size--volatility exponent $\beta$, the quenched moment
+ratios $\zeta_q/\zeta_1$, and the excess kurtosis of the growth-rate distribution.
+
+For the horizon, each economy is integrated once and stored at fine output resolution,
+and every $\Delta t$ from $0.25$ to $4$ is measured on the same trajectory, so any
+difference between the columns of Figure~\ref{fig:robustness-protocol} is an estimator
+effect and not a resampling of the dynamics. The moment ratios do not move: over a factor
+of sixteen in $\Delta t$ they stay at $1.86,\,2.55,\,3.1$ with every shift inside one
+standard error. The exponent is flat within the economy-to-economy spread up to
+$\Delta t = 1$ ($\beta = 0.40 \pm 0.07$ at $\Delta t = 0.25$ against $0.41 \pm 0.07$ at
+the production value) and then climbs steadily, $0.49 \pm 0.05$ at $\Delta t = 2$ to
+$0.58 \pm 0.06$ at $\Delta t = 4$: beyond the correlation time of the chaotic state the
+increments stop sampling the local diffusion and start sampling the firm's stationary
+spread, and the median volatility saturates accordingly. The correlation time is measured
+on the same trajectories: the firm-averaged autocorrelation of $\ln S$ is $0.82$ at lag
+$1$, $0.54$ at lag $2$ and $0.18$ at lag $4$, a half-life of $2.3 \pm 0.3$ time units, so
+the flat range $\Delta t \le 1$ sits below half the correlation time and the drift sets
+in where $C(\Delta t)$ decays. The horizon is therefore part of
+the definition of $\beta$, as it is in the data, where the exponent is reported at the
+yearly horizon; the ratios $\zeta_q/\zeta_1$ carry no such dependence, one more sense in
+which they are the sharper diagnostic. Identifying the production horizon
+$\Delta t = 0.5$ with one year places the firm memory time at four to six years, and
+hides no tuning: every horizon below the correlation time returns the same exponent. The excess kurtosis falls from $9.2$ to $4.2$
+over the same range as successive increments aggregate toward the Gaussian; the tent
+stays above the Laplace reference at every lag.
+
+For the tolerance, the first three economies are re-integrated at relative tolerance
+$10^{-6}$ (absolute $10^{-9}$) and measured at the production horizon. Individual
+trajectories in a chaotic state cannot coincide across tolerances; the statistics do.
+The per-economy exponents move from $0.59,\,0.47,\,0.41$ to $0.58,\,0.48,\,0.45$, a
+largest shift of $0.04$ against the $\pm 0.07$ spread between economies, and the moment
+ratios and kurtosis shift within their standard errors.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{robustness_protocol.png}
+    \caption{Dependence of the headline statistics on the observation lag $\Delta t$, ten
+    economies of $N = 8000$ ($C = 200$) at the operating point of the main text, all lags
+    measured on the same trajectories. \panel{Left}: the size--volatility exponent
+    $\beta$ (median and economy-to-economy standard deviation). \panel{Centre}: the
+    quenched moment ratios $\zeta_q/\zeta_1$ (mean and standard error). \panel{Right}:
+    excess kurtosis of the growth-rate distribution (median and spread), with the Laplace
+    reference at $3$. The dotted line marks the production value $\Delta t = 0.5$.}
+    \label{fig:robustness-protocol}
+\end{figure}
+
 \section{Code availability}
 
 The model, the measurement protocols described above, and a generator for every
