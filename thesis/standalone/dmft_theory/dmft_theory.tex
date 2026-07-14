@@ -4,12 +4,13 @@
 % and the closing \printbibliography/\end{document}, then \include this as a chapter.
 \documentclass{report}
 \usepackage{graphicx}
+\graphicspath{{../../assets/figures/}}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{placeins}
 \usepackage{hyperref}
 \usepackage[natbib=true]{biblatex}
-\addbibresource{bib.bib}
+\addbibresource{../../bib.bib}
 
 \newcommand{\Dz}{\mathcal{D}z}
 \newcommand{\E}{\mathbb{E}}
@@ -68,8 +69,8 @@ Subtracting this common scale leaves a closed equation for the relative abundanc
     g(t) = \langle yF\rangle ,
     \label{eq:dmft-replicator}
 \end{equation}
-which is a replicator equation, the simplex projection of \eqref{eq:dmft-glv} in the sense
-of Hofbauer's correspondence \citep{hofbauer81}. The aggregate is recovered from
+which is a replicator equation, obtained through the standard Lotka--Volterra-to-replicator
+transformation described by Hofbauer \citep{hofbauer81}. The aggregate is recovered from
 $M(t) = M(0)\exp\!\int_0^t g$, and a positive stationary $g$ is a steadily growing
 economy.
 
@@ -157,7 +158,7 @@ The disorder average is now carried by four functionals of the single-site law o
 \end{equation}
 The first is the normalisation, the middle two are the standard correlation and response
 that close the noise and the memory, and the last fixes the common drift. The closure for
-$g$ is forced rather than chosen: $\dot M_1 = \E[yF] - g M_1$, and demanding $\dot M_1 = 0$
+$g$ follows from the normalisation: $\dot M_1 = \E[yF] - g M_1$, and demanding $\dot M_1 = 0$
 at $M_1 = 1$ gives $g(t) = \E[yF]$. This is the structure of the solvable random-replicator
 model of \citet{diederich1989}, here carrying the GLV self-limitation as well.
 
@@ -209,7 +210,7 @@ At threshold the mean-square equation $v^2 = \sigma^2 w_2(\Delta)$ then forces $
 \begin{equation}
     \sigma_c = \sqrt 2 \qquad (\gamma = 0),
 \end{equation}
-the standard onset of the high-diversity fluctuating phase \citep{galla2018,roy2020}.
+the standard onset of the high-diversity fluctuating phase \citep{roy2020,mallmin2024}.
 Because $\Delta = 0$ at threshold, $\mu$ and $g^\ast$ drop out of the condition entirely:
 on the regular graph the boundary is independent of $\mu$, a horizontal line. This is the
 mean-field statement of a fact specific to the relative model. Since $\mu$ enters every
@@ -250,8 +251,8 @@ character is already visible, however: the noise $\eta$ in \eqref{eq:dmft-effect
 single common field, so the single-site description contains no genuine cross-firm
 correlation. Any nonzero $\beta$ it produces must therefore come from the single-firm
 mechanics, the self-limitation $-y$ and the memory, rather than from correlations between
-firms, which is the analytic counterpart of the observation that switching off the disorder
-removes the size-variance law \citep{moran2024}.
+firms, which is the analytic counterpart of the thesis's simulation result that switching off
+the disorder removes the size-variance law.
 
 \section{Numerical validation}
 \label{sec:dmft-validation}

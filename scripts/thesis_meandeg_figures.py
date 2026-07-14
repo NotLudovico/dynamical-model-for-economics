@@ -5,9 +5,9 @@ thesis-named PNGs, replacing the uncommitted "session script from npz" that FIGU
 The characterize 2x2 panels are split into two 2-panel thesis figures; the conditional figure
 is copied through.
 
-  thesis/meandeg_stationary_msb.png  <- size-volatility decline + growth tent
-  thesis/meandeg_multiscaling.png    <- higher moments + quenched multiscaling ratios
-  thesis/meandeg_conditional.png     <- copy of the characterize _conditional PNG (D1/D3)
+  thesis/assets/figures/meandeg_stationary_msb.png  <- size-volatility decline + growth tent
+  thesis/assets/figures/meandeg_multiscaling.png    <- higher moments + quenched multiscaling ratios
+  thesis/assets/figures/meandeg_conditional.png     <- copy of the characterize _conditional PNG (D1/D3)
 
 Usage:
   .venv/bin/python scripts/thesis_meandeg_figures.py            # TAG=_N16000 (default)
@@ -23,7 +23,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAG = os.environ.get("MC_TAG", "_N16000")
 NPZ = os.path.join(ROOT, "data", f"meandeg_characterize{TAG}.npz")
 COND_SRC = os.path.join(ROOT, "data", f"meandeg_characterize_conditional{TAG}.png")
-OUT = os.environ.get("THESIS_OUT", os.path.join(ROOT, "thesis"))
+OUT = os.environ.get("THESIS_OUT", os.path.join(ROOT, "thesis", "assets", "figures"))
 os.makedirs(OUT, exist_ok=True)
 
 QCOL = ["#1d3557", "#457b9d", "#e76f51", "#2a9d8f"]
@@ -85,7 +85,7 @@ plt.close(fig)
 # ---- Figure 3: conditional tests (D1/D3) -- copied from the characterize output ----------
 shutil.copyfile(COND_SRC, os.path.join(OUT, "meandeg_conditional.png"))
 
-print(f"wrote thesis/meandeg_stationary_msb.png, meandeg_multiscaling.png, "
+print(f"wrote thesis/assets/figures/meandeg_stationary_msb.png, meandeg_multiscaling.png, "
       f"meandeg_conditional.png  from {os.path.basename(NPZ)}")
 print(f"  beta={float(d['beta']):.3f}+-{float(d['beta_sd']):.3f}  "
       f"ratios(quenched)={np.round(d['ratio_quenched'], 3)}  "

@@ -12,3 +12,6 @@
 *.toc
 # generated PDFs (main + standalone builds); .tex sources stay tracked
 *.pdf
+
+# Figure assets are source-controlled despite the general image convention.
+!assets/figures/*.png

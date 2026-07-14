@@ -11,7 +11,7 @@ growth rates that GROWS with size. This measures it in the model, two ways, on t
 
 Both are read off the per-firm growth time series g (live firms x time) that size_volatility
 already returns. Quenched: computed per economy, then averaged. Saves data/between_firm_corr.npz
-and thesis/between_firm_corr.png.
+and thesis/assets/figures/between_firm_corr.png.
 
 Env: BFC_SEEDS (10), BFC_N (16000), BFC_NJOBS (6), BFC_SMOKE=1.
 """
@@ -129,5 +129,5 @@ for i, j, x, y, e, xl, yl, ti, c in panels:
     ax[i, j].axhline(0, color="0.7", lw=0.8, zorder=0)
     ax[i, j].set(xlabel=xl, ylabel=yl, title=ti)
 plt.tight_layout()
-fig.savefig("thesis/between_firm_corr.png", dpi=140)
-print("saved data/between_firm_corr.npz and thesis/between_firm_corr.png")
+fig.savefig("thesis/assets/figures/between_firm_corr.png", dpi=140)
+print("saved data/between_firm_corr.npz and thesis/assets/figures/between_firm_corr.png")

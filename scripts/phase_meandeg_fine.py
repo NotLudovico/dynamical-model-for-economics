@@ -1,4 +1,4 @@
-"""Fine-resolution PHASE diagram of the own-degree relative GLV (regime-coloured,
+"""Fine-resolution PHASE diagram of the mean-degree relative GLV (regime-coloured,
 not beta-coloured; mu<0 = competitive, thesis convention).
 
 Regimes: DIVERGENT (integration fails/explodes) / FROZEN (shares relax) /
@@ -6,12 +6,12 @@ SHRINKING (g_eff<0) / FLUCTUATING+GROWING (the MSB regime). Robust to exploding
 sims: per-seed wall-clock cap + finite-check + broad except -> bad runs become
 NaN (flagged divergent), never crash the job; per-row checkpoint to the npz.
 
-    uv run python scripts/phase_owndeg_fine.py            # compute (~2-3h) + plot
-    uv run python scripts/phase_owndeg_fine.py --plot     # replot from the npz
-    uv run python scripts/phase_owndeg_fine.py --smoke
-    uv run python scripts/phase_owndeg_fine.py --grid 20 --seeds 10   # finer + more seeds
+    uv run python scripts/phase_meandeg_fine.py            # compute (~2-3h) + plot
+    uv run python scripts/phase_meandeg_fine.py --plot     # replot from the npz
+    uv run python scripts/phase_meandeg_fine.py --smoke
+    uv run python scripts/phase_meandeg_fine.py --grid 20 --seeds 10   # finer + more seeds
 
---grid/--seeds write to a tagged npz+png (phase_owndeg_fine_<nS>x<nM>_<seeds>s.*), so the
+--grid/--seeds write to a tagged npz+png (phase_meandeg_fine_<nS>x<nM>_<seeds>s.*), so the
 banked default figure is never clobbered until you copy the new one over it.
 """
 import sys, os, time, signal
@@ -22,9 +22,10 @@ from relative_glv.model import coupling, integrate, growth_rate
 from relative_glv.msb import size_volatility
 
 DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
-NPZ = os.path.join(DATA, "phase_owndeg_fine.npz")
-PNG_OUT = os.path.join(DATA, "phase_owndeg_fine.png")
+NPZ = os.path.join(DATA, "phase_meandeg_fine.npz")
+PNG_OUT = os.path.join(DATA, "phase_meandeg_fine.png")
 N, LAM = 4000, 1e-3
+C = N // 40                                          # thesis dilution C = N/40
 TMAX, N_EVAL, LATE, DT = 400.0, 800, (320.0, 390.0), 0.5
 GRID = 14                                            # cells per axis (override with --grid)
 SIGMAS = np.round(np.linspace(1.40, 1.95, GRID), 4)
@@ -48,7 +49,7 @@ def run_one(sigma, mu, seed):
     signal.signal(signal.SIGALRM, _alarm)
     signal.alarm(TIMEOUT)
     try:
-        a = coupling(N, mu, sigma, kind="powerlaw_owndeg", seed=seed)
+        a = coupling(N, mu, sigma, kind="powerlaw", seed=seed, mean_degree=C)
         r = integrate(a, tmax=TMAX, n_eval=N_EVAL, lam=LAM, seed=seed,
                       method="RK45", rtol=1e-4, atol=1e-7)
         signal.alarm(0)
@@ -66,7 +67,7 @@ def compute():
     t0 = time.time()
     nS, nM = len(SIGMAS), len(MUS)
     raw = np.full((nS, nM, SEEDS, 5), np.nan)
-    print(f"[phase-fine] own-degree N={N} lam={LAM}  {nS}x{nM} grid x {SEEDS} seeds  "
+    print(f"[phase-fine] mean-degree N={N} C={C} lam={LAM}  {nS}x{nM} grid x {SEEDS} seeds  "
           f"(cap {TIMEOUT}s/seed, explosion-safe, per-row checkpoint)", flush=True)
     for i, s in enumerate(SIGMAS):
         for j, m in enumerate(MUS):
@@ -84,8 +85,6 @@ def plot():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.patches import Patch
-    from scipy.interpolate import RegularGridInterpolator
     d = np.load(NPZ)
     sig, mus, raw, op = d["sigmas"], d["mus"], d["raw"], d["op"]
     integ = np.isfinite(raw[..., 0]).mean(2)
@@ -120,7 +119,6 @@ def plot():
     fig, ax = plt.subplots(figsize=(8.8, 6.2))
     ax.pcolormesh(edges(mu_s), edges(sig), code_s, cmap=ListedColormap(COLS),
                   vmin=-0.5, vmax=3.5, shading="flat", edgecolors="white", linewidth=0.3)
-    COL = np.array([matplotlib.colors.to_rgb(c) for c in COLS])
 
     # grow/shrink boundary: g_eff=0 contour of the MEASURED grid (divergent cells = fast-growing)
     geff_s = geff[:, order].copy()
@@ -130,16 +128,17 @@ def plot():
     ax.scatter([-op[0]], [op[1]], marker="*", s=520, color="black", zorder=6)
     ax.set_xlabel(r"mean interaction  $\mu$   ($\mu<0$ competitive)", fontsize=12)
     ax.set_ylabel(r"interaction disorder  $\sigma$", fontsize=12)
-    ax.set_title(f"Phase diagram of the own-degree relative GLV  (N={int(d['N'])})", fontsize=12)
-    # label each region directly on the plot (no legend box)
+    ax.set_title(f"Phase diagram of the relative GLV  (N={int(d['N'])})", fontsize=12)
+    # label each region directly on the plot (no legend box); positions checked on the
+    # own-degree map -- reposition after the first mean-degree plot if regions moved.
     ax.text(-2.05, 1.45, "frozen", color="black", fontsize=12, ha="center", va="center")
     ax.text(-0.95, 1.71, "fluctuating\n+ growing\n(MSB)", color="white", fontsize=11,
             ha="center", va="center", weight="bold")
-    ax.text(-2.28, 1.73, "shrinking", color="white", fontsize=10.5, ha="center", va="center",
+    ax.text(-2.28, 1.80, "shrinking", color="white", fontsize=10.5, ha="center", va="center",
             weight="bold")
     ax.text(-0.45, 1.93, "divergent", color="white", fontsize=11, ha="center", va="center",
             weight="bold")
-    ax.text(-0.95, 1.46, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
+    ax.text(-1.30, 1.43, r"$g_{\rm eff}=0$", color="black", fontsize=10, ha="left", va="center")
     fig.tight_layout()
     fig.savefig(PNG_OUT, dpi=150, bbox_inches="tight")
     print(f"[phase-fine] figure -> {PNG_OUT}")
@@ -151,16 +150,21 @@ def _argval(flag, cast, default):
 
 if __name__ == "__main__":
     if "--smoke" in sys.argv:
-        SIGMAS = np.array([1.45, 1.7, 1.9]); MUS = np.array([0.0, 1.0, 2.0]); SEEDS = 2
+        SIGMAS = np.array([1.45, 1.7, 1.95]); MUS = np.array([0.0, 1.76, 2.5]); SEEDS = 2
+        NPZ = os.path.join(DATA, "phase_meandeg_fine_smoke.npz")
+        PNG_OUT = os.path.join(DATA, "phase_meandeg_fine_smoke.png")
     elif "--grid" in sys.argv or "--seeds" in sys.argv:
         GRID = _argval("--grid", int, GRID)
         SEEDS = _argval("--seeds", int, SEEDS)
-        SIGMAS = np.round(np.linspace(1.40, 1.95, GRID), 4)
+        # 4 extra sigma rows below 1.40 (same spacing) so the frozen band under
+        # sigma_c = sqrt(2) is visible at every mu
+        step = (1.95 - 1.40) / (GRID - 1)
+        SIGMAS = np.round(np.linspace(1.40 - 4 * step, 1.95, GRID + 4), 4)
         MUS = np.round(np.linspace(0.0, 2.5, GRID), 4)
         # tagged outputs so the banked default figure is never clobbered
         tag = f"_{len(SIGMAS)}x{len(MUS)}_{SEEDS}s"
-        NPZ = os.path.join(DATA, f"phase_owndeg_fine{tag}.npz")
-        PNG_OUT = os.path.join(DATA, f"phase_owndeg_fine{tag}.png")
+        NPZ = os.path.join(DATA, f"phase_meandeg_fine{tag}.npz")
+        PNG_OUT = os.path.join(DATA, f"phase_meandeg_fine{tag}.png")
     if "--plot" not in sys.argv:
         compute()
     plot()

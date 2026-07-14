@@ -58,24 +58,16 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
     kind="powerlaw": power-law configuration-model graph (exponent 2.5, mean
                      degree ~100), Roy disorder per edge, couplings normalised by
                      the GLOBAL mean degree C_eff. The realistic ensemble.
-    kind="powerlaw_owndeg": same graph, but each row normalised by its OWN degree
-                     k_i (a_ij = mu/k_i + (sigma/sqrt(k_i)) z_ij), so every firm's
-                     disorder field has the same variance regardless of degree --
-                     the principled per-fan-in (mean-field 1/sqrt(connectivity))
-                     scaling on a heterogeneous graph. Unlike mean-degree, this
-                     keeps the size-volatility exponent beta sustained as N->inf
-                     (mean-degree over-couples the hubs and washes beta to 0).
-                     gamma must be 0 (couplings are independent/asymmetric).
     kind="powerlaw_rowavg": EXPLORATORY variant. Same graph, but each interaction is the
                      AVERAGE of O(1) couplings over the k_i neighbours,
-                     a_ij = (mu + sigma z_ij)/k_i. Mean field mu (as owndeg) but the noise
+                     a_ij = (mu + sigma z_ij)/k_i. Mean field mu but the noise
                      self-averages as sigma/sqrt(k_i): the field variance falls as 1/k_i,
                      so hubs are QUIETER and degree DRIVES the size-volatility law
                      directly. gamma must be 0.
 
     mean_degree overrides the target mean degree (default ~100) for the powerlaw* kinds:
     lower C => sparser graph => each firm's field is a sum of fewer neighbours => fatter,
-    less-Gaussian fluctuations (own-degree departs from the fully-connected limit as C falls).
+    less-Gaussian fluctuations.
 
     min_degree optionally uses a shifted power law with a requested degree floor while
     retaining the target mean degree and tail exponent. The default None preserves the
@@ -105,22 +97,10 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
         rows = np.concatenate([ei, ej])
         cols = np.concatenate([ej, ei])
         return sparse.csr_array((np.concatenate([w_ij, w_ji]), (rows, cols)), shape=(N, N))
-    if kind == "powerlaw_owndeg":
-        if gamma != 0.0:
-            raise ValueError("powerlaw_owndeg supports only gamma=0 (asymmetric couplings)")
-        C = min(mean_degree or _MEAN_DEGREE, N - 1)
-        A = _powerlaw_adjacency(N, C, rng, seed, min_degree)
-        ki = np.diff(A.indptr).astype(float)          # each node's own degree (fan-in)
-        ki[ki == 0] = 1.0
-        coo = A.tocoo()
-        z = rng.normal(size=coo.row.size)
-        vals = mu / ki[coo.row] + (sigma / np.sqrt(ki[coo.row])) * z
-        return sparse.csr_array((vals, (coo.row, coo.col)), shape=(N, N))
     if kind == "powerlaw_rowavg":
         # Exploratory variant: interaction = AVERAGE of O(1) couplings over the k_i
-        # neighbours, a_ij = (mu + sigma z)/k_i. Same graph build as powerlaw_owndeg;
-        # differs ONLY in the noise prefactor (sigma/k_i, not sigma/sqrt(k_i)), so the
-        # field noise self-averages as ~k^-1/2 and hubs are quieter (degree-driven beta).
+        # neighbours, a_ij = (mu + sigma z)/k_i: the field noise self-averages as
+        # ~k^-1/2 and hubs are quieter (degree-driven beta).
         if gamma != 0.0:
             raise ValueError("powerlaw_rowavg supports only gamma=0 (asymmetric couplings)")
         C = min(mean_degree or _MEAN_DEGREE, N - 1)
@@ -133,7 +113,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
         return sparse.csr_array((vals, (coo.row, coo.col)), shape=(N, N))
     raise ValueError(
         f"unknown kind {kind!r} "
-        "(expected 'fc', 'powerlaw', 'powerlaw_owndeg' or 'powerlaw_rowavg')")
+        "(expected 'fc', 'powerlaw' or 'powerlaw_rowavg')")
 
 
 def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,

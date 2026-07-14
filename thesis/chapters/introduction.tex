@@ -1,12 +1,11 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-The natural baseline for firm growth is Gibrat's law of proportionate effect, which takes the
-growth of a firm over a period to be a random
-shock independent of its current size \citep{gibrat1931}, so that a firm's log-size follows a
-random walk and the average growth rate and its spread are the same at every size. Much of the empirical
-firm-growth literature is the study of where this baseline breaks \citep{sutton1997}, and it
-breaks in two definite ways that we take as our starting point.
+Gibrat's law of proportionate effect provides the standard baseline for firm growth. It treats
+growth over a fixed period as a random shock independent of the firm's current size
+\citep{gibrat1931}. A firm's log-size then follows a random walk, and both its average growth
+rate and its volatility are independent of size. Empirical work has identified two systematic
+departures from this baseline \citep{sutton1997}.
 
 The first is in the volatility of the growth rate. Measured year over year,
 a firm's growth volatility falls with its size as a power law,
@@ -15,16 +14,16 @@ a firm's growth volatility falls with its size as a power law,
   \label{eq:intro-sizevar}
 \end{equation}
 with a small exponent $\beta \approx 0.15$--$0.20$ that is stable across datasets
-\citep{stanley1996, amaral1997}. Gibrat's law makes the volatility independent of size,
-$\beta = 0$; a firm assembled from many independent parts would instead average them down to
-$\beta = 1/2$; the measured exponent lies between the two.
+\citep{stanley1996, amaral1997}. Under Gibrat's law, volatility does not depend on firm size,
+so $\beta = 0$. At the other extreme, a firm assembled from many independent parts would
+average their fluctuations down to $\beta = 1/2$. The measured exponent lies between these
+two benchmarks.
 
-The second is in the shape of the growth distribution. Independent multiplicative shocks would
-make it Gaussian, but the demeaned growth rate is instead sharply peaked and fat-tailed, close to
-the Laplace form \citep{stanley1996, bottazzi2006}, and it keeps that same shape within every
-size class of firms. We will refer to these two throughout as the
-size--variance law and the growth tent. A model of firm growth has to produce both, and the
-difficulty is to produce them together.
+The second concerns the shape of the growth distribution. Independent multiplicative shocks would
+produce a Gaussian distribution. Instead, the demeaned growth rate is sharply peaked and
+fat-tailed, close to the Laplace form \citep{stanley1996, bottazzi2006}, and retains this shape
+within every size class. We refer to these two observations as the size--variance law and the
+growth tent. A model of firm growth must account for both.
 
 \section{The granular explanation and where it fails}
 \label{sec:intro-granular}
@@ -72,21 +71,20 @@ $\sigma(S) \propto S^{-(1 - 1/\nu)}$, so
   \label{eq:intro-beta-nu}
 \end{equation}
 which lands anywhere between $0$ and $1/2$ as the tail runs from Zipf ($\nu \to 1$) to thin
-($\nu \to 2$). A heavy-tailed distribution of sub-unit sizes thus delivers both starting facts
-from a single assumption. It
-gives a variance that falls too slowly with size, and a growth distribution that stays
-fat-tailed because the sum in $g$ is carried by a handful of dominant units. A tail slightly
+($\nu \to 2$). This mechanism explains both observations. The variance falls too slowly with
+size, and the growth distribution stays fat-tailed because the sum in $g$ is carried by a
+handful of dominant units. A tail slightly
 above the Zipf value, $\nu \approx 1.2$, lands the size--variance exponent in the
-measured range. On the two facts we began with, the granular model works.
+measured range, and on the two facts we began with the granular model works.
 
 \subsection{Where it fails: conditioning on size}
 \label{sec:intro-granular-fail}
 
-Those two facts are \emph{marginal}: each averages over all firms of a given size, reporting a
-typical volatility and a pooled growth distribution. \citet{moran2024} sharpen the test by
-conditioning on size and asking about the whole distribution of growth and volatility within
-each size class, not merely its typical value. The granular composition makes definite
-predictions there, and on three of them the data break it.
+The two observations above are \emph{marginal}: each averages over all firms of a given size,
+reporting a typical volatility and a pooled growth distribution. \citet{moran2024} make a
+stronger test by conditioning on size and examining the full distribution of growth and
+volatility within each size class. The granular model makes definite predictions for these
+conditional distributions, and the data contradict three of them.
 
 First, a firm's growth rate divided by its own
 volatility is an average of the firm's
@@ -127,22 +125,21 @@ distribution. Whatever its asymptotic fate, the measured $q$-dependence is the o
 separates the data from the granular composition, and it is the one this thesis sets out to
 generate.
 
-From the three failures \citet{moran2024} conclude that the granular models lack a
-correlation the data possess: that the shocks hitting a firm become ``more and more correlated
-as its size increases, due either to supply chain effects affecting inputs or customers common
-to all sub-units''. The missing ingredient is a correlation that grows with firm size, and its
-proposed sources point at relations between firms rather than inside them.
+These failures led \citet{moran2024} to argue that the granular models lack a correlation
+present in the data: the shocks hitting a firm become ``more and more correlated as its size
+increases, due either to supply chain effects affecting inputs or customers common to all
+sub-units''. Both proposed sources involve relations between firms rather than correlations
+inside a firm.
 
 \section{A model of interacting firms}
 \label{sec:intro-move}
 
-Those sources (shared customers, common suppliers) are precisely the premise of the
-production-network account of the macroeconomy, and of the one existing network model of firm
-volatility (Chapter~\ref{chap:background}). The granular models cannot reach them: with no
-relation between firms at all, they are, in the phrase of \citet{moran2024}, ``island models''.
-We take the between-firm premise one level down, to the firm-growth statistics themselves,
-treating the firms as the interacting parts and the economy as the aggregate, and asking
-whether the interactions between firms can generate the size-conditioned statistics.
+Shared customers and common suppliers are central to the production-network account of the
+macroeconomy and to the existing network model of firm volatility (Chapter~\ref{chap:background}).
+The granular models cannot represent these links: firms are independent, or, in the phrase of
+\citet{moran2024}, they are ``island models''. We instead treat firms as the interacting parts
+and the economy as their aggregate, and ask whether interactions between firms can generate the
+size-conditioned statistics.
 
 Concretely, we model the economy as a network of interacting firms, each node a company and
 each edge a signed competitive or cooperative coupling, drawn at random into a disordered
@@ -159,23 +156,21 @@ injected external noise, while here they are generated by the disordered
 interactions themselves, in a persistently fluctuating state from which we read off the growth
 statistics of the firms. The model also adds a small immigration term, a
 firm-entry rate that keeps firms from reaching exact extinction.
-Total output then grows exponentially without diverging, and in the strongly disordered regime
-the composition of the economy keeps changing chaotically. It is in this
-state that the two facts appear together, and switching off the disorder removes both, so their
-origin lies in the interactions. The model recovers the
-anomalous multiscaling of the higher moments, the test the granular picture fails, and passes
-the other two size-conditioned tests of \citet{moran2024} as well; the size--variance exponent
-comes out with the right sign as a clean power law, its value set by the graph's degree tail,
-which brackets the empirical $0.15$--$0.20$ between $\beta \approx 0.45$ at tail exponent $2.5$,
-where the multiscaling ratios sit on the data, and $\beta = 0.21$ at exponent $2.2$, where the
-exponent reaches the band while the ratios run a few percent low.
-The thesis's sharpest finding is that the size-conditioned statistics are
-generated by the degree heterogeneity of the network. Under the standard dilute normalization a
-firm's noise variance grows with its connectivity, so the graph's degree distribution is printed
-onto the firm-level fluctuations; on homogeneous graphs the multiscaling vanishes exactly, and
-only a scale-free network reproduces the empirical curve. The network is the explanatory
-ingredient, the production-network premise carried down to the
-firm-growth statistics.
+Total output then grows exponentially without diverging, while the composition of the economy
+keeps changing chaotically. In this state, the two observations emerge together. Turning off
+the disorder removes both, which indicates that they are generated by the interactions. The
+model recovers the anomalous multiscaling of the higher moments and passes the other two
+size-conditioned tests of \citet{moran2024}. The size--variance relation is a power law that
+decreases with size, and its exponent is set by the tail of the graph's degree distribution:
+changing the tail exponent from $2.5$ to $2.2$ moves $\beta$ from $0.45$ to $0.21$, bracketing
+the empirical $0.15$--$0.20$. The multiscaling ratios match the data for the $2.5$ graph and
+are a few percent below the data for the $2.2$ graph.
+The relevant feature of the interactions is the
+degree heterogeneity of the network. Under the standard Lotka--Volterra normalization a
+firm's noise variance grows with its connectivity, so the graph's degree distribution determines
+the distribution of firm-level fluctuations. On homogeneous graphs the multiscaling vanishes
+exactly, and only a scale-free network reproduces the empirical curve. This is how the
+production-network structure enters the firm-growth statistics.
 
 The rest of the thesis is organized as follows. Chapter~\ref{chap:background} places the
 model in the two bodies of work it draws on, the compositional and scale-invariant models

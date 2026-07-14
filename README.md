@@ -1,6 +1,6 @@
 # relative-glv
 
-The relative (scale-invariant) generalised Lotka-Volterra model of firm growth. Interactions act on the mean firm, giving a self-consistently growing economy without finite-time blow-up. The model reproduces the stylized facts of firm-size dynamics observed in empirical firm-growth studies: a symmetric fat-tailed growth-rate distribution, and a size-variance relation whose form (volatility declining with size) matches real data, though not yet its exponent.
+The relative (scale-invariant) generalised Lotka-Volterra model of firm growth. Interactions act on the mean firm, giving a self-consistently growing economy without finite-time blow-up. The model reproduces the stylized facts of firm-size dynamics observed in empirical firm-growth studies: a symmetric fat-tailed growth-rate distribution, and a size-variance relation (volatility declining with size) matching real data.
 
 ## The Model
 
@@ -18,7 +18,7 @@ Here $x_i$ is the absolute size of firm $i$, $m$ is the mean firm size, $\alpha$
 
 - **Symmetric fat-tailed growth.** The distribution of firm-specific growth rates is symmetric around zero and fat-tailed (tent-shaped, closer to Laplace than Gaussian). See the notebook for growth distributions across parameter regimes.
 
-- **Size-variance exponent.** Firm growth volatility decays with firm size as $\sigma(S) \sim S^{-\beta}$. The own-degree model reproduces the *form* of this relation but with $\beta \approx 0.6$-0.8, about $3\times$ the empirical $\beta \approx 0.15$-0.20 observed by Moran, Santos, and Bouchaud. This gap is structural: it is robust to parameters, network degree, and demographic noise, matching the MSB argument that the empirical exponent needs size-growing correlations beyond a single-level interaction model.
+- **Size-variance exponent.** Firm growth volatility decays with firm size as $\sigma(S) \sim S^{-\beta}$, driven by the degree heterogeneity of the interaction graph under the standard (mean-degree) coupling normalization. Quenched per-economy fits at the operating point land in or near the empirical band $\beta \approx 0.15$-0.20 observed by Moran, Secchi, and Bouchaud; see the thesis for the estimator protocol and finite-size analysis.
 
 - **Phase transition.** The relaxed (single fixed point) to fluctuating (chaotic) phase boundary sits at $\sigma_c = \sqrt{2}$, independent of the mean competition $\mu$. Below it the relative sizes relax to a fixed point; above it they fluctuate persistently, and that fluctuating phase is where the MSB tent appears.
 
@@ -41,10 +41,9 @@ relative-glv/
     dmft.py                      DMFT solver: solve_fixed_point, sigma_c, solve_twotime
   scripts/
     compute.py                   Heavy compute: generate phase diagrams and validation data
-    phase_owndeg_fine.py         (mu, sigma) phase diagram, own-degree normalization
+    phase_meandeg_fine.py        (mu, sigma) phase diagram, mean-degree normalization
     survival_by_degree.py        Conditional survival probability by network degree
-    msb_conditional.py           MSB conditional statistics (D1/D2/D3) over many economies
-    plot_growing_*.py            Thesis main-text figure generators (see below)
+    plot_growing_growth_churn.py Thesis growth-churn figure generator
     plot_dmft_*.py               Thesis DMFT-appendix figure generators (see below)
   figures/                       Regenerable figure output (gitignored; canonical copies in the thesis)
   docs/
@@ -68,11 +67,8 @@ output lands in `figures/` (the canonical copies are committed in the thesis its
 
 | thesis figure | script |
 |---|---|
-| `phase_diagram.png` (main) | `scripts/phase_owndeg_fine.py` (own-degree, N=4000) |
+| `phase_diagram.png` (main) | `scripts/phase_meandeg_fine.py --grid 20 --seeds 10` (mean-degree, N=4000) |
 | `growing_growth_churn.png` | `scripts/plot_growing_growth_churn.py` |
-| `growing_stationary_msb.png` | `scripts/plot_growing_stationary_msb.py` |
-| `growing_multiscaling.png` | `scripts/plot_growing_multiscaling.py` (reads `data/msb_conditional.npz`) |
-| `growing_conditional.png` | `scripts/plot_growing_conditional.py` (reads `data/msb_conditional.npz`) |
 | `dmft_phase.png` (appendix) | `scripts/plot_dmft_phase.py` |
 | `dmft_validation.png` (appendix) | `scripts/plot_dmft_validation.py` |
 

@@ -3,13 +3,14 @@
 \usepackage{setspace}
 \setstretch{1.2} % gentle line-height bump; \onehalfspacing for the fuller 1.5
 \usepackage{graphicx} % Required for inserting images
+\graphicspath{{assets/figures/}}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{multirow}
 \usepackage{placeins}
 \usepackage{cancel}
 \usepackage{minted}
-\usepackage{hyperref}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage{xurl} % allow long URLs to break across lines (12pt made the repo URL overrun)
 \usepackage{microtype} % better justification; clears the minor 12pt line overruns
 \usepackage{listings}
@@ -38,16 +39,17 @@
 \newcommand{\panel}[1]{\underline{#1}}
 
 \begin{document}
+\hypersetup{pageanchor=false}
 
 \begin{titlepage}
 \centering
 
 % Logo: drop the official mark at thesis/polito_logo.pdf (preferred) or .png and it
 % appears automatically; the page builds fine without it.
-\IfFileExists{polito_logo.pdf}{%
-  \includegraphics[height=2.4cm]{polito_logo.pdf}\par\vspace{0.9cm}}{%
-  \IfFileExists{polito_logo.png}{%
-    \includegraphics[height=2.4cm]{polito_logo.png}\par\vspace{0.9cm}}{\vspace{0.4cm}}}
+\IfFileExists{assets/figures/polito_logo.pdf}{%
+  \includegraphics[height=2.4cm]{assets/figures/polito_logo.pdf}\par\vspace{0.9cm}}{%
+  \IfFileExists{assets/figures/polito_logo.png}{%
+    \includegraphics[height=2.4cm]{assets/figures/polito_logo.png}\par\vspace{0.9cm}}{\vspace{0.4cm}}}
 
 {\scshape\LARGE Politecnico di Torino\par}
 \vspace{0.45cm}
@@ -80,30 +82,29 @@
 \vspace{0.25cm}
 {\normalsize Academic Year 2025/2026\par}
 \end{titlepage}
-
-
-
+\clearpage
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
 
 \begin{abstract}
-Firm growth shows two robust anomalies: the volatility of a firm's growth rate falls
-slowly with size, $\sigma(S)\sim S^{-\beta}$
-with $\beta\approx0.15$--$0.20$, and the growth-rate distribution is
+Across datasets, the volatility of a firm's growth rate falls slowly with size,
+$\sigma(S)\sim S^{-\beta}$ with $\beta\approx0.15$--$0.20$, and its growth-rate distribution is
 fat-tailed. The standard explanation treats each firm as a collection of independently fluctuating
 sub-units with heavy-tailed sizes, so that both facts arise from the firm's internal
 composition. \citet{moran2024} find that firm data contradict this granular picture, and suggest
 that the shocks hitting a firm's sub-units must become more correlated as it
 grows. We ask instead
-whether a dynamical model of interacting firms can generate both facts on its own.
+whether a dynamical model of interacting firms can generate both on its own.
 
 We model the economy as a Generalized Lotka--Volterra system on a scale-free random graph, in
-which the interactions act on a firm's size relative to the average firm in order to
+which the interactions act on a firm's size relative to the average firm to
 make the dynamics scale-invariant. In the strongly disordered
-regime the economy's composition keeps churning chaotically, and in this persistently
-fluctuating state both facts emerge together as stationary properties of the
+regime the economy's composition keeps fluctuating chaotically, and in this persistently
+fluctuating state the two facts emerge together as stationary properties of the
 interactions, with no external noise. On the scale-free graph the normalized higher-moment
 exponents $\zeta_q/\zeta_1\approx1,\,1.84,\,2.51,\,3.02$ reproduce the anomalous multiscaling
-of the empirical $1,\,2.0,\,2.6,\,2.9$, and the size--variance relation is a clean power law
-with the empirical sign. Its exponent is set by the graph's degree tail, which brackets the
+of the empirical $1,\,2.0,\,2.6,\,2.9$, and the size--variance relation decreases with firm
+size, as in the data. Its exponent is set by the graph's degree tail, which brackets the
 empirical $0.15$--$0.20$: $\beta \approx 0.45$ at tail exponent $2.5$, where the ratios sit
 on the data, falling to $\beta = 0.21$ at exponent $2.2$, where it reaches the band while the
 ratios run a few percent low. The other facts \citet{moran2024} test against the
@@ -113,6 +114,17 @@ with firm size, hold in the model as well.
 
 \clearpage
 \tableofcontents
+
+\vfill
+\noindent\small\textit{During the preparation of this thesis, the author used
+AI-based tools (Anthropic's Claude) to assist with the development of
+simulation code and with language editing of the text. All scientific content,
+including the model design, analysis, and conclusions, is the author's own,
+and the author takes full responsibility for the content of this work.}
+\normalsize
+
+\clearpage
+\pagenumbering{arabic}
 
 \include{chapters/introduction}
 \include{chapters/background}

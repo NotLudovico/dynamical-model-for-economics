@@ -5,8 +5,8 @@ We model the economy as a network of interacting firms whose sizes evolve by Gen
 Lotka--Volterra dynamics. We choose these dynamics because they are the least we can assume about
 a large collection of firms that each grow on their own and interact in pairs, with every firm
 carrying its own logistic growth and self-limitation and every competitive or cooperative link a
-single entry of a signed interaction matrix. This is the natural model of a large disordered
-community, the same one used for interacting species in theoretical ecology \citep{may1972}. The standard form of these dynamics cannot represent
+single entry of a signed interaction matrix. This is a standard model of a large disordered
+community in theoretical ecology \citep{bunin2017}. The standard form of these dynamics cannot represent
 a growing economy for two reasons, and this chapter corrects each in turn to arrive at the model
 we use. The result is then analysed in
 Section~\ref{sec:model-phases}, where we locate the growing, fluctuating regime in which the
@@ -15,7 +15,7 @@ firm-growth statistics of Chapter~\ref{chap:firmgrowth} are measured.
 \section{From Lotka--Volterra to the relative model}
 \label{sec:relative-model}
 
-\subsection{The starting point and why it fails}
+\subsection{The starting point}
 \label{sec:starting-point}
 
 We take as our starting point the Generalized Lotka--Volterra (GLV) system for $N$ firms. Each
@@ -41,7 +41,7 @@ stays of order one as the graph is made denser, since a firm with about $C$ neig
 mean of order $C \cdot \mu/C = \mu$ and, summing $C$ independent random terms, a spread of order
 $\sqrt{C}\,\sigma/\sqrt{C} = \sigma$.
 
-Equation~\eqref{eq:abs-glv} cannot serve as it stands, and it fails for two reasons. The first is
+Equation~\eqref{eq:abs-glv} fails for two reasons, and the first is
 that it carries an absolute scale of size that an economy does not have, since the self-limitation
 $-x_i$ caps an isolated firm at $x_i = 1$ and the quadratic interaction fixes once and for all the
 size at which growth, competition and self-limitation balance. A real economy has no such
@@ -50,7 +50,7 @@ distribution of firm sizes and the statistics of their growth stayed essentially
 the dynamics should be invariant under a rescaling $x \to c\,x$ of the whole economy, which
 \eqref{eq:abs-glv} is not. The absolute model can be made to grow without bound, but only by
 tuning the cooperation to the critical strength at which its bounded fixed point disappears, and
-there the total abundance diverges in finite time rather than growing steadily.
+even there the total abundance diverges in finite time.
 
 The second reason is that even at that point the absolute model delivers only one of the two
 firm-growth facts we are after, since it reproduces the fat-tailed growth-rate distribution on
@@ -68,10 +68,12 @@ and while the growth term $x_i$ already is, the self-limitation $x_i^2$ and the 
 $x_i (Wx)_i$ are both of degree two. To bring them back to degree one we divide each by a quantity
 that scales like a size, and the natural one is the average firm $m = \langle x\rangle$, the
 typical firm that each one competes against. The chaotic flow also drives some firms to
-zero size, where they stay, so as is
-standard in the disordered Lotka--Volterra literature \citep{bunin2017,roy2020} we add a small
-immigration term, an entry flow of small firms at a rate set by the size of the economy itself,
-which prevents exact extinction. The model of this thesis is then, in its entirety,
+zero size, which is a fixed point of the dynamics, so we add a small immigration term, as
+migration-supported formulations of disordered ecological models do for the same reason
+\citep{bunin2017,arnouxbunin2024}. The constant flux used there would break the scale
+invariance, so here the entry flow of small firms is set by the size of the economy itself,
+which prevents exact extinction, and since the term sums to zero over firms it redistributes
+size without adding to the total. The model of this thesis is then
 \begin{equation}
     \dot{x}_i \;=\; x_i \left( 1 - \frac{x_i}{m} + \frac{(Wx)_i}{m} \right)
     \;+\; \lambda\,( m - x_i ),
@@ -111,7 +113,7 @@ by the (realized) mean degree $C$, the same for every firm, exactly as in the di
 Lotka--Volterra literature. The graph is a configuration model with a power-law degree
 distribution of exponent $\alpha = 2.5$, built as follows: each firm draws a target degree
 $k_i = C\,\frac{\alpha-2}{\alpha-1}\,u_i^{-1/(\alpha-1)}$ rounded to the nearest integer, with
-$u_i$ uniform on $(0,1)$ --- the Pareto distribution with tail exponent $\alpha$ and mean $C$,
+$u_i$ uniform on $(0,1)$, the Pareto distribution with tail exponent $\alpha$ and mean $C$,
 whose support therefore starts at $k_{\min} = C\,\frac{\alpha-2}{\alpha-1}$, a third of the mean
 degree at $\alpha = 2.5$, so the ensemble contains no weakly connected firms; the sequence is
 wired by the configuration model and the graph made simple by deleting self-loops and merging
@@ -120,25 +122,21 @@ graph is the $C$ of the coupling normalization. The graphs of other exponents co
 Chapter~\ref{chap:firmgrowth} change only $\alpha$ in this construction. On such a heterogeneous graph the standard normalization has a
 consequence on which the results of Chapter~\ref{chap:firmgrowth} will turn: a firm with $k_i$
 neighbours sums $k_i$ independent couplings of variance $\sigma^2/C$, so the variance of the
-disorder field it feels grows with its own connectivity, $\mathrm{Var}\,h_i \propto k_i/C$. The
-degree distribution of the graph is thereby printed onto the distribution of firm-level
-noise (hubs live in louder environments), and this is one channel through which the
-topology reaches the firm-growth statistics; a second, the coherent competitive
-pressure that also grows with a firm's degree, surfaces in the survival analysis of
-Section~\ref{sec:growing-degree-size}. (An alternative, which an earlier stage of
-this work explored, normalizes each firm by its own degree,
-$\alpha_{ij} = \mu/k_i + (\sigma/\sqrt{k_i})\,z_{ij}$, equalizing the field variance
-across firms; Chapter~\ref{chap:firmgrowth} shows that this cancels the graph out of the
-size-conditioned statistics and with it the multiscaling, so we set it aside.)
+disorder field it feels grows with its own connectivity, $\mathrm{Var}\,h_i \propto k_i/C$. A firm
+with more neighbours thus sits in a noisier environment, and the degree distribution of the
+graph sets the distribution of noise levels across firms. This is one way the topology
+enters the firm-growth statistics, and a second, the coherent competitive pressure that
+also grows with a firm's degree, appears in the survival analysis of
+Section~\ref{sec:growing-degree-size}.
 
 Under the standard normalization the mean degree must scale with the system,
-$C \propto N$, the usual dilute-coupling prescription whose fully-connected limit is the
+$C \propto N$, the standard Lotka--Volterra normalization whose fully-connected limit is the
 $C = N$ Gaussian ensemble; we hold the dilution fixed at $C = N/40$. On the power-law
 graph this keeps the whole degree hierarchy at fixed fractions of $N$: the largest hub
 saturates the natural cutoff at $k \approx N$, and the over-coupling of the hubs relative
 to the mean, of order $k_{\max}/C = N/C$, stays finite as the economy grows. At fixed $C$,
-by contrast, the hub over-coupling grows without bound and the size--variance law washes
-out with system size.
+by contrast, the hub over-coupling grows without bound and the size--variance exponent
+falls toward zero as $N$ grows.
 
 \subsection{A convenient change of variables}
 \label{sec:growth-churn}
@@ -151,10 +149,9 @@ economy, and each firm's size in units of that scale,
 \end{equation}
 where $\langle\,\cdot\,\rangle$ denotes the average over firms. The relative sizes carry
 the composition of the economy, their mean pinned to one by construction, and the average
-firm $m$ carries its overall scale. The split separates the two things the model does, and
-no system-size factor appears in either piece.
+firm $m$ carries its overall scale.
 
-The scale grows steadily. Averaging \eqref{eq:relative-glv} over firms, the immigration
+Averaging \eqref{eq:relative-glv} over firms, the immigration
 term drops (it conserves the total), and
 \begin{equation}
     \dot{m} = m\, g_{\mathrm{eff}},
@@ -171,7 +168,7 @@ growth, with no singularity. The rate
 $g_{\mathrm{eff}}$ fluctuates as the composition churns, but its time-average is a small
 positive constant, so $\log m$ climbs at a steady slope over unbounded time.
 
-The composition, by contrast, never settles. From \eqref{eq:relative-glv} and the quotient
+While the scale climbs, the composition never settles. From \eqref{eq:relative-glv} and the quotient
 rule the relative sizes obey
 \begin{equation}
     \begin{gathered}
@@ -187,16 +184,17 @@ grows at the average fitness of its firms. This is a
 replicator equation, the canonical description of frequency-dependent selection in which a
 firm gains relative size precisely when its fitness exceeds the market average, plus the
 immigration flow pulling each firm toward the mean size one; it is
-the standard correspondence between Lotka--Volterra and replicator dynamics
+the standard Lotka--Volterra-to-replicator transformation described by Hofbauer
 \citep{hofbauer81}. Note that $N$ appears nowhere in
 \eqref{eq:Mdot-relative}--\eqref{eq:replicator}: the number of firms enters the model only
 through the construction of the couplings (the graph and its mean degree $C = N/40$) and
 as the number of degrees of freedom, not through the form of the dynamics.
 Because the relative model does not blow up, these equations are written in the same
 physical time $t$ in which
-$m$ grows, with no time rescaling. Above the disorder threshold $\sigma_c$
-\citep{diederich1989,opperdiederich1992} the replicator flow does not relax to a fixed
-point but stays chaotic, so
+$m$ grows, with no time rescaling. The random-replicator literature identifies the instability
+of the fixed point above a disorder threshold \citep{diederich1989,opperdiederich1992}; in the
+high-diversity GLV phase the resulting dynamics remain persistently fluctuating and chaotic
+\citep{roy2020,mallmin2024}, so
 the growth rates never vanish, which is the persistently fluctuating state we needed.
 
 The numerical payoff of the split is that we can integrate \eqref{eq:replicator}
@@ -214,7 +212,7 @@ exponential growth
 of \eqref{eq:Mdot-relative}, with no sign of a blow-up. The relative firm sizes
 $S_i = x_i/m$ (right) do not settle; after an initial transient they
 keep exchanging rank and spanning orders
-of magnitude, the persistent chaos of the $\sigma > \sigma_c$ phase. The economy grows
+of magnitude, the persistent chaos of the fluctuating phase. The economy grows
 while its
 composition keeps turning over.
 
@@ -233,12 +231,11 @@ composition keeps turning over.
 \section{Phases of the model}
 \label{sec:model-phases}
 
-Before measuring the firm-growth statistics it helps to see where in parameter space the
-growing, fluctuating state lives. Figure~\ref{fig:phase-diagram} maps the behaviour of the model
+Figure~\ref{fig:phase-diagram} maps the behaviour of the model
 over the plane of the mean interaction $\mu$ and the disorder $\sigma$, classified from the
-late-time dynamics of many graph realizations. Two genuine transitions organize it. The
-dynamical threshold $\sigma_c$ separates a frozen regime below, where the shape
-relaxes to a fixed point and the growth rates vanish, from the chaotic regime above, where it
+late-time dynamics of many graph realizations, and two transitions organize it. A dynamical
+transition separates the frozen region, where the shape relaxes to a fixed point and the
+growth rates vanish, from the fluctuating region, where it
 never settles. Cutting across it, the line $g_{\mathrm{eff}} = 0$ separates a growing economy
 from a shrinking one. Where the competition is strong and the disorder high, coexistence
 collapses and the dynamics either condense onto a few firms or grow explosively.
@@ -246,17 +243,18 @@ collapses and the dynamics either condense onto a few firms or grow explosively.
 The regime we want is pinned down by three things the data demand, and each one rules out part of
 the plane. The economy must grow, since output has risen for two centuries, which requires
 $g_{\mathrm{eff}} > 0$ and discards the whole shrinking half below the $g_{\mathrm{eff}} = 0$ line.
-Its firms must keep growing period after period, so that firm growth is a stationary statistic
-rather than a one-off event, and this requires the chaotic phase above $\sigma_c$, since in the
-frozen phase below it the shape relaxes to a fixed point and every growth rate vanishes, leaving
+Its firms must keep growing period after period, so that firm growth is a stationary statistic,
+and this requires the fluctuating phase, since in the
+frozen phase the shape relaxes to a fixed point and every growth rate vanishes, leaving
 the same transient size--variance relation that already ruled out the absolute model. The economy
 must also stay diverse, a whole distribution of coexisting firms, which discards the
 strong-competition, high-disorder corner where coexistence collapses onto a handful of firms or
 the sizes diverge. What survives all three demands is the chaotic, growing band, where the model reproduces the
 empirical firm-growth statistics of Moran, Secchi and Bouchaud \citep{moran2024}, the region
-labelled MSB in Figure~\ref{fig:phase-diagram}. It is the wedge bounded below by $\sigma_c$, on
+labelled MSB in Figure~\ref{fig:phase-diagram}. It is the wedge bounded below by the frozen
+region, on
 the competitive side by the $g_{\mathrm{eff}} = 0$ line, and on the strong-disorder side by the
-condensed corner. It is an extended region rather than an isolated point, so what follows
+condensed corner. It is an extended region, so what follows
 describes the behaviour of the model and not a single tuned operating point.
 
 \begin{figure}[htbp]
@@ -264,30 +262,36 @@ describes the behaviour of the model and not a single tuned operating point.
     \includegraphics[width=\linewidth]{phase_diagram.png}
     \caption{Phase diagram of the relative model \eqref{eq:relative-glv}, over the mean
     interaction $\mu$ (competitive for $\mu < 0$)
-    and the disorder $\sigma$, classified from the late-time dynamics ($N = 4000$, a
-    $20 \times 20$ grid with ten realizations per cell). The diagram was mapped under the
-    per-firm normalization noted in Section~\ref{sec:completing-model}; under the standard
-    normalization used throughout this thesis the same qualitative structure holds but the
-    fluctuating band is somewhat narrower: at the operating point every realization at
-    $N \ge 8000$ persists (Chapter~\ref{chap:firmgrowth}), while stronger disorder
-    ($\sigma = 2.0$) already loses most realizations to the collapsed corner. At low disorder the shape relaxes and nothing fluctuates
-    (frozen). Above it the dynamics are chaotic, and the solid black line marks the growth
+    and the disorder $\sigma$, classified from the late-time dynamics on the power-law
+    configuration-model graph of this section (tail exponent $2.5$, mean degree
+    $C = N/40$; $N = 4000$, a $24 \times 20$ grid with ten realizations per cell, each
+    drawing its own graph and couplings). At low disorder the shape relaxes and nothing fluctuates
+    (frozen); the freezing threshold rises with the competition strength, from
+    $\sigma \approx 1.3$ at weak competition to $\sigma \approx 1.7$ at $\mu = -2.5$,
+    because the coherent competitive load $\mu\,k_i/C$ grows with degree and a stronger
+    deterministic fitness gradient takes more disorder to destabilize. Above the
+    threshold the dynamics are chaotic, and the solid black line marks the growth
     boundary $g_{\mathrm{eff}} = 0$, which separates the shrinking region ($g_{\mathrm{eff}}
     < 0$) from the fluctuating, growing band in which the firm-growth statistics are
     measured (blue, labelled MSB, for Moran--Secchi--Bouchaud). The band is bounded below by the
-    freezing line, on the competitive side by $g_{\mathrm{eff}} = 0$, and in the strong-disorder corner by the
+    freezing line, on the competitive side by $g_{\mathrm{eff}} = 0$, and in the
+    weak-competition, strong-disorder corner by the
     explosive, divergent region. The star marks the operating point $\mu = -1.76$,
-    $\sigma = 1.75$. The band is an extended region rather than a single point.}
+    $\sigma = 1.75$.}
     \label{fig:phase-diagram}
 \end{figure}
 
 This phase structure has a mean-field underpinning. The relative model
 \eqref{eq:relative-glv} is a disordered replicator equation, and its dynamical mean-field theory,
 worked out in Appendix~\ref{app:dmft}, reduces the $N$-firm dynamics to a single representative
-firm in a self-consistent Gaussian field. This is the standard replicator mean-field
-\citep{galla2018,roy2020}, whose chaos transition is the mean-field counterpart of the freezing
-line. Below it the shape relaxes to a fixed point and the growth rates vanish, above it the flow
-never settles. The mean interaction enters every firm's fitness as the same uniform shift, so it
-cancels from the replicator and only sets the level of the growth rate $g_{\mathrm{eff}}$, moving
-the $g_{\mathrm{eff}} = 0$ line but not the freezing threshold. We locate the threshold and
-measure the firm-growth statistics directly from the simulations.
+firm in a self-consistent Gaussian field. This construction is related to the effective-process
+treatments of random Lotka--Volterra systems in \citet{galla2018,roy2020}, although their
+model-specific assumptions differ from those of the relative model. We locate the freezing
+threshold directly from simulations: below it the shape relaxes to a fixed point and the growth
+rates vanish, while above it the flow never settles.  On a regular graph the mean interaction is
+the same uniform fitness shift for every firm and cancels from the replicator, giving the
+homogeneous benchmark $\sigma_c=\sqrt2$.  On the power-law graph, however, the coherent load
+scales as $\mu k_i/C$ and is not uniform.  The structural-cutoff HDMFT of
+Appendix~\ref{app:dmft} therefore predicts a competition-dependent curve $\sigma_c(\mu)$,
+consistent with the bending of the measured freezing boundary.  The threshold and the
+firm-growth statistics reported here are measured directly from the simulations.

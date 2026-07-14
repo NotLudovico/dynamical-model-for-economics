@@ -3,146 +3,397 @@
 \providecommand{\Dz}{\mathcal{D}z}
 \providecommand{\E}{\mathbb{E}}
 
-This appendix derives a dynamical mean-field theory (DMFT) for the scale-invariant model of
-the growing-economy chapter, where interactions act on the average firm rather than on absolute
-abundances. The model reduces to a disordered replicator equation. Its DMFT is therefore the
-heterogeneous single-site process used to locate $\mu_c$ by \citet{aguirrelopez}, with two
-additions required by scale invariance. We derive the reduction, the effective single-site process,
-and the associated self-consistency conditions.
+This appendix derives a heterogeneous dynamical mean-field theory (HDMFT) for the scale-invariant
+model of the growing-economy chapter.  The derivation starts from the absolute sizes $x_i(t)$ and
+keeps their time-dependent mean $m(t)$ explicit.  Only after deriving the coupled equations for
+$m(t)$ and the relative sizes $S_i(t)=x_i(t)/m(t)$ do we apply the network HDMFT of
+\citet{aguirrelopez} and its structural-cutoff extension by \citet{patil2026}.  The result is a
+degree-resolved stochastic process coupled through the full degree-to-degree connection kernel.
+The regular fully connected theory, including $\sigma_c=\sqrt{2}$, is recovered as a one-class
+limit rather than assumed for the power-law graph.
+
+We retain $\lambda$ during the exact change of variables and in the time-dependent effective
+process.  We set $\lambda=0$ only when deriving the clipped-Gaussian fixed point and its linear
+stability.  The numerical model uses $\lambda=10^{-3}$, whose effect on the phase boundary can
+therefore be tested separately from degree heterogeneity.
 
 \section{The model and its reduction to a replicator}
 \label{sec:dmft-model}
 
-We take the relative GLV in the competition convention used in the simulations,
+Write the relative GLV in a competition-positive convention,
 \begin{equation}
-    \dot x_i = x_i\left[\,1 - \frac{x_i}{m} - \frac{(\alpha x)_i}{m}\,\right],
-    \qquad m = \frac1N\sum_j x_j = \frac MN ,
+    \dot x_i
+    =x_i\left[1-\frac{x_i}{m(t)}-\frac{(\beta x)_i}{m(t)}\right]
+      +\lambda\bigl[m(t)-x_i\bigr],
+    \qquad
+    m(t)=\frac1N\sum_{j=1}^N x_j(t),
     \label{eq:dmft-glv}
 \end{equation}
 with couplings on a graph of mean degree $C$,
 \begin{equation}
-    \alpha_{ij} = A_{ij}\Big(-\frac{\mu}{C} + \frac{\sigma}{\sqrt C}\,z_{ij}\Big),\qquad
-    z_{ij}\sim\mathcal N(0,1),\qquad \overline{z_{ij}z_{ji}} = \gamma,\qquad \alpha_{ii}=0 .
+    \beta_{ij}=A_{ij}\left(\frac{\mu_{\rm c}}{C}
+                  +\frac{\sigma}{\sqrt C}z_{ij}\right),
+    \qquad z_{ij}\sim\mathcal N(0,1),\qquad
+    \overline{z_{ij}z_{ji}}=\gamma .
+    \label{eq:dmft-couplings}
 \end{equation}
-This layout differs from \eqref{eq:relative-glv} and \eqref{eq:coupling-global} by two
-compensating sign flips (the interaction is subtracted and the mean coupling written
-$-\mu/C$), so $\mu$ is the same parameter in both, competitive at the operating point
-$\mu = -1.76$.
-Both the self-limitation $x_i/m$ and the interaction $(\alpha x)_i/m$ are divided by the
-population mean $m$. The right-hand side of \eqref{eq:dmft-glv} is then homogeneous of
-degree one in $x$, so the bracket $F_i := 1 - x_i/m - (\alpha x)_i/m$ depends on $x$ only
-through ratios. The overall scale is a free direction that grows or decays exponentially
-without the finite-time blow-up of the absolute model.
+Here $\mu_{\rm c}>0$ means competition.  It is related to the sign convention of the main text by
+$\mu_{\rm c}=-\mu$, so the operating point $\mu=-1.76$ is $\mu_{\rm c}=1.76$ in this appendix.
+Equivalently, $\beta=-W$.  This notation matches the convention of \citet{patil2026} and avoids
+carrying two compensating minus signs through the derivation.
 
-Introduce the relative abundances $y_i = x_i/m$, which satisfy $\langle y\rangle :=
-\frac1N\sum_i y_i = 1$ by construction, and let $M = \sum_j x_j$ be the total. The
-aggregate grows at the population-averaged fitness,
+Define the time-dependent relative size
 \begin{equation}
-    g(t) := \frac{d\ln M}{dt}
-          = \frac1M\sum_j \dot x_j = \sum_j \frac{x_j}{M}\,F_j
-          = \frac1N\sum_j y_j F_j = \langle yF\rangle .
+    S_i(t):=\frac{x_i(t)}{m(t)},
+    \qquad \frac1N\sum_i S_i(t)=1.
+    \label{eq:dmft-relative-size}
+\end{equation}
+Because $m$ is a function of time, differentiating $x_i=mS_i$ gives
+\begin{equation}
+    \dot x_i(t)=\dot m(t)S_i(t)+m(t)\dot S_i(t).
+    \label{eq:dmft-product-rule}
+\end{equation}
+Substituting $x_i=mS_i$ into \eqref{eq:dmft-glv} removes $m(t)$ from every ratio,
+\begin{equation}
+    \dot m\,S_i+m\dot S_i
+    =mS_i\bigl[1-S_i-(\beta S)_i\bigr]
+     +\lambda m(1-S_i).
+    \label{eq:dmft-before-average}
+\end{equation}
+Now average this identity over firms.  Since $\langle S\rangle=1$, $\langle\dot S\rangle=0$,
+and the immigration term has zero mean, one obtains
+\begin{align}
+    \dot m(t)
+      &=m(t)\left\langle S_i(t)
+          \bigl[1-S_i(t)-(\beta S(t))_i\bigr]\right\rangle_i,
+          \label{eq:dmft-mdot-step}\\
+    \frac{\dot m(t)}{m(t)}
+      &=:g(t)=\langle S(t)F(t)\rangle,
+    \qquad F_i(t):=1-S_i(t)-(\beta S(t))_i.
     \label{eq:dmft-g}
-\end{equation}
-Subtracting this common scale leaves a closed equation for the relative abundances,
-\begin{equation}
-    \dot y_i = y_i\big(F_i - g(t)\big),\qquad
-    F_i = 1 - y_i - (\alpha y)_i,\qquad
-    g(t) = \langle yF\rangle ,
-    \label{eq:dmft-replicator}
-\end{equation}
-which is a replicator equation, the simplex projection of \eqref{eq:dmft-glv} in the sense
-of Hofbauer's correspondence \citep{hofbauer81}. The aggregate is recovered from
-$M(t) = M(0)\exp\!\int_0^t g$, and a positive stationary $g$ is a steadily growing
-economy.
-
-\paragraph{What the $-g(t)$ term is.}
-The drift $-g(t)$ in \eqref{eq:dmft-replicator} is the mean-fitness subtraction of the
-replicator, and it is the term that turns the equation for absolute size into one for
-relative size. From \eqref{eq:dmft-g}, $g(t) = \langle yF\rangle = \sum_j w_j F_j$ is the
-share-weighted average fitness of the whole economy, with shares $w_j = y_j/N = x_j/M$,
-and it equals the growth rate of the aggregate, $g(t) = d\ln M/dt$. Every firm feels the
-same $g(t)$: it is a global field rather than something private to firm $i$. A firm therefore
-gains relative size, $\dot y_i > 0$, only when its own fitness $F_i$ exceeds the
-economy-wide average $g(t)$, so $-g(t)$ encodes the requirement to beat the field in
-order to gain ground. Its role is to enforce the constraint $\langle y\rangle = 1$. One
-checks from \eqref{eq:dmft-replicator} that $\frac{d}{dt}\langle y\rangle = \langle
-yF\rangle - g\langle y\rangle = g\,(1 - \langle y\rangle)$, so $\langle y\rangle = 1$ is
-preserved, and $g(t) = \langle yF\rangle$ is precisely the value required to do so.
-Because it is an average over the whole population, $g(t)$ self-averages. Its fluctuations
-are of order $1/\sqrt N$ and vanish in the thermodynamic limit, so it enters the mean-field
-description as a deterministic common drift rather than as a source of noise.
-
-\section{The local field and the effective single-site process}
-\label{sec:dmft-cavity}
-
-We take the high-connectivity limit and treat the regular graph, so that
-$k_i \equiv C$. Split the interaction felt by node $i$ into its mean and
-its fluctuation,
-\begin{equation}
-    (\alpha y)_i
-    = -\frac{\mu}{C}\sum_{j\in\partial i} y_j + \frac{\sigma}{\sqrt C}\sum_{j\in\partial i} z_{ij} y_j
-    \;\longrightarrow\; -\mu M_1(t) + h_i(t),
-\end{equation}
-where the neighbourhood average of the mean part tends to the global one, $-\mu M_1$ with
-$M_1 = \langle y\rangle$, and $h_i$ collects the disorder. (This $h_i$ is the disorder
-part of the field alone and enters the fitness with a minus sign; the time-averaged
-field $\bar h_i$ of the balance law \eqref{eq:balance-law} is instead the full
-interaction field, coherent part included, with the beneficial-positive sign.) The dynamical cavity argument
-\citep{bunin2017,galla2018} proceeds by removing node $i$. The cavity trajectories
-$y_j^{(i)}$ are independent of the couplings $\{z_{ij}, z_{ji}\}$, and reinstating $i$
-perturbs each neighbour by linear response. The field that $i$ exerts on $j$ has
-fluctuating part $-\frac{\sigma}{\sqrt C} z_{ji} y_i$, so with the single-site response
-$G_j(t,s) = \delta y_j(t)/\delta\zeta_j(s)$,
-\begin{equation}
-    h_i(t)
-    = \frac{\sigma}{\sqrt C}\sum_{j\in\partial i} z_{ij}\,y_j^{(i)}(t)
-    \;-\; \frac{\sigma^2}{C}\sum_{j\in\partial i} z_{ij}z_{ji}\!\int_0^t\! ds\,G_j(t,s)\,y_i(s).
-\end{equation}
-The first sum is a sum of $C$ independent zero-mean terms; by the central limit theorem it
-becomes a Gaussian noise $\xi_i(t)$ whose covariance is the population autocorrelation,
-\begin{equation}
-    \langle\xi_i(t)\xi_i(s)\rangle
-    = \frac{\sigma^2}{C}\sum_{j\in\partial i} y_j(t)y_j(s)
-    = \sigma^2\,C(t,s),\qquad C(t,s):=\langle y(t)y(s)\rangle .
-\end{equation}
-The second sum uses $\overline{z_{ij}z_{ji}} = \gamma$ and
-$\frac1C\sum_{j\in\partial i} G_j \to G := \langle G_j\rangle$, giving the retarded Onsager
-reaction $-\gamma\sigma^2\!\int_0^t G(t,s)\,y_i(s)\,ds$. Substituting into $F_i = 1 - y_i +
-\mu M_1 - h_i$ and using \eqref{eq:dmft-replicator} produces the effective single-site
-process
+\end{align}
+Thus $g(t)$ is not introduced as an independent constant: it is the instantaneous logarithmic
+growth rate of the time-dependent mean size.  Inserting $\dot m/m=g(t)$ back into
+\eqref{eq:dmft-before-average} gives the exact composition dynamics
 \begin{equation}
     \boxed{\;
-    \dot y = y\left[\,1 - y + \mu M_1(t) - g(t)
-        + \sigma\,\eta(t) + \gamma\sigma^2\!\int_0^t\! G(t,s)\,y(s)\,ds\,\right],
+    \dot S_i(t)=S_i(t)\bigl[F_i(t)-g(t)\bigr]
+                  +\lambda\bigl[1-S_i(t)\bigr].
     \;}
-    \label{eq:dmft-singlesite}
+    \label{eq:dmft-replicator}
 \end{equation}
-with $\eta$ a unit-strength Gaussian noise of covariance $\langle\eta(t)\eta(s)\rangle =
-C(t,s)$. Equation~\eqref{eq:dmft-singlesite} is the heterogeneous effective process of
-\citet{aguirrelopez} with carrying capacity $K=1$, the competition sign on the mean field,
-and the two structural additions forced by the scale invariance, namely the common drift $-g(t)$
-of Section~\ref{sec:dmft-model}, and the constraint that the mean abundance is pinned,
-$M_1\equiv 1$, rather than left free.
-
-\section{Self-consistency}
-\label{sec:dmft-selfconsistency}
-
-The disorder average is described by four functionals of the single-site law of
-\eqref{eq:dmft-singlesite}:
+Equations~\eqref{eq:dmft-g} and \eqref{eq:dmft-replicator} are equivalent to the original
+$x$ dynamics.  The scale is recovered at any time from
 \begin{equation}
-    M_1(t) = \E[y(t)] = 1,\qquad
-    C(t,s) = \E[y(t)y(s)],\qquad
-    G(t,s) = \E\!\left[\frac{\delta y(t)}{\delta\zeta(s)}\right]_{\zeta=0},
+    m(t)=m(0)\exp\left(\int_0^t g(s)\,ds\right),
+    \qquad x_i(t)=m(t)S_i(t).
+    \label{eq:dmft-reconstruct-scale}
 \end{equation}
+The $-g(t)$ term is therefore exactly the quotient-rule correction associated with the moving
+denominator $m(t)$.  It also preserves the constraint: averaging
+\eqref{eq:dmft-replicator} gives $\langle\dot S\rangle=\langle SF\rangle-g\langle S\rangle
++\lambda(1-\langle S\rangle)=0$.  In the thermodynamic limit $g(t)$ is a deterministic,
+self-averaging common field, but it generally remains a function of time in the fluctuating phase.
+
+\section{The graph kernel and its structural cutoff}
+\label{sec:dmft-kernel}
+
+Let $p$ label a degree class, let $\rho_p$ be the fraction of nodes in that class, and let
+$P_{pr}$ be the probability that a node in class $p$ is connected to a node in class $r$.
+Write
 \begin{equation}
-    g(t) = \E[y(t)F(t)],\qquad
-    F = 1 - y + \mu M_1 + \sigma\eta + \gamma\sigma^2\!\int_0^t G\,y .
-    \label{eq:dmft-closures}
+    c:=\frac{C}{N},\qquad v_p:=\frac{k_p}{N}.
 \end{equation}
-The first is the normalization, the middle two are the standard correlation and response
-that close the noise and the memory, and the last fixes the common drift. The closure for
-$g$ is forced rather than chosen. We have $\dot M_1 = \E[yF] - g M_1$, and demanding $\dot M_1 = 0$
-at $M_1 = 1$ gives $g(t) = \E[yF]$. This has the structure of a solvable random-replicator
-model, here carrying the GLV self-limitation as well. Solving these self-consistency
-conditions is the standard replicator mean-field problem \citep{galla2018,roy2020}; the
-freezing threshold is taken from simulation in the main text.
+The kernel must reproduce the observed class degrees and the global mean degree,
+\begin{equation}
+    v_p=\sum_r\rho_rP_{pr},\qquad
+    c=\sum_p\rho_pv_p=\sum_{p,r}\rho_p\rho_rP_{pr}.
+    \label{eq:dmft-kernel-degree}
+\end{equation}
+The uncorrelated Chung--Lu approximation $P_{pr}=v_pv_r/c$ fails whenever
+$v_pv_r>c$, since it would assign a connection probability above one.  This is precisely the
+structural-cutoff problem of the hubs in a broad power-law graph.  Following \citet{patil2026},
+introduce positive hidden degree fractions $h_p$ and use the soft-configuration kernel
+\begin{equation}
+    P_{pr}^{\rm SCM}=\frac{h_ph_r}{h_ph_r+c}.
+    \label{eq:dmft-scm-kernel}
+\end{equation}
+The $h_p$ are fixed by substituting \eqref{eq:dmft-scm-kernel} into
+\eqref{eq:dmft-kernel-degree}.  For $h_ph_r\ll c$ the denominator reduces to $c$ and the
+ordinary bilinear kernel is recovered.  For hubs, $P_{pr}^{\rm SCM}$ saturates below one and
+retains the disassortative correlations induced by the simplicity constraint.  The theory below
+accepts any symmetric kernel satisfying \eqref{eq:dmft-kernel-degree}; the SCM form is the
+ensemble prediction used for the production graph.
+
+\section{From the network field to the time-dependent HDMFT}
+\label{sec:dmft-cavity}
+
+For a node $i$ in class $p$, split the interaction field in \eqref{eq:dmft-g} into its mean and
+random parts,
+\begin{align}
+    (\beta S)_i(t)
+      &=\frac{\mu_{\rm c}}{C}\sum_jA_{ij}S_j(t)
+        +\frac{\sigma}{\sqrt C}\sum_jA_{ij}z_{ij}S_j(t)
+        \nonumber\\
+      &=:H_i^{(\mu)}(t)+H_i^{(z)}(t).
+    \label{eq:dmft-field-split}
+\end{align}
+There are $N\rho_r$ potential neighbours in class $r$, each present with probability $P_{pr}$.
+Consequently, averaging first over nodes in class $r$ and then over classes gives
+\begin{align}
+    \E[H_i^{(\mu)}(t)\mid p]
+      &=\frac{\mu_{\rm c}}{C}
+        \sum_rN\rho_rP_{pr}\E[S_r(t)]\nonumber\\
+      &=\mu_{\rm c}B_p(t),
+    \label{eq:dmft-mean-field-step}\\
+    B_p(t)&:=\frac1c\sum_r\rho_rP_{pr}\E[S_r(t)].
+    \label{eq:dmft-B}
+\end{align}
+The same calculation at two times gives the covariance of the zero-mean random part,
+\begin{align}
+    \E[H_i^{(z)}(t)H_i^{(z)}(s)\mid p]
+      &=\frac{\sigma^2}{C}\sum_rN\rho_rP_{pr}
+          \E[S_r(t)S_r(s)]\nonumber\\
+      &=\sigma^2q_p(t,s),
+    \label{eq:dmft-noise-cov-step}\\
+    q_p(t,s)&:=\frac1c\sum_r\rho_rP_{pr}\E[S_r(t)S_r(s)].
+    \label{eq:dmft-q}
+\end{align}
+In the high-connectivity limit the central limit theorem therefore replaces $H_i^{(z)}$ by a
+Gaussian process $-\sigma\eta_p(t)$ with zero mean and
+$\E[\eta_p(t)\eta_p(s)]=q_p(t,s)$.  The sign is immaterial because the Gaussian law is
+symmetric.  The production ensemble has $\gamma=0$, so there is no retarded Onsager term.
+For $\gamma\ne0$, the degree-resolved response kernel of \citet{aguirrelopez} must be added.
+
+Substitution into the exact relative dynamics \eqref{eq:dmft-replicator} yields one effective
+process for every degree class,
+\begin{equation}
+    \boxed{\;
+    \dot S_p(t)=S_p(t)\left[1-S_p(t)-\mu_{\rm c}B_p(t)
+                       +\sigma\eta_p(t)-g(t)\right]
+                    +\lambda\left[1-S_p(t)\right].
+    \;}
+    \label{eq:dmft-heterogeneous-process}
+\end{equation}
+This equation is still fully time dependent.  In particular, $g(t)=\dot m(t)/m(t)$ has not
+been replaced by a stationary constant.  The stochastic processes close through
+\eqref{eq:dmft-B}--\eqref{eq:dmft-q} together with
+\begin{align}
+    1&=\sum_p\rho_p\E[S_p(t)],
+    \label{eq:dmft-normalisation}\\
+    g(t)&=\sum_p\rho_p\E\!\left[
+       S_p(t)\bigl(1-S_p(t)-\mu_{\rm c}B_p(t)+\sigma\eta_p(t)\bigr)
+       \right].
+    \label{eq:dmft-growth-closure}
+\end{align}
+Equation~\eqref{eq:dmft-growth-closure} is not an additional approximation.  Averaging
+\eqref{eq:dmft-heterogeneous-process}, using \eqref{eq:dmft-normalisation}, and imposing
+$d\langle S\rangle/dt=0$ reproduces it.  Once the coupled effective processes are solved,
+$m(t)$ follows from \eqref{eq:dmft-reconstruct-scale}.  The composition theory and the scale
+equation are therefore coupled through $g(t)$ but the growing scale never enters the interaction
+statistics separately.
+
+\section{Stationary fixed point without immigration}
+\label{sec:dmft-fixed-point}
+
+Now assume that the relative composition reaches a unique fixed point.  Then
+$g(t)\to g^*$, $B_p(t)\to B_p^*$ and $q_p(t,s)\to q_p^*$ at long times.  Set
+\begin{equation}
+    a:=1-g^*.
+    \label{eq:dmft-a}
+\end{equation}
+For a surviving firm, $S_p^*>0$, the bracket in
+\eqref{eq:dmft-heterogeneous-process} must vanish.  For an extinct firm the non-negative
+solution is zero.  Hence
+\begin{equation}
+    S_p^*(z)=\left[a-\mu_{\rm c}B_p^*
+                   +\sigma\sqrt{q_p^*}\,z\right]_+,
+    \qquad z\sim\mathcal N(0,1),\qquad [u]_+:=\max(u,0).
+    \label{eq:dmft-clipped-law}
+\end{equation}
+Define the class threshold
+\begin{equation}
+    \Delta_p:=\frac{a-\mu_{\rm c}B_p^*}{\sigma\sqrt{q_p^*}}.
+    \label{eq:dmft-delta-p}
+\end{equation}
+The firm survives when $z>-\Delta_p$.  With
+\begin{equation}
+    w_n(\Delta):=\int_{-\Delta}^{\infty}\Dz\,(\Delta+z)^n,
+    \qquad \Dz:=\frac{e^{-z^2/2}}{\sqrt{2\pi}}\,dz,
+\end{equation}
+the three required Gaussian integrals are
+\begin{align}
+    w_0(\Delta)&=\Phi(\Delta),\nonumber\\
+    w_1(\Delta)&=\Delta\Phi(\Delta)+\phi_{\rm G}(\Delta),\nonumber\\
+    w_2(\Delta)&=(1+\Delta^2)\Phi(\Delta)
+                    +\Delta\phi_{\rm G}(\Delta),
+    \label{eq:dmft-gaussian-moments}
+\end{align}
+where $\Phi$ and $\phi_{\rm G}$ are the standard-normal cumulative distribution and density.
+It follows step by step that
+\begin{align}
+    \varphi_p&:=\Pr(S_p^*>0)=w_0(\Delta_p),
+    \label{eq:dmft-class-survival}\\
+    M_{1,p}&:=\E[S_p^*]
+       =\sigma\sqrt{q_p^*}\,w_1(\Delta_p),
+    \label{eq:dmft-class-first}\\
+    M_{2,p}&:=\E[(S_p^*)^2]
+       =\sigma^2q_p^*\,w_2(\Delta_p).
+    \label{eq:dmft-class-second}
+\end{align}
+Substitution of these moments into \eqref{eq:dmft-B}, \eqref{eq:dmft-q}, and the scale
+normalisation gives the closed fixed-point system
+\begin{align}
+    B_p^*&=\frac1c\sum_r\rho_rP_{pr}M_{1,r},
+    \label{eq:dmft-fixed-B}\\
+    q_p^*&=\frac1c\sum_r\rho_rP_{pr}M_{2,r},
+    \label{eq:dmft-fixed-q}\\
+    1&=\sum_p\rho_pM_{1,p},
+    \label{eq:dmft-fixed-normalisation}\\
+    g^*&=1-a.
+    \label{eq:dmft-fixed-growth}
+\end{align}
+For $n$ degree classes, these are $2n+1$ equations for the $2n+1$ unknowns
+$\{B_p^*,q_p^*\}_{p=1}^n$ and $a$.  The aggregate scale is then
+$m(t)\sim m(0)e^{g^*t}$, but the stationary law \eqref{eq:dmft-clipped-law} concerns the
+relative sizes only.
+
+\subsection{Finite immigration}
+
+For the simulated model $\lambda>0$, no class is exactly extinct and the clipped law must be
+replaced before testing stability.  Define the Gaussian local field
+\begin{equation}
+    h_p(z):=a-\mu_{\rm c}B_p^*+\sigma\sqrt{q_p^*}\,z.
+\end{equation}
+The stationary version of \eqref{eq:dmft-heterogeneous-process} is
+\begin{equation}
+    0=S_p^*(h_p-S_p^*)+\lambda(1-S_p^*),
+\end{equation}
+or, after collecting powers of $S_p^*$,
+\begin{equation}
+    (S_p^*)^2-(h_p-\lambda)S_p^*-\lambda=0.
+\end{equation}
+The non-negative root is
+\begin{equation}
+    S_p^*(z;\lambda)
+      =\frac{h_p(z)-\lambda
+        +\sqrt{[h_p(z)-\lambda]^2+4\lambda}}{2}.
+    \label{eq:dmft-immigration-root}
+\end{equation}
+It is strictly positive for every finite $h_p$ and converges to $[h_p]_+$ as
+$\lambda\downarrow0$.  The class moments in
+\eqref{eq:dmft-class-first}--\eqref{eq:dmft-class-second} are consequently replaced by
+direct Gaussian averages of \eqref{eq:dmft-immigration-root}; the field equations
+\eqref{eq:dmft-fixed-B}--\eqref{eq:dmft-fixed-normalisation} are otherwise unchanged.
+
+The zero-frequency response to a perturbation of $h_p$ follows by implicit differentiation.
+From the quadratic equation,
+\begin{equation}
+    \left[2S_p^*-(h_p-\lambda)\right]\frac{\partial S_p^*}{\partial h_p}=S_p^*.
+\end{equation}
+Using $(h_p-\lambda)=S_p^*-\lambda/S_p^*$ from the same quadratic gives
+\begin{equation}
+    \chi_p(z):=\frac{\partial S_p^*}{\partial h_p}
+       =\frac{(S_p^*)^2}{(S_p^*)^2+\lambda}.
+    \label{eq:dmft-immigration-response}
+\end{equation}
+This response, rather than a binary survival indicator, is the factor that enters the stability
+calculation.
+
+\section{Linear stability with the scale constraint}
+\label{sec:dmft-stability}
+
+Define the class response weight
+\begin{equation}
+    R_p(\lambda):=\E_z[\chi_p(z)^2].
+    \label{eq:dmft-response-weight}
+\end{equation}
+The structural-cutoff HDMFT then gives the random, zero-frequency stability operator
+\begin{equation}
+    \mathcal L_{pr}(\lambda)
+       =\frac{\sigma^2}{c}\,R_p(\lambda)P_{pr}\rho_r.
+    \label{eq:dmft-stability-matrix}
+\end{equation}
+To see its origin, let $Y_p$ be the variance of a small persistent perturbation in class $p$.
+The perturbation arriving from class $r$ has variance
+$\sigma^2P_{pr}\rho_rY_r/c$, and the squared local response averages to $R_p$.  Therefore
+\begin{equation}
+    Y_p=\sum_r\mathcal L_{pr}Y_r.
+    \label{eq:dmft-stability-eigenproblem}
+\end{equation}
+The unique fixed point loses bulk stability when the Perron root reaches one,
+\begin{equation}
+    \rho(\mathcal L)=1.
+    \label{eq:dmft-stability-condition}
+\end{equation}
+When $\lambda\downarrow0$, $\chi_p\to1$ on the surviving branch and $\chi_p\to0$ on the
+extinct branch, so $R_p(0)=\varphi_p$.  The stability operator then reduces exactly to the
+survival-weighted expression of \citet{patil2026}.
+
+At $\lambda=0$ the relative model also contains the common perturbation $-\delta g$.  It is
+useful to show explicitly what this changes.  At a fixed point, for perturbations tangent to
+$\langle S\rangle=1$,
+\begin{align}
+    \delta g
+      &=\frac1N\sum_i\left[\delta S_iF_i^*
+          +S_i^*\delta F_i\right]\nonumber\\
+      &=-\frac1N\sum_iS_i^*\left[\delta S_i+(\beta\delta S)_i\right],
+    \label{eq:dmft-delta-g}
+\end{align}
+where the first term in the first line is $g^*\langle\delta S\rangle=0$.  Consequently,
+with $D=\operatorname{diag}(S^*)$ and $L=I+\beta$, the finite-system Jacobian on the surviving
+set is
+\begin{equation}
+    J=-D\left(I-\mathbf 1\frac{(S^*)^{\!T}}{N}\right)L.
+    \label{eq:dmft-projected-jacobian}
+\end{equation}
+The extra factor is a rank-one projection that removes the forbidden scale direction.  It does
+not change the extensive random bulk whose variance instability is
+\eqref{eq:dmft-stability-condition}, but it can move an isolated coherent eigenvalue at finite
+$N$.  We therefore use \eqref{eq:dmft-stability-condition} as the HDMFT prediction for the
+onset of persistent fluctuations and use \eqref{eq:dmft-projected-jacobian} as a separate
+finite-size diagnostic in numerical validation.
+For $\lambda>0$, the local diagonal response is the susceptibility
+\eqref{eq:dmft-immigration-response} and the derivative of $g$ acquires additional
+$\lambda/S_i^*$ weights.  These contributions remain diagonal plus rank one; their random-bulk
+effect is already contained in $R_p(\lambda)$ in \eqref{eq:dmft-stability-matrix}.
+
+\section{Homogeneous limit}
+\label{sec:dmft-homogeneous-limit}
+
+For one regular degree class, $\rho_1=1$ and $P_{11}=c$.  Equations
+\eqref{eq:dmft-fixed-B}--\eqref{eq:dmft-fixed-q} reduce to $B^*=M_1=1$ and
+$q^*=M_2$.  The mean competition $\mu_{\rm c}B^*=\mu_{\rm c}$ is then a uniform shift and is
+absorbed into $a$; it cannot affect the relative-size distribution.  The stability condition is
+\begin{equation}
+    \sigma^2\varphi=1.
+\end{equation}
+At the transition the homogeneous clipped-Gaussian equations give $\Delta=0$ and
+$\varphi=\Phi(0)=1/2$, hence
+\begin{equation}
+    \sigma_c=\sqrt{2}.
+\end{equation}
+On a heterogeneous graph $B_p^*$ and $q_p^*$ vary with degree, so mean competition is no longer
+a uniform shift.  Both $\varphi_p$ and the Perron root in
+\eqref{eq:dmft-stability-condition} depend on $\mu_{\rm c}$.  The power-law theory therefore
+predicts a curve $\sigma_c(\mu_{\rm c})$, not the horizontal fully connected line.
+
+\section{Numerical solution}
+\label{sec:dmft-numerical-solution}
+
+The implementation bins the realised degree distribution into classes, solves
+\eqref{eq:dmft-kernel-degree} for the hidden degrees of the SCM kernel, and then solves
+\eqref{eq:dmft-fixed-B}--\eqref{eq:dmft-fixed-normalisation} for
+$\{B_p^*,q_p^*,a\}$.  For $\lambda>0$, the Gaussian averages of
+\eqref{eq:dmft-immigration-root} and \eqref{eq:dmft-response-weight} are evaluated by
+Gauss--Hermite quadrature.  At every parameter pair the solver forms
+\eqref{eq:dmft-stability-matrix}; a scalar root search in $\sigma$ locates the point where its
+largest eigenvalue is one.  The one-class limit is checked numerically against the closed regular
+DMFT and recovers its growth rate, survival fraction, second moment, and
+$\sigma_c=\sqrt{2}$ to numerical precision.  On a representative production graph at
+$N=4000$, the SCM theory moves the critical disorder from $\sigma_c=\sqrt2$ to a
+$\mu_{\rm c}$-dependent curve.  At $\mu_{\rm c}=1.7$ it gives $\sigma_c=1.409$ for
+$\lambda=0$ and $1.411$ for $\lambda=10^{-3}$.  The stored finite-time churn classifier switches
+near $1.57$--$1.60$, so immigration explains very little of the residual displacement.  The next
+validation must therefore isolate finite observation time and the operational churn cutoff before
+changing the HDMFT equations.

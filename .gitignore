@@ -9,4 +9,6 @@ __pycache__/
 
 # Regenerable thesis-figure output (canonical copies live in the thesis)
 figures/
+!thesis/assets/figures/
+!thesis/assets/figures/*.png
 scripts/*.npz

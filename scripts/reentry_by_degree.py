@@ -96,7 +96,7 @@ def main():
     axis.set(xlabel="degree $k$", ylabel="re-entry probability", ylim=(-0.02, 1.02),
              title="Re-entry after a threshold exit")
     axis.legend(fontsize=8)
-    figure.suptitle(f"Mean-degree GLV (N={N}, {len(records)} economies, $\\mu$={MU}, $\\sigma$={SIGMA})")
+    figure.suptitle(f"Mean-degree GLV (N={N}, {len(records)} economies, $\\mu$={-MU}, $\\sigma$={SIGMA})")  # thesis sign convention
     image = output.with_suffix(".png")
     figure.savefig(image, dpi=150)
     print(f"saved {output} and {image}")

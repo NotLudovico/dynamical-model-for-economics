@@ -92,7 +92,7 @@ def plot_distribution(full, active, grid, active_grid, tail_index, tail_start, o
     right.legend(fontsize=7.5)
     figure.suptitle(
         f"Mean-degree relative GLV size distribution (N={N}, {len(tail_index)} economies, "
-        f"$\\mu$={MU}, $\\sigma$={SIGMA})",
+        f"$\\mu$={-MU}, $\\sigma$={SIGMA})",   # thesis sign convention (mu<0 competitive)
         fontsize=11,
     )
     figure.savefig(output, dpi=180)

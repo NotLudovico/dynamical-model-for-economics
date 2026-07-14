@@ -37,7 +37,7 @@ def _arg(flag, default, cast=float):
     return cast(sys.argv[sys.argv.index(flag) + 1]) if flag in sys.argv else default
 
 
-KIND = _arg("--kind", "powerlaw_rowavg", str)   # also 'fc', 'powerlaw', 'powerlaw_owndeg' for comparison
+KIND = _arg("--kind", "powerlaw_rowavg", str)   # also 'fc', 'powerlaw' for comparison
 
 
 # NB: own-degree's locked point (sigma=1.75) is FROZEN for this variant -- the row-average

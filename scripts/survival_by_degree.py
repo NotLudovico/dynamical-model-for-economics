@@ -77,9 +77,9 @@ def plot_summary(summary, overall, *, N, economies, min_degree, output):
     configure_survival_axes(axis, summary["degree"], summary["ci_high"])
     axis.set(xlabel="degree $k$", ylabel="survival probability", title="Survival conditional on degree")
     axis.legend(fontsize=8)
-    topology = "legacy power law" if min_degree is None else rf"shifted power law ($k_{{\min}}$={min_degree})"
+    topology = "power-law graph" if min_degree is None else rf"shifted power law ($k_{{\min}}$={min_degree})"
     figure.suptitle(f"Mean-degree GLV: {topology} (N={N}, {economies} economies, "
-                     f"$\\mu$={MU}, $\\sigma$={SIGMA})", fontsize=11)
+                     f"$\\mu$={-MU}, $\\sigma$={SIGMA})", fontsize=11)   # thesis sign convention
     figure.savefig(output, dpi=150)
     plt.close(figure)
 
