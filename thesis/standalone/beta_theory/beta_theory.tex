@@ -27,14 +27,13 @@
 \textbf{Main result.}
 At leading order in $1/C$ the exponent is the HDMFT's, and analytically
 \[
-  \beta_\infty\simeq\beta_{\rm ad}^\Phi-\varepsilon_\chi-\varepsilon_k .
+  \beta_\infty\simeq\beta_{\rm ad}-\varepsilon_\chi-\varepsilon_k .
 \]
-Here $\beta_{\rm ad}^\Phi$ is the adiabatic size--volatility slope of a single firm, normalised by
-its realised fitness amplitude.  It equals $1$
-when firms fully track their fitness, and falls when the field is rough.  $\varepsilon_\chi$ is
-a small fluctuation-selection term ($0.02$--$0.03$).  $\varepsilon_k$ is the degree channel: how
-strongly larger surviving firms sit on higher degrees.  It follows from an explicit survivor
-ensemble built on three justified facts:
+Here $\beta_{\rm ad}$ is the adiabatic size--volatility slope of a single firm, normalised by its
+realised fitness amplitude.  It equals $1$ when firms fully track their fitness, and falls when
+the field is rough.  $\varepsilon_\chi$ is a small fluctuation-selection term ($0.02$--$0.03$).
+$\varepsilon_k$ is the degree channel: how strongly larger surviving firms sit on higher
+degrees.  It follows from an explicit survivor ensemble built on three justified facts:
 \begin{enumerate}
   \item a firm's mean size equals its mean fitness (exact);
   \item that mean fitness is Gaussian, with amplitude proportional to $\sqrt\kappa$;
@@ -42,15 +41,16 @@ ensemble built on three justified facts:
         extreme-value law $P=\Phi(\bar\Phi/f)^{T/2\tau}$.
 \end{enumerate}
 With order parameters from the HDMFT and no fitting, it reproduces the HDMFT's degree channel
-and size spread to within $0.015$ for $\alpha\ge2.5$.  Quenched neighbourhoods add $1/C$
-corrections ($\varepsilon_n$, $\varepsilon_z$).  With every input from the HDMFT, the result is
-within $0.07$ of simulation at $N=8000$ for $\alpha\ge2.5$.  The theory predicts, and simulation confirms, that $\beta$
-depends on the observation window.  The same ensemble gives the multiscaling: the higher degree
-moments at fixed size grow faster than the first, because the smallest survivors are pinned at the
-minimum degree, and the HDMFT reproduces the simulated ratio curve $\zeta_q/\zeta_1$ to within
-$0.05$ for $\alpha=2.5$ and $3.5$ (Section~\ref{sec:multiscaling}).  Two things are not closed: $\beta_{\rm ad}$ on light tails
-(a nonlinear one-firm effect), and $\alpha\approx2.2$, where the field is carried by about four
-neighbours and the Gaussian closure fails.
+and size spread to within $0.015$ for $\alpha\ge2.5$.  At $N=8000$ the simulated $\beta$ lies
+$0.05$--$0.15$ below the leading-order value.  This is a finite-connectivity correction from
+quenched neighbourhoods, set by the inverse effective number of neighbours, and it decays more
+slowly than $1/N$.  The theory predicts, and simulation confirms, that $\beta$ depends on the
+observation window.  The same ensemble gives the multiscaling: the higher degree moments at fixed
+size grow faster than the first, because the smallest survivors are pinned at the minimum degree,
+and the HDMFT reproduces the simulated ratio curve $\zeta_q/\zeta_1$ to within $0.05$ for
+$\alpha=2.5$ and $3.5$ (Section~\ref{sec:multiscaling}).  Two things are not closed:
+$\beta_{\rm ad}$ on light tails (a nonlinear one-firm effect), and $\alpha\approx2.2$, where the
+field is carried by about four neighbours and the Gaussian closure fails.
 \end{minipage}}
 \end{center}
 
@@ -141,7 +141,7 @@ moves into regime~1, $\beta\to1$.
 \end{corollary}
 This matches the simulations: $\beta=1.02$ on the fully connected graph and $0.99$ on the
 regular graph at $N=32000$.  At $\alpha=6$, where the degrees are nearly homogeneous, the
-realised-amplitude slope $\beta_D$ of Table~\ref{tab:check} is $1.03$.  The corollary also
+adiabatic slope with the realised fitness amplitude is $1.01$ (Table~\ref{tab:hdmft}).  The corollary also
 explains the horizon dependence in the numerics appendix: raising $\Delta$ moves a fixed size
 window from regime~2 towards regime~1, so $\beta_A$ and hence $\beta$ grow with the horizon.
 
@@ -176,8 +176,7 @@ Take $\E[v\mid S]=\sigma A(S)\,\E[\zeta]\,\E[\sqrt\kappa\mid S]$ and differentia
 
 A graph lowers $\beta$ only to the extent that larger firms sit, on average, on larger degrees.
 The size of the degree heterogeneity does not matter on its own; what matters is how strongly
-size selects on it.  The same argument holds with the realised amplitude $\sqrt{D_i}$ of
-\eqref{eq:adiabatic} in place of $\sqrt\kappa$, which gives $\beta=\beta_D-\varepsilon_D$.
+size selects on it.
 
 \subsection{Intermediate case: a two-class graph}
 
@@ -274,25 +273,23 @@ channel therefore lowers $\beta$ by at most $\approx0.25$ even at $\alpha=2.2$.
 \begin{table}[h]
 \centering
 \small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcccc|ccccc|ccc}
+\begin{tabular}{lcccc|ccccc}
 \toprule
 $\alpha$ & $\beta$ & $\beta_A$ & $\varepsilon_k$ & $\beta_A-\varepsilon_k$
- & $\varepsilon_k^{\rm th}$ & $b_k$ & $f_k$ & $s$ & $V_\kappa$ / th
- & $\beta_D$ & $\varepsilon_D$ & $V_R$\\
+ & $\varepsilon_k^{\rm th}$ & $b_k$ & $f_k$ & $s$ & $V_\kappa$ / th\\
 \midrule
-2.2 & 0.222 & 0.440 & 0.229 & 0.211 & 0.244 & 0.42 & 0.94 & 0.87 & 0.221 / 0.234 & 0.74 & 0.55 & 0.128\\
-2.5 & 0.414 & 0.581 & 0.174 & 0.407 & 0.183 & 0.50 & 1.05 & 0.99 & 0.151 / 0.162 & 0.77 & 0.36 & 0.057\\
-3.0 & 0.595 & 0.715 & 0.149 & 0.565 & 0.148 & 0.50 & 1.00 & 0.85 & 0.117 / 0.123 & 0.89 & 0.33 & 0.040\\
-3.5 & 0.689 & 0.788 & 0.102 & 0.686 & 0.112 & 0.53 & 0.92 & 0.94 & 0.081 / 0.084 & 0.93 & 0.25 & 0.033\\
-6.0 & 0.894 & 0.916 & 0.034 & 0.882 & 0.033 & 0.54 & 0.95 & 0.82 & 0.030 / 0.030 & 1.03 & 0.16 & 0.035\\
+2.2 & 0.222 & 0.440 & 0.229 & 0.211 & 0.244 & 0.42 & 0.94 & 0.87 & 0.221 / 0.234\\
+2.5 & 0.414 & 0.581 & 0.174 & 0.407 & 0.183 & 0.50 & 1.05 & 0.99 & 0.151 / 0.162\\
+3.0 & 0.595 & 0.715 & 0.149 & 0.565 & 0.148 & 0.50 & 1.00 & 0.85 & 0.117 / 0.123\\
+3.5 & 0.689 & 0.788 & 0.102 & 0.686 & 0.112 & 0.53 & 0.92 & 0.94 & 0.081 / 0.084\\
+6.0 & 0.894 & 0.916 & 0.034 & 0.882 & 0.033 & 0.54 & 0.95 & 0.82 & 0.030 / 0.030\\
 \bottomrule
 \end{tabular}
 \caption{Medians over economies, $N=8000$, $C=200$, $\mu=-1.76$, $\sigma=1.75$,
 $\lambda=10^{-3}$, eight economies per graph ($\alpha=2.2$: seven, one freezes), each fitted on
 its own decline branch.  $\varepsilon_k^{\rm th}$ is \eqref{eq:eps-alpha} evaluated with the
 measured $V_S$ and $s$.  The $V_\kappa$ column gives the measured value and $1/(\alpha-1+s)^2$.
-$\beta_D$ and $\varepsilon_D$ repeat the sum rule with the realised field amplitude $\sqrt{D_i}$,
-and $V_R=\Var\ln\sqrt{D_i/k_i}$.  Source: \texttt{scripts/beta\_theory.py}.}
+Source: \texttt{scripts/beta\_theory.py}.}
 \label{tab:check}
 \end{table}
 
@@ -416,187 +413,62 @@ $V_S$ to $0.09$.  Source: \texttt{scripts/beta\_survivor\_theory.py}.}
 \label{tab:ensemble}
 \end{table}
 
-\section{Closing the within-degree channel}
-\label{sec:within}
+\section{Finite connectivity}
+\label{sec:finiteC}
 
-\subsection{The field amplitude is a neighbour sum}
-
-Let $d_j=\Var[S_j(t+\Delta)-S_j(t)]$ be the increment variance of firm $j$.  At zero reciprocity
-the increments of different neighbours are nearly uncorrelated, so the field increment variance
-of firm $i$ is
+The HDMFT replaces each firm's neighbourhood by its degree class.  In a finite graph the field
+is a quenched sum over actual neighbours.  At zero reciprocity the increments of different
+neighbours are nearly uncorrelated, so the field increment variance of firm $i$ is
 \begin{equation}
-  D_i\simeq\frac{\sigma^2}{C}\sum_jA_{ij}z_{ij}^2\,d_j .
+  D_i\simeq\frac{\sigma^2}{C}\sum_jA_{ij}z_{ij}^2\,d_j,
+  \qquad d_j=\Var[S_j(t+\Delta)-S_j(t)],
   \label{eq:nbrsum}
 \end{equation}
-The measured ratio of $D_i$ to the right side is $0.95$--$0.99$ on every graph.  What matters is
-how few neighbours carry the sum.  The effective number,
-$n_{\rm eff}=(\sum_jc_j)^2/\sum_jc_j^2$ with $c_j=z_{ij}^2d_j$, is $24$ at $\alpha=6$ and only
-$4$ at $\alpha=2.2$.  On a heavy-tailed graph a firm's field is carried by a handful of large
-neighbours.
+to within $1$--$5\%$ on every graph.  What matters is how few neighbours carry the sum.  The
+effective number, $n_{\rm eff}=(\sum_jc_j)^2/\sum_jc_j^2$ with $c_j=z_{ij}^2d_j$, is $24$ at
+$\alpha=6$ and only $4$ at $\alpha=2.2$.  On a heavy-tailed graph a firm's field is carried by a
+handful of large neighbours.
 
-Two quenched sums over the same neighbours therefore enter the dynamics.  The static one,
-$a_s^2=\sum_jA_{ij}\bar S_j^2/C$, sets the size through \eqref{eq:stationarity}.  The dynamic
-one, \eqref{eq:nbrsum}, sets the volatility through \eqref{eq:adiabatic}.  Selection on size
-reaches the volatility in two ways.
+The same neighbours and couplings also set the firm's static field, and hence its size through
+\eqref{eq:stationarity}.  A firm that is large because it drew large neighbours, or favourable
+couplings to them, therefore also has a large volatility amplitude.  This selection lowers
+$\beta$ below its leading-order value by an amount proportional to $c_{ds}\E[k^{-1}]$, the
+inverse effective number of neighbours, where
+$c_{ds}=\E_w[d\,\bar S^2]/(\E_w[d]\,\E_w[\bar S^2])$ with neighbour weights $w_j\propto k_j$
+measures how much the neighbours that carry the size also carry the noise.  $c_{ds}$ grows with
+the degree tail, from $3.4$ at $\alpha=6$ to $6.3$ at $\alpha=2.2$.  On homogeneous graphs
+$c_{ds}\to1$ and $\E[k^{-1}]=1/C$, so the correction is $O(1/C)$ and $\beta\to\beta_{\rm ad}\to1$.
 
-\subsection{Neighbour composition, $\varepsilon_n$}
+\paragraph{System size.}
+The factor $\E[k^{-1}]$ halves when $N$ doubles at $C=N/40$, but the correction shrinks more
+slowly.  At $\alpha=2.5$ the gap between the HDMFT exponent and simulation
+(Section~\ref{sec:assembled}) goes from $0.15$ at $N=8000$ to $0.14$ at $N=16000$.  Two things
+slow the decay.  $c_{ds}$ grows with the heaviest neighbour weights ($4.6\to5.5$ at
+$\alpha=2.5$).  And the degree channel itself approaches its HDMFT value from below
+($\varepsilon_k=0.174\to0.213$ at $\alpha=2.5$, against $0.214$), so the finite-$C$ change in
+$\beta$ is a trade between the degree channel rising and the neighbourhood selection falling.
+Over the measured range the approach to the limit is not linear in $1/N$, and a large-$N$ law
+would need the $N$-dependence of $c_{ds}$ and of the survivors' degree mix, which we have not
+derived.  At fixed $C$, by contrast, $\E[k^{-1}]$ does not fall while $c_{ds}$ keeps growing with
+$\kappa_{\max}=N/C$, consistent with the observed fall of $\beta$ towards zero.
 
-Averaging over the couplings gives $D_i^{(0)}=(\sigma^2/C)\sum_jA_{ij}d_j$.  A firm whose
-neighbours are large has both a large $a_s$ (so it is big) and a large $D^{(0)}$ (so it is
-noisy).  With neighbours drawn with weight $w_j\propto k_j$ (configuration model) and the delta
-method, the covariance of the two log-sums per neighbour is set by the cross-moment
-\begin{equation}
-  c_{ds}=\frac{\E_w[d\,\bar S^2]}{\E_w[d]\,\E_w[\bar S^2]},
-  \qquad
-  \mathrm{Cov}\bigl(\ln\sqrt{D^{(0)}/\kappa},\,\ln\bar S\bigr)\simeq\frac{c_{ds}-1}{4k}.
-\end{equation}
-With $\ln\bar S=\ln a_s+\ln x$ and $x$ independent of the neighbours, the reverse regression gives
-\begin{equation}
-  \boxed{\;\varepsilon_n=\frac{c_{ds}-1}{4V_S}\,\E\!\left[k^{-1}\right].\;}
-  \label{eq:eps-n}
-\end{equation}
-Here $c_{ds}$ measures how much the neighbours that carry the static amplitude also carry the
-dynamic one.  It grows with the degree tail, from $3.4$ at $\alpha=6$ to $6.3$ at $\alpha=2.2$.
-
-\subsection{Selection on the couplings, $\varepsilon_z$}
-
-At fixed neighbours, a firm becomes big by drawing favourable couplings $z_{ij}$ on its big
-neighbours.  These same $|z_{ij}|$ enter \eqref{eq:nbrsum} squared.  The $z_{ij}$ are Gaussian,
-so conditioning them on the static z-score $x$ is exact:
-\begin{equation}
-  \E[z_{ij}\mid x]=\frac{\bar S_j\,x}{\sqrt{\sum_lA_{il}\bar S_l^2}},\qquad
-  \Var[z_{ij}\mid x]=1-\frac{\bar S_j^2}{\sum_lA_{il}\bar S_l^2}.
-\end{equation}
-Substituting into \eqref{eq:nbrsum} gives
-\begin{equation}
-  \E[D_i\mid x]=D_i^{(0)}\bigl[1+\theta_i(x^2-1)\bigr],
-  \qquad
-  \theta_i=\frac{\sum_jA_{ij}d_j\bar S_j^2}{\sum_jA_{ij}d_j\,\sum_jA_{ij}\bar S_j^2}
-  \simeq\frac{c_{ds}}{k_i}.
-  \label{eq:zsel}
-\end{equation}
-The concentration $\theta_i$ is of order $1/n_{\rm eff}$.  When the field is spread over many
-neighbours, conditioning on one linear combination of the couplings barely moves their squares.
-When a few neighbours dominate, it does.  By \eqref{eq:stationarity}, $x=(\bar S-r_\kappa)/
-(\sigma a_s)$ is fixed by the size (measured correlation $1.000$), and
-\begin{equation}
-  \boxed{\;\varepsilon_z=\frac12\,\frac{d\ln\E\bigl[1+\theta(x^2-1)\mid S\bigr]}{d\ln S}
-  \;\approx\;\frac{\theta x^2}{1+\theta(x^2-1)}\;
-  \Bigl(1-\frac{V_{a_s}}{V_S}\Bigr).\;}
-  \label{eq:eps-z}
-\end{equation}
-The last factor is $d\ln x/d\ln S$.  It is unity at fixed $a_s$, and is reduced by the part of
-the size variance that comes from the amplitude itself.  The z-selection saturates at
-$\varepsilon_z\to1$ for $\theta x^2\gg1$.  This is the regime approached by a firm fed by a
-single neighbour.
-
-\subsection{Result}
-
-Collecting the channels,
-\begin{equation}
-  \boxed{\;\beta=\beta_{\rm ad}^{\rm nb}-\varepsilon_k-\varepsilon_n-\varepsilon_z,\;}
-  \label{eq:full}
-\end{equation}
-with $\varepsilon_k$ from \eqref{eq:eps-alpha}, $\varepsilon_n$ from \eqref{eq:eps-n} and
-$\varepsilon_z$ from \eqref{eq:eps-z}.  Here $\beta_{\rm ad}^{\rm nb}$ is the adiabatic slope with the neighbour-sum amplitude \eqref{eq:nbrsum} (Section~\ref{sec:bad}).  Apart from $\beta_{\rm ad}^{\rm nb}$, every input is a
-neighbour-weighted moment of single-firm statistics ($d$, $\bar S$, $k$) or a size-level
-quantity ($V_S$, $x$).  No quenched information about a firm's actual neighbourhood enters, so
-all inputs are outputs of the degree-resolved effective process.
-
-\begin{table}[h]
-\centering
-\small\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lccc|cc|cc|cc|cc|c}
-\toprule
-$\alpha$ & $n_{\rm eff}$ & $c_{ds}$ & $\E[k^{-1}]$ & $\varepsilon_k$ & th
- & $\varepsilon_n$ & th & $\varepsilon_z$ & th & $\beta_{\rm ad}^{\rm nb}$ & $\beta$ & pred\\
-\midrule
-2.2 & 4.0 & 6.28 & 0.020 & 0.229 & 0.230 & 0.105 & 0.106 & 0.161 & 0.172 & 0.729 & 0.209 & 0.188\\
-2.5 & 8.8 & 4.61 & 0.011 & 0.174 & 0.169 & 0.050 & 0.048 & 0.108 & 0.076 & 0.736 & 0.414 & 0.459\\
-3.5 & 17.4 & 3.77 & 0.006 & 0.102 & 0.109 & 0.027 & 0.024 & 0.064 & 0.036 & 0.888 & 0.691 & 0.720\\
-6.0 & 23.5 & 3.35 & 0.005 & 0.034 & 0.035 & 0.016 & 0.014 & 0.040 & 0.025 & 0.965 & 0.894 & 0.891\\
-\bottomrule
-\end{tabular}
-\caption{The three amplitude channels, measured as slopes of $\E[\sqrt{\,\cdot\,}\mid S]$ on
-the estimator's decline bins and predicted by \eqref{eq:eps-alpha}, \eqref{eq:eps-n} and
-\eqref{eq:eps-z}.  Same ensemble as Table~\ref{tab:check}, with $\Delta=0.5$ on the $0.25$
-output grid.  ``pred'' is \eqref{eq:full} with the three closed forms and the measured
-$\beta_{\rm ad}^{\rm nb}$.  Source: \texttt{scripts/beta\_within\_degree.py}.}
-\label{tab:within}
-\end{table}
-
-The degree and composition channels are predicted to within $0.007$.  The coupling-selection
-channel is predicted to within $0.03$.  It runs low by $0.015$--$0.03$ on the lighter tails,
-where the neglected off-diagonal terms of \eqref{eq:nbrsum} are comparable to the effect.  The
-full prediction \eqref{eq:full} is within $0.05$ of the measured $\beta$ on every graph.  The
-decomposition also shows where heterogeneity acts.  At $\alpha=2.2$ the drop $1-\beta\approx0.8$
-splits into $0.27$ from non-adiabaticity, $0.23$ from degree, $0.11$ from neighbour composition
-and $0.16$ from coupling selection.  The last two are the within-degree channel, and both scale
-as $c_{ds}/k$, the inverse effective number of neighbours.
-
-\paragraph{Consequences.}
-\begin{itemize}
-  \item \emph{System size.}  Both within-degree channels carry a factor $\E[k^{-1}]$, which
-        halves when $N$ doubles at $C=N/40$.  They shrink more slowly than that.  From $N=8000$
-        to $16000$, $\varepsilon_n+\varepsilon_z$ falls from $0.27$ to $0.24$ at $\alpha=2.2$ and
-        from $0.16$ to $0.12$ at $\alpha=2.5$, factors of $0.90$ and $0.73$ rather than $0.5$.  Two
-        things slow the decay.  $c_{ds}$ grows with the heaviest neighbour weights ($4.6\to5.5$ at
-        $\alpha=2.5$).  And on the decline branch $\E[k^{-1}]$ itself falls by less than half
-        ($0.020\to0.013$ at $\alpha=2.2$), because the survivors shift towards higher degrees.  At
-        the same time $\varepsilon_k$ grows towards its HDMFT value ($0.174\to0.213$ at
-        $\alpha=2.5$, against $0.214$), so the degree channel also carries a finite-$C$
-        correction, of the same size as the fall in $\varepsilon_n+\varepsilon_z$.  The
-        finite-size drift of $\beta$ is therefore a trade between channels, and \eqref{eq:full}
-        tracks it: predicted $0.180$ and $0.455$ against measured $0.152$ and $0.431$ at
-        $N=16000$.  Over the measured range the approach to the limit is not linear in $1/N$.
-        A large-$N$ law needs the $N$-dependence of $c_{ds}$, $V_S$ and the survivors' degree
-        mix, which we have not derived.  At fixed $C$, by contrast, $\E[k^{-1}]$ does not
-        fall while $c_{ds}$ keeps growing with $\kappa_{\max}=N/C$.  This is consistent with the
-        observed fall of $\beta$ towards zero.
-  \item \emph{Homogeneous graphs.}  Here $c_{ds}\to1+O(\text{size dispersion})$ and
-        $\E[k^{-1}]=1/C$, so $\varepsilon_n,\varepsilon_z=O(1/C)$ and $\beta\to\beta_{\rm ad}\to1$.
-  \item \emph{What remains.}  The one input not yet closed here is $\beta_{\rm ad}^{\rm nb}$, the filter
-        slope of Proposition~\ref{prop:adiabatic} with the neighbour-sum amplitude.
-        Section~\ref{sec:bad} closes it with the two-time HDMFT.
-\end{itemize}
+\paragraph{Numerical resolution.}
+A chaotic trajectory does not survive a change of integration tolerance, so re-integrating the
+same economies at $10^{-6}$ instead of $10^{-4}$ resamples the late window.  The eight-economy
+medians of $\beta$ and $\beta_{\rm ad}$ then move by up to $0.05$ and $0.07$
+(\texttt{scripts/\allowbreak beta\_\allowbreak ad\_\allowbreak estimators.py}), the resampling noise also found in the thesis's
+tolerance check (per-economy shifts up to $0.04$).  This sets the resolution of every
+simulation comparison in this note at about $0.03$--$0.05$.  All simulation values come from
+the $10^{-4}$ runs.
 
 \section{Closing $\beta_{\rm ad}$ with the two-time HDMFT}
 \label{sec:bad}
 
-\paragraph{Two adiabatic slopes.}
-$\beta_{\rm ad}=1-d\ln\E[vS/\sqrt D\mid S]/d\ln S$ depends on which amplitude $D$ normalises the
-volatility, and two are used below.  $\beta_{\rm ad}^{\rm nb}$ uses the neighbour sum
-$D_i^{\rm nb}=\sum_jz_{ij}^2d_j$ of \eqref{eq:nbrsum}.  This is the amplitude against which the
-channels $\varepsilon_n$, $\varepsilon_z$ of Section~\ref{sec:within} are defined, and the
-$\beta_{\rm ad}$ of Table~\ref{tab:within}.  At $C\to\infty$ it becomes the class amplitude of
-the HDMFT.  $\beta_{\rm ad}^\Phi$ uses the realised increment variance of the full fitness,
-$D_i^\Phi=\Var[\Phi_i(t+\Delta)-\Phi_i(t)]$ with $\Phi_i=1-g-(\alpha S)_i$, as in
-\eqref{eq:adiabatic}.  By Proposition~\ref{prop:sum} they differ by a selection channel,
-\begin{equation}
-  \beta_{\rm ad}^\Phi-\beta_{\rm ad}^{\rm nb}=\varepsilon_r,
-  \qquad
-  \varepsilon_r=\frac{d\ln\E\bigl[\sqrt{D^\Phi/D^{\rm nb}}\mid S\bigr]}{d\ln S},
-\end{equation}
-which collects the mean-coupling part of the field and the off-diagonal terms dropped in
-\eqref{eq:nbrsum}.  It is the finite-$C$ counterpart of the HDMFT selection term
-$\varepsilon_\chi$ below.  Measured on the same eight economies per graph, $\varepsilon_r=-0.04$,
-$0.01$, $0.04$, $0.05$ ($\alpha=2.2$, $2.5$, $3.5$, $6$), and
-$\beta=\beta_{\rm ad}^\Phi-\varepsilon_k-\varepsilon_n-\varepsilon_z-\varepsilon_r$ closes to
-within $0.03$ on every graph (\texttt{scripts/beta\_ad\_estimators.py}).  Comparisons with the
-HDMFT must pair like with like: class amplitude with $\beta_{\rm ad}^{\rm nb}$, realised
-amplitude with $\beta_{\rm ad}^\Phi$.
-
-The same script integrates each economy twice, at the two tolerances used by the scripts of this
-note ($10^{-4}$ and $10^{-6}$).  A chaotic trajectory does not survive a change of tolerance, so
-the late window is resampled, and the eight-economy medians of $\beta$ and $\beta_{\rm ad}$ move by
-up to $0.05$ and $0.07$.  This is the resampling noise found in the thesis's tolerance check
-(per-economy shifts up to $0.04$), not a bias.  It sets the resolution of every comparison in
-this note at about $0.03$--$0.05$.  All simulation values below come from the $10^{-4}$ runs,
-the same economies as Table~\ref{tab:within}.
-
 \paragraph{The single-firm replay is exact.}
 Drive \eqref{eq:process} with a firm's own measured fitness $\Phi_i(t)$ and the full
-nonlinearity, starting from its true size.  The replay reproduces $\beta_{\rm ad}^\Phi$ to within
+nonlinearity, starting from its true size.  Here $\beta_{\rm ad}$ is normalised by the firm's realised fitness amplitude,
+$D_i=\Var[\Phi_i(t+\Delta)-\Phi_i(t)]$ as in \eqref{eq:adiabatic}.  The replay reproduces it to
+within
 $0.005$ on every graph, so $\beta_{\rm ad}$ is a property of the one-firm process and the law of
 its field.  Linearising the replay with a constant rate $\bar S_i$, as in \eqref{eq:A}, loses
 accuracy.  It is right on heavy tails ($0.67$ against $0.65$ at $\alpha=2.2$) but runs
@@ -630,65 +502,53 @@ Because $\beta_{\rm ad}$ depends only on the one-firm process and a graph-level 
 degree-resolved two-time HDMFT should capture it.  Its classes run \eqref{eq:process} in a
 self-consistent Gaussian field.  We solve it with 25 classes from the realised degree
 sequence, the SCM kernel and 200 paths per class
-(\texttt{hdmft.solve\_\allowbreak twotime\_\allowbreak heterogeneous}), and measure the
-slope of $vS/\sqrt{D_p}$ on its surviving paths, with $D_p$ the class field-increment variance
-from $q_p$.
+(\texttt{hdmft.solve\_\allowbreak twotime\_\allowbreak heterogeneous}), and measure
+$\beta_{\rm ad}$ on its surviving paths, each normalised by its own realised fitness increments
+as in simulation.
 
 \begin{table}[h]
 \centering
 \small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{l|cc|cc|ccc|cc}
+\begin{tabular}{l|cc|ccc|c}
 \toprule
- & \multicolumn{2}{c|}{class / neighbour sum} & \multicolumn{2}{c|}{realised $\Phi$} & & & & & \\
-$\alpha$ & $\beta_{\rm ad}^{\rm HD}$ & $\beta_{\rm ad}^{\rm nb}$
- & $\beta_{\rm ad}^{\rm HD,\Phi}$ & $\beta_{\rm ad}^\Phi$
- & $\beta^{\rm HD}$ & $\varepsilon_k^{\rm HD}$ & $\beta_{\rm ad}^{\rm HD}-\varepsilon_k^{\rm HD}$
- & $\beta_{\rm th}$ & $\beta^{\rm sim}$\\
+$\alpha$ & $\beta_{\rm ad}^{\rm HD}$ & $\beta_{\rm ad}^{\rm sim}$
+ & $\beta^{\rm HD}$ & $\varepsilon_k^{\rm HD}$
+ & $\beta_{\rm ad}^{\rm HD}-\varepsilon_\chi-\varepsilon_k^{\rm HD}$ & $\beta^{\rm sim}$\\
 \midrule
-2.2 & 0.643 & 0.729 & 0.680 & 0.697 & 0.397 & 0.268 & 0.375 & ---   & 0.209\\
-2.5 & 0.753 & 0.736 & 0.782 & 0.749 & 0.566 & 0.214 & 0.539 & 0.388 & 0.414\\
-3.5 & 0.902 & 0.888 & 0.937 & 0.918 & 0.826 & 0.109 & 0.793 & 0.759 & 0.691\\
-6.0 & 0.966 & 0.965 & 0.987 & 1.014 & 0.945 & 0.035 & 0.931 & 0.900 & 0.894\\
+2.2 & 0.680 & 0.697 & 0.397 & 0.268 & 0.383 & 0.209\\
+2.5 & 0.782 & 0.749 & 0.566 & 0.214 & 0.540 & 0.414\\
+3.5 & 0.937 & 0.918 & 0.826 & 0.109 & 0.803 & 0.691\\
+6.0 & 0.987 & 1.014 & 0.945 & 0.035 & 0.933 & 0.894\\
 \bottomrule
 \end{tabular}
 \caption{Two-time HDMFT against simulation ($N=8000$ graphs, $\mu=-1.76$, $\sigma=1.75$,
-$\lambda=10^{-3}$).  Each simulated $\beta_{\rm ad}$ is paired with its HDMFT counterpart: the
-class amplitude with the neighbour sum $D^{\rm nb}$, the realised path fitness with
-$D^\Phi$.  Simulation columns are medians over the eight economies of Table~\ref{tab:within}
-(\texttt{scripts/beta\_ad\_estimators.py}).  $\beta_{\rm th}=\beta^{\rm HD}-\varepsilon_n-\varepsilon_z$ with every
-input of \eqref{eq:eps-n} and \eqref{eq:eps-z} ($c_{ds}$, $\E[k^{-1}]$, $V_S$, $x$) taken from
-HDMFT paths.  $V_S$ adds the static composition spread
-$\tfrac14\E[k^{-1}](\E_w[\bar S^4]/\E_w[\bar S^2]^2-1)$, which the class-level field does not
-carry.  Source: \texttt{scripts/beta\_ad\_hdmft.py}.}
+$\lambda=10^{-3}$).  Both $\beta_{\rm ad}$ columns normalise each firm by its realised fitness
+increments.  $\varepsilon_\chi=0.029$, $0.028$, $0.025$, $0.019$.  Simulation columns are
+medians over eight economies.  Sources: \texttt{scripts/beta\_ad\_hdmft.py},
+\texttt{scripts/beta\_survivor\_theory.py}, \texttt{scripts/beta\_ad\_estimators.py}.}
 \label{tab:hdmft}
 \end{table}
 
-Table~\ref{tab:hdmft} gives three results.
+Table~\ref{tab:hdmft} gives two results.
 \begin{enumerate}
-  \item Paired like with like, $\beta_{\rm ad}$ is predicted by the HDMFT to within $0.02$
-        (class against neighbour sum) and $0.03$ (realised against realised) for
-        $\alpha\ge2.5$.  At $\alpha=2.2$ the realised pair still agrees ($0.680$ against
-        $0.697$), but the class pair is $0.09$ apart, since the HDMFT is not converged there.
-        The HDMFT field roughness does not match the simulation in detail
-        ($0.135$ against $0.088$ at $\alpha=2.5$).  The agreement in $\beta_{\rm ad}$ is
-        therefore an agreement of the full one-firm process, not of a single roughness number.
+  \item $\beta_{\rm ad}$ is predicted by the HDMFT to within $0.035$ on every graph, including
+        $\alpha=2.2$ ($0.680$ against $0.697$).  The HDMFT field roughness does not match the
+        simulation in detail ($0.135$ against $0.088$ at $\alpha=2.5$).  The agreement in
+        $\beta_{\rm ad}$ is therefore an agreement of the full one-firm process, not of a single
+        roughness number.
   \item The HDMFT's own exponent obeys $\beta^{\rm HD}\simeq\beta_{\rm ad}^{\rm HD}-
-        \varepsilon_k^{\rm HD}$ to within $0.03$.  This is expected: its class field has no
-        quenched neighbourhoods, so it carries only the adiabatic and degree channels.  The
-        gap $\beta^{\rm HD}-\beta^{\rm sim}$ ($0.19$, $0.15$, $0.14$, $0.05$) is the
-        within-degree channel of Section~\ref{sec:within}.
-  \item Taking the within-degree inputs from the HDMFT paths too gives a $\beta$ with no
-        simulation input: $0.388$, $0.759$ and $0.900$ against $0.414$, $0.691$ and $0.894$
-        for $\alpha=2.5$, $3.5$ and $6$.
+        \varepsilon_\chi-\varepsilon_k^{\rm HD}$ to within $0.03$.  This is expected: its class
+        field has no quenched neighbourhoods, so it carries only the adiabatic and degree
+        channels.  The gap $\beta^{\rm HD}-\beta^{\rm sim}$ ($0.19$, $0.15$, $0.14$, $0.05$) is the
+        finite-connectivity correction of Section~\ref{sec:finiteC}.
 \end{enumerate}
 
 \paragraph{What sets $\beta_{\rm ad}$.}
 Two further checks inside the HDMFT narrow this down.  First, normalising by the class-level
-$D_p$ mixes in a selection effect: near-threshold survivors are the ones whose realised
-fluctuations happened to be small.  With each path's realised increment variance instead, the
-adiabatic slope is $0.680$, $0.782$, $0.937$ and $0.987$ ($\alpha=2.2$, $2.5$, $3.5$, $6$), and
-the selection term is only $\varepsilon_\chi=0.02$--$0.03$.  These realised values match the
-simulation's $\beta_{\rm ad}^\Phi$ ($0.697$, $0.749$, $0.918$, $1.014$) to within $0.03$.  Second, linear response with the class
+amplitude instead of the realised one mixes in a selection effect: near-threshold survivors are
+the ones whose realised fluctuations happened to be small.  This is the term $\varepsilon_\chi$,
+the slope of $\E[\sqrt{D_{\rm realised}/D_{\rm class}}\mid S]$, and it is only $0.02$--$0.03$.
+Second, linear response with the class
 spectrum gives a flat $0.66$--$0.71$ and misses the trend.  Linear response on the survivors'
 own fitness paths recovers it on heavy tails ($0.688$, $0.746$ against $0.680$, $0.782$), but runs
 $0.09$--$0.12$ low on light tails.  Survivors see a slightly rougher field than their class
@@ -701,12 +561,11 @@ tails.
 \paragraph{Where the Gaussian closure fails.}
 At $\alpha=2.2$ the HDMFT fixed point does not converge (relative error $15$--$18\%$ even at
 twice the iterations, and $g$ keeps drifting).  Its survivors also sit on too-low degrees
-($\E[k^{-1}]=0.043$ against $0.020$ in simulation), so the within-degree inputs come out wrong
-and $\beta_{\rm th}$ is meaningless there.  This is the regime where
+($\E[k^{-1}]=0.043$ against $0.020$ in simulation).  This is the regime where
 $n_{\rm eff}\approx4$.  A field carried by four neighbours is not Gaussian, so the assumption
-behind the cavity step fails.  For $\alpha=2.2$ the theory therefore stands on
-Table~\ref{tab:within}: closed forms with simulation inputs, and $\beta_{\rm ad}$ from either
-source.  A sparse (few-neighbour, non-Gaussian) cavity field is what the heaviest tails would
+behind the cavity step fails.  For $\alpha=2.2$ only $\beta_{\rm ad}$, which the HDMFT still
+gets right, and the degree closure \eqref{eq:eps-alpha} of Table~\ref{tab:check} stand.  A
+sparse (few-neighbour, non-Gaussian) cavity field is what the heaviest tails would
 need.
 
 \section{Assembled prediction and a new test}
@@ -716,40 +575,37 @@ At leading order in $1/C$ the exponent is the HDMFT's own, $\beta_\infty\equiv\b
 since the class field carries no quenched neighbourhoods.  The survivor ensemble gives it
 analytically,
 \begin{equation}
-  \beta_\infty\simeq\beta_{\rm ad}^{\rm HD,\Phi}-\varepsilon_\chi-\varepsilon_k,
+  \beta_\infty\simeq\beta_{\rm ad}-\varepsilon_\chi-\varepsilon_k,
   \label{eq:beta-inf}
 \end{equation}
-with $\varepsilon_k$ from \eqref{eq:joint}, and $\beta_{\rm ad}^{\rm HD,\Phi}$, $\varepsilon_\chi$ from the
-one-firm process.  The within-degree channels of Section~\ref{sec:within} are the first
-quenched correction, $\beta_N=\beta_\infty-\varepsilon_n-\varepsilon_z$, both proportional to
-$c_{ds}\E[k^{-1}]$.
+with $\varepsilon_k$ from \eqref{eq:joint}, and $\beta_{\rm ad}$, $\varepsilon_\chi$ from the
+one-firm process.  Finite connectivity then lowers $\beta$ (Section~\ref{sec:finiteC}).
 
 \begin{center}
 \small
 \begin{tabular}{lcccc}
 \toprule
 $\alpha$ & $\beta_\infty$, \eqref{eq:beta-inf} & $\beta_\infty=\beta^{\rm HD}$
- & $\beta_{8000}$ (theory) & $\beta_{8000}$ (sim)\\
+ & $\beta_{8000}$ (sim) & $\beta^{\rm HD}-\beta_{8000}$\\
 \midrule
-2.2 & 0.320 & 0.397 & ---   & 0.209\\
-2.5 & 0.519 & 0.566 & 0.388 & 0.414\\
-3.5 & 0.797 & 0.826 & 0.759 & 0.691\\
-6.0 & 0.933 & 0.945 & 0.900 & 0.894\\
+2.2 & 0.320 & 0.397 & 0.209 & (0.19)\\
+2.5 & 0.519 & 0.566 & 0.414 & 0.15\\
+3.5 & 0.797 & 0.826 & 0.691 & 0.14\\
+6.0 & 0.933 & 0.945 & 0.894 & 0.05\\
 \bottomrule
 \end{tabular}
 \end{center}
 
-$\beta_{8000}$ (theory) is $\beta^{\rm HD}-\varepsilon_n-\varepsilon_z$ with every input taken
-from HDMFT paths, the $\beta_{\rm th}$ of Table~\ref{tab:hdmft}; it has no simulation input.
 The analytic form \eqref{eq:beta-inf} runs $0.01$--$0.05$ below $\beta^{\rm HD}$, because the
-ensemble overestimates $\varepsilon_k$ on the heavier tails (Table~\ref{tab:ensemble}) and the
-split $\beta^{\rm HD}\simeq\beta_{\rm ad}^{\rm HD}-\varepsilon_k^{\rm HD}$ holds only to $0.03$.
-The theory is within $0.03$ of simulation at $\alpha=2.5$ and $6$, and $0.07$ above it at
-$\alpha=3.5$.  The thesis's $1/N$ extrapolations ($0.79$ at $\alpha=3.5$, and a loosely
-constrained $0.47$ at $\alpha=2.5$) lie $0.04$ and $0.10$ below $\beta^{\rm HD}$.  They assume a
-$1/N$ approach, which Section~\ref{sec:within} shows is not established, so they are not a sharp
-test.  At $\alpha=2.2$ the $1/C$ expansion is not controlled ($n_{\rm eff}\approx4$) and the HDMFT
-does not converge, so no theoretical $\beta_{8000}$ is given.
+ensemble overestimates $\varepsilon_k$ on the heavier tails (Table~\ref{tab:ensemble}) and
+the split $\beta^{\rm HD}\simeq\beta_{\rm ad}^{\rm HD}-\varepsilon_\chi-\varepsilon_k^{\rm HD}$ holds
+only to $0.03$.  The
+finite-connectivity gap grows with the degree tail, as $c_{ds}\E[k^{-1}]$ does.  The thesis's
+$1/N$ extrapolations ($0.79$ at $\alpha=3.5$, and a loosely constrained $0.47$ at $\alpha=2.5$)
+lie $0.04$ and $0.10$ below $\beta^{\rm HD}$.  They assume a $1/N$ approach, which
+Section~\ref{sec:finiteC} shows is not established, so they are not a sharp test.  At
+$\alpha=2.2$ the $1/C$ expansion is not controlled ($n_{\rm eff}\approx4$) and the HDMFT does not
+converge, so the bracketed gap should not be used.
 
 \paragraph{Window dependence.}
 Through $n=T/2\tau$ and $q_T$, \eqref{eq:joint} predicts that $\beta$ depends on the
@@ -929,8 +785,8 @@ Four things can be read off the tables.
   \item The ratio curve is a leading-order property and $\beta$ is not.  The HDMFT is off in
         $\zeta_1$ by $0.14$ at $\alpha=2.5$ ($0.525$ against $0.389$) and still gets the ratios
         right.  This is consistent with the thesis finding that the ratios are converged in $N$
-        while $\beta$ drifts: the within-degree channels of Section~\ref{sec:within} move
-        $\zeta_1$ at order $1/C$.  We have not shown why they leave the ratios nearly unchanged.
+        while $\beta$ drifts: the finite-connectivity correction of Section~\ref{sec:finiteC}
+        moves $\zeta_1$.  We have not shown why they leave the ratios nearly unchanged.
   \item The bend grows with the tail for two reasons, visible in \eqref{eq:bend}: $e_1=
         \varepsilon_k$ rises and $\zeta_1=\beta$ falls.  Their ratio goes from $0.04$ at
         $\alpha=6$ to $0.8$--$1.25$ at $\alpha=2.2$.
@@ -938,8 +794,8 @@ Four things can be read off the tables.
 
 \paragraph{Limits.}
 In simulation the degree-normalised volatility is not of fixed shape ($\zeta_4^A/\zeta_1^A=
-3.68$--$3.87$), so part of the simulated bend comes from the within-degree amplitude $R_i$ rather
-than from degree.  Simulation and HDMFT reach nearly the same curve by slightly different routes.
+3.68$--$3.87$), so part of the simulated bend comes from the spread of amplitudes within a degree class
+rather than from degree.  Simulation and HDMFT reach nearly the same curve by slightly different routes.
 The factorisation \eqref{eq:zeta-split} holds to $0.01$ at $q=1$ and to about $0.1$ at $q=4$ in
 the HDMFT.  In simulation it fails at $\alpha=2.2$ ($0.31$ at $q=4$), the same few-neighbour
 regime where the Gaussian cavity fails.  Finally, \eqref{eq:criterion} is a second-cumulant
@@ -956,10 +812,10 @@ of the data after $q=3$, which is why the model's curve bends more gently than t
         no fitting.  Its ingredients are size $=$ mean fitness, a Gaussian static field, and
         extreme-value survival.  It reproduces the HDMFT's degree channel and size spread to
         within $0.015$ ($\alpha\ge2.5$).
-  \item First correction in $1/C$: quenched neighbourhoods, $\varepsilon_n+\varepsilon_z$, both
-        proportional to $c_{ds}\E[k^{-1}]$.  Because $c_{ds}$ grows with $N$ and
-        $\varepsilon_k$ converges to its HDMFT value from below, $\beta(N)$ approaches its limit
-        more slowly than $1/N$ over the measured range.
+  \item Finite connectivity: quenched neighbourhoods lower $\beta$ by an amount proportional
+        to $c_{ds}\E[k^{-1}]$, the inverse effective number of neighbours ($0.05$--$0.15$ at
+        $N=8000$).  Because $c_{ds}$ grows with $N$ and $\varepsilon_k$ converges to its HDMFT
+        value from below, $\beta(N)$ approaches its limit more slowly than $1/N$.
   \item Prediction confirmed in simulation: $\beta$ and $\varepsilon_k$ depend on the observation
         window $T$.
   \item Multiscaling: the degree channel bends $\zeta_q/\zeta_1$ below $q$ if and only if
