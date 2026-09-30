@@ -357,3 +357,89 @@ def heterogeneous_zero_growth_line(
         "controlled": np.array([point["controlled"] for point in points], dtype=bool),
         "points": points,
     }
+
+
+def solve_twotime_heterogeneous(
+    mu: float,
+    sigma: float,
+    connection_kernel: np.ndarray,
+    connectance: float,
+    n_per_class: int = 400,
+    Nt: int = 960,
+    dt: float = 0.25,
+    iters: int = 24,
+    burn: int = 12,
+    damp: float = 0.5,
+    lam: float = 0.0,
+    nsub: int = 4,
+    seed: int = 0,
+    verbose: bool = False,
+) -> dict:
+    """Two-time HDMFT on equal-population degree classes (fluctuating phase, gamma=0).
+
+    Class ``p`` runs the effective process of eq. (dmft-heterogeneous-process),
+
+        dS/dt = S [1 - S - mu B_p(t) + sigma eta_p(t) - g(t)] + lam (1 - S),
+        <eta_p(t) eta_p(s)> = q_p(t,s),
+
+    closed by  B_p = sum_r K_pr E[S_r(t)],  q_p = sum_r K_pr E[S_r(t) S_r(s)],
+    K = P diag(rho) / c,  and E[S] = 1 across all classes (the -g(t) drift).
+    Classes must have equal weight (``bin_degree_distribution`` output), so the
+    ensemble of ``n_per_class`` paths per class IS the degree distribution.
+    Like ``dmft.solve_twotime`` this is a Monte-Carlo fixed-point map: the
+    post-``burn`` iterations are pooled. Returns the final ensemble paths ``U``
+    (n_classes, n_per_class, Nt) plus the pooled class fields.
+    """
+    from relative_glv.dmft import cholesky_psd
+
+    kernel = np.asarray(connection_kernel, dtype=float)
+    n_cls = kernel.shape[0]
+    K = kernel / (n_cls * connectance)               # rho_r = 1/n_cls
+    rel_k = K.sum(axis=1)
+    rng = np.random.default_rng(seed)
+    t = np.arange(Nt) * dt
+    lag = np.abs(t[:, None] - t[None, :])
+    q = rel_k[:, None, None] * (1.0 + 2.0 * np.exp(-lag / 3.0))[None]   # decaying warm start
+    B = np.repeat(rel_k[:, None], Nt, axis=1)
+    u0 = rng.uniform(0.5, 1.5, (n_cls, n_per_class))
+    u0 /= u0.mean()
+    h = dt / nsub
+    q_bar, B_bar, n_bar, hist = np.zeros_like(q), np.zeros_like(B), 0, []
+
+    for it in range(iters):
+        eta = np.stack([cholesky_psd(q[p]) @ rng.standard_normal((Nt, n_per_class))
+                        for p in range(n_cls)], axis=1)          # (Nt, n_cls, n_per)
+        u, U, g_t = u0.copy(), np.empty((Nt, n_cls, n_per_class)), np.empty(Nt)
+        for s in range(Nt):
+            U[s] = u
+            e0, e1 = eta[s], eta[min(s + 1, Nt - 1)]
+            b0, b1 = B[:, s, None], B[:, min(s + 1, Nt - 1), None]
+            for j in range(nsub):
+                x = (j + 0.5) / nsub
+                F = 1.0 - u - mu * (b0 + (b1 - b0) * x) + sigma * (e0 + (e1 - e0) * x)
+                g = float((u * F).mean())
+                if j == 0:
+                    g_t[s] = g
+                u = u * np.exp(np.clip(h * (F - g), -30.0, 30.0))
+                if lam:
+                    u = u + h * lam * (1.0 - u)
+                u = np.maximum(u, 0.0)
+                u /= u.mean()                                    # E[S] = 1
+        Up = U.transpose(1, 0, 2)                                # (n_cls, Nt, n_per)
+        C_r = Up @ Up.transpose(0, 2, 1) / n_per_class           # class autocorrelation
+        q_new = np.tensordot(K, C_r, axes=1)
+        B_new = K @ U.mean(axis=2).T
+        err = float(np.abs(q_new - q).mean() / np.abs(q).mean())
+        hist.append(err)
+        q = (1 - damp) * q + damp * q_new
+        B = (1 - damp) * B + damp * B_new
+        if it >= burn:
+            q_bar += q_new; B_bar += B_new; n_bar += 1
+        if verbose:
+            print(f"  it{it:02d} rel.err={err:.4f} g={g_t[Nt // 2:].mean():+.3f}", flush=True)
+
+    return {
+        "t": t, "U": np.moveaxis(U, 0, -1), "g_t": g_t,
+        "q": q_bar / n_bar, "B": B_bar / n_bar, "rel_k": rel_k,
+        "err": float(np.mean(hist[burn:])), "hist": np.array(hist),
+    }

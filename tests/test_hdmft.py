@@ -134,3 +134,16 @@ def test_zero_growth_line_marks_unstable_fixed_point_continuation():
     assert np.allclose(result["mu_thesis"], -result["mu_c"])
     assert np.array_equal(result["controlled"], [True, False])
     assert np.allclose(result["growth_rate"], 0.0, atol=1e-9)
+
+
+def test_twotime_one_class_mean_competition_cancels():
+    """Regular graph: mu B = mu is a uniform shift absorbed by g(t); shapes unchanged."""
+    from relative_glv.hdmft import solve_twotime_heterogeneous
+
+    kw = dict(sigma=1.8, connection_kernel=np.array([[0.1]]), connectance=0.1,
+              n_per_class=200, Nt=60, dt=0.25, iters=3, burn=1, seed=3)
+    a = solve_twotime_heterogeneous(mu=0.0, **kw)
+    b = solve_twotime_heterogeneous(mu=1.5, **kw)
+    np.testing.assert_allclose(a["U"], b["U"], rtol=1e-8, atol=1e-10)
+    np.testing.assert_allclose(a["g_t"] - b["g_t"], 1.5, atol=1e-8)
+    np.testing.assert_allclose(a["B"], 1.0, atol=1e-12)
