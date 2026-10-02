@@ -1,5 +1,5 @@
 import numpy as np
-from relative_glv.msb import rescale, size_volatility, tent_stats
+from relative_glv.msb import rescale, size_volatility, spell_volatility, tent_stats
 
 
 def test_rescale_unit_scale_on_gaussian():
@@ -37,3 +37,22 @@ def test_size_volatility_recovers_a_planted_exponent():
     out = size_volatility(W, t, window=(0, T - 1), dt=1.0)
     assert abs(out["beta"] - beta_true) < 0.08
     assert out["r2"] > 0.9
+
+
+def test_spell_volatility_splits_spells_and_matches_balanced_panel():
+    # firm 0 dips below the floor mid-window -> two spells; the rest never dip, so their
+    # spells are the whole window and must agree with size_volatility firm by firm
+    rng = np.random.default_rng(3)
+    N, T = 4000, 80
+    base = np.logspace(0.5, 2, N)                         # smallest share ~3e-5, never below the floor
+    lnS = np.log(base)[:, None] + 0.5 * base[:, None] ** -0.3 * rng.standard_normal((N, T))
+    lnS[0, 30:40] = np.log(1e-9)                          # firm 0 delisted for 10 steps
+    W = np.exp(lnS); W /= W.sum(0, keepdims=True)
+    t = np.arange(T, dtype=float)
+    sp = spell_volatility(W, t, window=(0, T - 1), dt=1.0)
+    sv = size_volatility(W[1:], t, window=(0, T - 1), dt=1.0)
+    assert sp["Sbar"].size == N + 1                       # firm 0 contributes two spells
+    assert sorted(sp["length"][:2]) == [30, 40] and sp["censored"].all()
+    assert (sp["firm"][:2] == 0).all() and (sp["firm"][2:] == np.arange(1, N)).all()
+    assert np.allclose(sp["vol"][2:], sv["vol"])          # undipped firms: identical estimator
+    assert abs(sp["beta"] - 0.3) < 0.08

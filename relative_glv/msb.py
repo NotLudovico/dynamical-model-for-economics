@@ -85,6 +85,38 @@ def size_volatility(W, t, *, window, dt, n_bins=20):
                 bin_S=bx, bin_vol=by, pk=pk, growth=g)
 
 
+def spell_volatility(W, t, *, window, dt, floor=1e-6, min_growth=2, n_bins=20):
+    """size_volatility on the unbalanced panel of Moran-Secchi-Bouchaud (2024, Sec. 3.1).
+
+    A firm is listed while its share is above `floor`. Every listed spell (a contiguous
+    stretch above the floor, on the dt grid) counts as one firm with its own lifetime
+    average size Sbar and MAD volatility around its own mean growth, if it has at least
+    `min_growth` growth rates. Unlike size_volatility, no firm has to persist across the
+    whole window, so the estimator has a long-window limit: only the spells cut by the
+    window edges (`censored`) depend on it. Returns dict(Sbar, vol, firm, length,
+    censored, beta, r2, bin_S, bin_vol, pk); `firm` is the row of W, `length` counts
+    grid points.
+    """
+    N = W.shape[0]
+    tg = np.arange(window[0], window[1] + 1e-9, dt)
+    lnS = np.array([np.interp(tg, t, np.log(np.maximum(N * w, 1e-300))) for w in W])
+    on = np.pad(lnS > np.log(N * floor), ((0, 0), (1, 1)))
+    i, j = np.nonzero(np.diff(on.astype(np.int8), axis=1))    # alternating start / end per firm
+    a, b = j[::2], j[1::2]                                     # spell = grid points a .. b-1
+    keep = b - a > min_growth
+    Sbar, vol = [], []
+    for f, s, e in zip(i[::2][keep], a[keep], b[keep]):
+        x = lnS[f, s:e]
+        g = np.diff(x)
+        Sbar.append(np.exp(x).mean())
+        vol.append(np.sqrt(np.pi / 2) * np.abs(g - g.mean()).mean())
+    Sbar, vol = np.array(Sbar), np.array(vol)
+    beta, r2, bx, by, pk = _decline_beta(Sbar, vol, n_bins)
+    return dict(Sbar=Sbar, vol=vol, firm=i[::2][keep], length=(b - a)[keep],
+                censored=((a == 0) | (b == tg.size))[keep],
+                beta=beta, r2=r2, bin_S=bx, bin_vol=by, pk=pk)
+
+
 def tent_stats(g):
     """Shape of the (rescaled) growth-rate distribution: Bowley skewness
     (quartile-based, robust) and excess kurtosis. A symmetric fat tent has
