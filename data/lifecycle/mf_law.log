@@ -1,0 +1,36 @@
+
+alpha=6.0 sigma=1.75
+  A cavity: gbar +0.176, Bbar 1.000, Q0 4.513, QT 3.387
+    standardised static field z = (m - r)/s: mean -0.003 sd 1.004 skew -0.01 exkurt +0.23   (law: 0, 1, 0, 0)
+    f_measured / f_law: median 0.969, IQR 0.865-1.093
+    m: sd 3.27 vs law 3.23; skew -0.11 vs -0.09; corr(m,f) -0.09 vs -0.12
+  B HDMFT (rel.err 0.025): per firm, law HDMFT / law cavity: mean +0.109 (shift), static sd 0.951, f 1.055
+    ACF at lag 0.5, 2, 8: sim 0.99 0.85 0.34 | cavity 0.99 0.86 0.36 | HDMFT 0.97 0.74 0.19
+  C spells, T=480: full model beta 0.422 ratios 1.86 2.55 3.07
+    surrogate, measured law: beta 0.439 ratios 1.79 2.39 2.82 (tau 3.51)
+    surrogate, cavity   law: beta 0.432 ratios 1.85 2.52 3.03 (tau 3.69)
+    surrogate, hdmft    law: beta 0.403 ratios 1.86 2.56 3.10 (tau 2.41)
+
+alpha=2.5 sigma=1.75
+  A cavity: gbar +0.332, Bbar 0.927, Q0 5.474, QT 3.627
+    standardised static field z = (m - r)/s: mean +0.004 sd 0.997 skew -0.03 exkurt +0.35   (law: 0, 1, 0, 0)
+    f_measured / f_law: median 0.962, IQR 0.831-1.119
+    m: sd 4.36 vs law 4.25; skew -4.56 vs -4.47; corr(m,f) -0.42 vs -0.41
+  B HDMFT (rel.err 0.100): per firm, law HDMFT / law cavity: mean +0.012 (shift), static sd 0.975, f 1.119
+    ACF at lag 0.5, 2, 8: sim 0.95 0.63 0.13 | cavity 0.95 0.66 0.14 | HDMFT 0.94 0.60 0.11
+  C spells, T=480: full model beta 0.198 ratios 1.49 1.48 1.14
+    surrogate, measured law: beta 0.185 ratios 1.52 1.67 1.56 (tau 1.89)
+    surrogate, cavity   law: beta 0.235 ratios 1.60 1.83 1.80 (tau 2.02)
+    surrogate, hdmft    law: beta 0.216 ratios 1.63 1.91 1.92 (tau 1.76)
+
+alpha=3.5 sigma=1.9
+  A cavity: gbar +0.936, Bbar 1.032, Q0 6.859, QT 3.318
+    standardised static field z = (m - r)/s: mean +0.006 sd 1.006 skew -0.02 exkurt +0.28   (law: 0, 1, 0, 0)
+    f_measured / f_law: median 0.975, IQR 0.878-1.090
+    m: sd 3.69 vs law 3.67; skew -0.87 vs -0.87; corr(m,f) -0.29 vs -0.33
+  B HDMFT (rel.err 0.058): per firm, law HDMFT / law cavity: mean +0.123 (shift), static sd 0.974, f 0.891
+    ACF at lag 0.5, 2, 8: sim 0.93 0.57 0.10 | cavity 0.93 0.58 0.11 | HDMFT 0.95 0.62 0.12
+  C spells, T=480: full model beta 0.214 ratios 1.80 2.31 2.54
+    surrogate, measured law: beta 0.231 ratios 1.79 2.35 2.69 (tau 1.65)
+    surrogate, cavity   law: beta 0.277 ratios 1.80 2.38 2.73 (tau 1.72)
+    surrogate, hdmft    law: beta 0.285 ratios 1.81 2.43 2.86 (tau 1.87)

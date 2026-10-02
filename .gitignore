@@ -12,3 +12,7 @@ figures/
 !thesis/assets/figures/
 !thesis/assets/figures/*.png
 scripts/*.npz
+
+# Regenerable intermediates of scripts/lifecycle (mf_law.py, ablation.py rewrite them)
+data/lifecycle/law_*.npz
+data/lifecycle/ablation_*.npz
