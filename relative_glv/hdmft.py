@@ -165,9 +165,10 @@ def solve_heterogeneous_fixed_point(
     a0 = 1.0 - homogeneous["gstar"]
     x0 = np.concatenate([B0, np.log(q0), [a0]])
     if lam:
-        quadrature_x, quadrature_w = np.polynomial.hermite.hermgauss(80)
-        gaussian_z = np.sqrt(2.0) * quadrature_x
-        gaussian_w = quadrature_w / np.sqrt(np.pi)
+        # Dense uniform grid, not Gauss-Hermite: S*(h) and its susceptibility kink over a width
+        # ~sqrt(lam) in h, which 80 Hermite nodes do not resolve (the stability radius jumped).
+        gaussian_z = np.linspace(-9.0, 9.0, 6001)
+        gaussian_w = np.exp(-gaussian_z**2 / 2) * (gaussian_z[1] - gaussian_z[0]) / np.sqrt(2 * np.pi)
 
     def moments(x):
         B = x[:n_classes]
