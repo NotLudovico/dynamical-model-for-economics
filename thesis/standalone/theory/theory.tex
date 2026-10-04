@@ -39,18 +39,20 @@
 \noindent
 We develop the theory of a generalised Lotka--Volterra (GLV) model of firms in which every
 interaction is normalised by the mean firm size.  The normalisation makes the dynamics scale
-invariant: the aggregate grows exponentially at a self-consistent rate $g(t)$, and the
-composition obeys a disordered replicator equation.  A heterogeneous dynamical mean-field theory
-(HDMFT) on the power-law interaction graph gives the phase diagram, the growth rate and its
-zero-growth line, and, in the fluctuating phase, the law of the fitness field felt by each
-firm.  From there the size--volatility statistics reduce to a one-dimensional problem: a single
-firm driven by a Gaussian fitness whose mean and amplitude are fixed by its degree and five
-order parameters.  Which firms the estimator counts then decides the mechanism.  Firms present
-throughout a window measure plateau fluctuations, with $\beta\to1$ on homogeneous graphs and a
-degree channel that lowers it.  The unbalanced panel used empirically measures life cycles: a
-firm's volatility is its log range over its lifetime, the exponents become lifetime exponents,
-and multiscaling follows from a general criterion on the conditional spread of a random factor.
-Each result is labelled as exact, leading order in $1/C$, or numerical.
+invariant: the aggregate grows exponentially at a self-consistent rate, and the composition obeys
+a disordered replicator equation.  A heterogeneous dynamical mean-field theory (HDMFT) on the
+power-law interaction graph gives the phase diagram.  For an uncorrelated graph the loss of the
+unique fixed point has a closed form, $\sigma_c\simeq\sqrt2\,[1-\tfrac12\Var\kappa\,(1-\mu^2/2\pi)]$ to
+first order in the degree variance, while the zero-growth line hardly depends on the topology.
+Above $\sigma_c$ trapping equilibria coexist with chaos.  In the fluctuating phase the fitness
+felt by each firm is Gaussian, with mean and amplitude fixed by its degree, and independent
+single firms driven by that fitness reproduce the size--volatility statistics of the network.
+Under the unbalanced panel used empirically these statistics are set by firm life cycles.  The
+one-firm equation is solvable for any fitness path; a firm exits on the first fitness dip
+whose area exceeds an explicit threshold, which gives its lifetime law.  A firm's volatility is
+its log range over its lifetime, and multiscaling follows from a general criterion: the growing
+spread of lifetimes with size.  Each result is labelled as exact, leading order in $1/C$, or
+numerical.
 \end{abstract}
 
 \tableofcontents
@@ -70,7 +72,8 @@ Compustat the conditional moments scale as
 so large firms are less volatile, but not as much as the $\bar S^{-1/2}$ of independent
 subunits, and the ratio curve bends below the line $\zeta_q/\zeta_1=q$ of a volatility law of
 fixed shape \citep{moran2024}.  We call the bend \emph{multiscaling}.  Simulations of the model
-below reproduce both features.  This document explains why.
+below reproduce both features.  This paper explains why, and maps where in parameter space
+the model fluctuates and grows.
 
 \paragraph{The argument in four steps.}
 \begin{enumerate}
@@ -78,19 +81,21 @@ below reproduce both features.  This document explains why.
         size separates the scale from the composition.  The scale grows at $g(t)$; the
         composition is a replicator equation.  Each firm obeys a one-dimensional equation driven
         by its \emph{fitness} $\Phi_i(t)$, and its mean size equals its mean fitness.
-  \item \emph{Mean-field theory} (Sections~\ref{sec:hdmft}--\ref{sec:fixed}).  At leading order in
-        $1/C$ the fitness is a Gaussian process whose mean and amplitude depend on the degree
-        through five order parameters.  The fixed-point phase gives the chaos onset and the
-        zero-growth line in closed or nearly closed form.
+  \item \emph{Mean-field theory and phase diagram} (Sections~\ref{sec:hdmft}--\ref{sec:fixed}).  At
+        leading order in $1/C$ the fitness is a Gaussian process whose mean and amplitude depend
+        on the degree through five order parameters.  The stability line of the unique fixed
+        point and the zero-growth line follow in closed or nearly closed form; above the line
+        trapping equilibria coexist with chaos.
   \item \emph{Single-firm reduction} (Section~\ref{sec:onefirm}).  In the fluctuating phase the
         size--volatility statistics of the full network are reproduced by independent single
         firms driven by Gaussian fitness with the mean-field law.  The network enters only
         through that law.
-  \item \emph{Which firms are counted} (Sections~\ref{sec:adiabatic}--\ref{sec:spells}).  A
+  \item \emph{Which firms are counted} (Sections~\ref{sec:panels}--\ref{sec:spells}).  A
         firm's volatility has two sources: fluctuations on its plateau, and the rise and fall
-        that bracket its life.  The survivor panel sees only the first; the unbalanced panel used
-        in the data is dominated by the second.  The two give different mechanisms for $\beta$
-        and for the bend.
+        that bracket its life.  The unbalanced panel used in the data is dominated by the second:
+        exits are set by fitness dips whose area exceeds an explicit threshold, and the bend of
+        the ratio curve is the growing spread of lifetimes with size.  The survivor panel, which
+        sees only the plateau, is treated in the appendices.
 \end{enumerate}
 Table~\ref{tab:map} lists the results and their status.  ``Exact'' means it holds for the
 finite-$N$ model.  ``Leading order'' means exact in the HDMFT, that is, at $N\to\infty$ and to
@@ -107,6 +112,7 @@ size is mean fitness & $\bar S_i=\bPhi_i$ for every stationary firm & exact & \r
 fitness law & $\bPhi\mid\kappa$ Gaussian, amplitude $\propto\sqrt\kappa$ & leading order & \ref{sec:fitnesslaw}\\
 chaos onset, regular graph & $\sigma_c=\sqrt2/(1+\gamma)$, independent of $\mu$ & leading order & \ref{sec:regular}\\
 stability line, heterogeneous & $\sigma_c(\mu)$, closed form for bilinear kernel & leading order & \ref{sec:zerogrowth}\\
+above $\sigma_c$ & trapping equilibria coexist with chaos & numerical & \ref{sec:above}\\
 zero-growth line, power-law graph & $a=1$ in the HDMFT closure & leading order$^\dagger$ & \ref{sec:zerogrowth}\\
 single-firm reduction & network $\to$ one firm in Gaussian fitness & numerical & \ref{sec:reduction}\\
 adiabatic volatility law & $v=\sqrt D/S$, $\beta\to1$ at fixed degree & leading order & \ref{sec:adlaw}\\
@@ -114,6 +120,7 @@ sum rule & $\beta=\beta_A-\varepsilon_k$ & exact$^\ddagger$ & \ref{sec:sumrule}\
 survivor ensemble & degree channel $\varepsilon_k$ with no fitting & leading order & \ref{sec:ensemble}\\
 multiscaling criterion & bend $\Leftrightarrow$ $\Var(\ln X\mid\bar S)$ grows & 2nd cumulant & \ref{sec:criterion}\\
 lifetime identity & $v=\sqrt{\pi/2}\,(2\ell+V_p)/n$ & exact & \ref{sec:identity}\\
+spells are humps & $V_p\simeq0$ below $8\tau$; merges add $\simeq0.7\ell$ & numerical & \ref{sec:humps}\\
 exact one-firm solution & $1/S=\int e^{-[\mathcal A(t)-\mathcal A(t')]}dt'$ & exact & \ref{sec:rice}\\
 lifetime law & $\bar L=\PhiN(u)/\nu(u)P_{\rm kill}(u)$ & leading order$^\S$ & \ref{sec:rice}\\
 \bottomrule
@@ -340,7 +347,7 @@ Here $\PhiN$ and $\phiN$ are the standard normal distribution function and densi
 tested firm by firm in Section~\ref{sec:fitnesscheck}.
 
 %======================================================================
-\section{The fixed-point phase: stability and growth}
+\section{Phase diagram}
 \label{sec:fixed}
 
 \subsection{Clipped-Gaussian closure}
@@ -557,8 +564,8 @@ every graph is above $\sigma_c$ and on the growing side of the line.
   ten realisations per cell; grey: median churn below $0.035$; red: shrinking; blue: fluctuating and
   growing; dark: integration failed, a numerical artefact of the solver tolerance) with the HDMFT stability line ($60$ classes, SCM kernel,
   $\lambda=10^{-3}$) and the zero-growth line.  Grey cells above the black line are not a unique fixed
-  point: at strong competition they fluctuate with an amplitude below the churn cutoff, at weak
-  competition they are runs trapped by one of many equilibria (Section~\ref{sec:above}).  (b) HDMFT
+  point: most of their runs are trapped by one of many equilibria or fluctuate with an amplitude
+  below the churn cutoff (Section~\ref{sec:above}).  (b) HDMFT
   stability lines (solid) and the stable part of the zero-growth lines (dotted) for
   $\alpha=2.2$--$6$ at $\lambda=0$, with the fully connected limit.  Source:
   \texttt{scripts/plot\_phase\_theory.py}, \texttt{scripts/phase\_theory\_lines.py}.}
@@ -575,7 +582,23 @@ unknown.  At fixed $\sigma$ the $2n+1$ unknowns $\{B_p^{(0)},q_p^{(0)}\}$ and $\
   \Delta_p^{(0)}=\frac{1+\mu^{(0)}B_p^{(0)}}{\sigma\sqrt{q_p^{(0)}}} .
   \label{eq:zerogrowth}
 \end{gather}
-In the one-class limit this gives $\mu^{(0)}=-g_0(\sigma)$.  Each point must also be tested
+In the one-class limit this gives $\mu^{(0)}=-g_0(\sigma)$.  For the bilinear kernel the line solves
+\[
+  \sigma^2\langle\kappa^2w_2(\Delta_\kappa)\rangle=1,\qquad M=\mu\langle\kappa^{3/2}w_1(\Delta_\kappa)\rangle,\qquad
+  A=\langle\kappa^{1/2}w_1(\Delta_\kappa)\rangle,
+\]
+the last being $a=1$ after the normalisation $\sigma\sqrt Q=1/\langle\kappa^{1/2}w_1\rangle$.  Expanding as for \eqref{eq:sigmac-v},
+\begin{equation}
+  \mu^{(0)}(\sigma)\simeq-g_0(\sigma)+c(\sigma)\,\Var\kappa,\qquad
+  c(\sigma\to0)=0,\qquad c(\sigma\to\sqrt2)=\frac54-\frac\pi2\simeq-0.32,
+  \label{eq:zg-v}
+\end{equation}
+with $c$ an explicit rational function of $\Delta$, $\PhiN(\Delta)$ and $\phiN(\Delta)$ at the regular
+solution $\sigma^2w_2(\Delta)=1$ (\texttt{scripts/phase\_zero\_growth\_bilinear.py}; it matches the exact
+bilinear line to $0.004$ at $\alpha=6$).  Heterogeneity moves the zero-growth line slightly towards
+competition, so a heterogeneous economy grows a little faster at given $(\mu,\sigma)$.  The
+coefficient is at most a third of that of $\sigma_c$ in \eqref{eq:sigmac-v}, which is why the zero-growth
+lines of different graphs nearly coincide (Figure~\ref{fig:phasetheory}b).  Each point must also be tested
 against \eqref{eq:stability}: the solution is a controlled prediction only where the fixed point
 is stable.
 
@@ -604,34 +627,38 @@ The simulated phase diagram classifies a cell as frozen when the late-time stand
 the growth rates (the \emph{churn}) is below $0.035$.  Its freezing line lies $0.1$--$0.3$ above the
 HDMFT $\sigma_c(\mu)$: $1.75$, $1.63$, $1.46$, $1.40$, $1.37$ against $1.63$, $1.52$, $1.38$, $1.25$,
 $1.11$ at $\mu=-2.5$, $-1.97$, $-1.45$, $-1.05$, $-0.66$.  Three numerical checks on the same graph
-ensemble ($N=4000$, $\lambda=10^{-3}$) locate the transition at the HDMFT line and explain the gap.
+ensemble locate the transition at the HDMFT line and explain the gap.
 \begin{enumerate}
   \item \emph{Below $\sigma_c$ the fixed point is unique.}  Three initial conditions (one narrow,
         two broad log-normal) on the same graph and couplings freeze into the same state, to
-        $10^{-4}$ in $\ln S$, up to the HDMFT $\sigma_c$ at every $\mu$ tested.
-  \item \emph{At strong competition the onset is continuous.}  At $\mu=-1.97$ the fluctuation
-        amplitude (the median time standard deviation of $\ln S$ of firms listed throughout) is
-        zero up to $\sigma_c$ and grows continuously above it:
+        $10^{-4}$ in $\ln S$, up to the HDMFT $\sigma_c$ at every $\mu$ tested ($N=4000$).
+  \item \emph{Above $\sigma_c$ frozen and chaotic runs coexist, at every $\mu$.}  For ten graphs
+        per point, each with its own HDMFT $\sigma_c$ (which varies by $\pm0.015$ between graphs), the
+        fluctuation amplitude (median time standard deviation of $\ln S$ of firms listed throughout)
+        was measured in two windows, $[600,800]$ and $[1400,1600]$.  A run is frozen in both
+        (amplitude $\lesssim10^{-3}$), still relaxing, or chaotic with the same amplitude in both:
         \begin{center}\small
-        \begin{tabular}{l|cccccccc}
+        \begin{tabular}{l|ccccc}
         \toprule
-        $\sigma-\sigma_c$ & $\le0$ & $0.025$ & $0.05$ & $0.075$ & $0.10$ & $0.125$ & $0.20$ & $0.30$\\
+        $\sigma-\sigma_c$ & $0$ & $0.025$ & $0.05$ & $0.10$ & $0.20$\\
         \midrule
-        amplitude & $0.000$ & $0.0005$ & $0.008$ & $0.03$ & $0.11$ & $0.20$ & $0.31$ & $0.46$\\
-        churn & $0.0001$ & $0.0002$ & $0.002$ & $0.006$ & $0.016$ & $0.040$ & $0.086$ & $0.17$\\
+        $\mu=-1.97$: frozen / relaxing / chaotic & 9/1/0 & 8/0/2 & 8/1/1 & 2/0/8 & 0/0/10\\
+        $\mu=-1.05$: frozen / relaxing / chaotic & 9/1/0 & 8/0/2 & 9/0/1 & 9/0/1 & 2/1/7\\
         \bottomrule
         \end{tabular}
         \end{center}
-        The churn crosses $0.035$ at $\sigma\simeq1.635$, which is the simulated freezing line
-        ($1.632$).  The line is a contour of an amplitude that switches on at $\sigma_c$.
-  \item \emph{At weak competition frozen and chaotic states coexist.}  At $\mu=-1.05$ and $-0.66$
-        individual runs above $\sigma_c$ are bimodal: either frozen (amplitude $\sim10^{-4}$) or
-        strongly fluctuating ($0.1$--$0.5$), and which one depends on the realisation, not
-        monotonically on $\sigma$, over the whole range $\sigma_c<\sigma<\sigma_c+0.3$.  Frozen runs
-        from different initial conditions end in different states.  This is the
-        multiple-attractor regime of the disordered GLV beyond $\sigma_c$, in which a finite system
-        can be trapped by one of many stable equilibria; the simulated line there measures a
-        trapping probability at $N=4000$ and $T=400$.
+        At $\sigma_c$ no run is chaotic.  Above it the chance of persistent chaos rises, steeply at
+        strong competition (most graphs are chaotic by $\sigma_c+0.1$) and slowly at weak competition
+        (by $\sigma_c+0.2$).  Frozen runs from different initial conditions end in different states,
+        and one chaotic run was trapped between $T=800$ and $1600$.  This is the multiple-attractor
+        regime of the disordered GLV beyond $\sigma_c$: the unique fixed point is gone, and a finite
+        system can wander chaotically or be trapped by one of many stable equilibria, with a
+        trapping probability that grows with the observation time.  A scan at $N=2000$, $4000$ and
+        $8000$ (three graphs each, $\mu=-1.97$, $T=800$) shows no trend in $N$.
+  \item \emph{The simulated line is a majority contour.}  It marks where most of the ten
+        realisations of a cell fluctuate with churn above $0.035$; for example, the median churn at
+        $\mu=-1.97$ crosses $0.035$ at $\sigma\simeq1.635$, the simulated line ($1.632$).  It is a
+        statistic of the coexistence region at $N=4000$ and $T=400$, not a second transition.
 \end{enumerate}
 \paragraph{The ``divergent'' corner.}  At weak competition and strong disorder some grid runs fail to
 integrate.  This is numerical, not a phase.  Integrated in chunks of $20$ time units with the state
@@ -642,11 +669,11 @@ runs fail because the immigration floor, $w\simeq\lambda/N|f|\simeq5\times10^{-9
 far below the absolute tolerance $10^{-7}$ of the solver.  The corner is the strongly concentrated,
 fast end of the fluctuating, growing phase, and the growth rate rises continuously into it.
 
-The HDMFT stability line is therefore the phase boundary of the unique fixed point everywhere.
-Above it the dynamics are chaotic with a continuously growing amplitude at strong competition,
-and chaos coexists with trapping equilibria at weak competition.  Sources:
-\texttt{scripts/phase\_attractors.py}, \texttt{scripts/phase\_onset.py},
-\texttt{scripts/phase\_divergent\_check.py}.
+The HDMFT stability line is therefore the phase boundary of the unique fixed point.  Above it
+chaos coexists with trapping equilibria at every competition strength, and chaos takes over
+within $0.1$ of the line at strong competition and within $0.2$ at weak competition.  Sources:
+\texttt{scripts/phase\_attractors.py}, \texttt{scripts/phase\_coexistence.py},
+\texttt{scripts/phase\_onset\_N.py}, \texttt{scripts/phase\_divergent\_check.py}.
 
 %======================================================================
 \section{The fluctuating phase: Gaussian fitness and one firm}
@@ -702,6 +729,17 @@ $\alpha=2.5$, $1.75$ & $0.004$  & $0.997$ & $-0.03$ & $0.35$ & $0.96$ ($0.83$--$
 \label{tab:cavity}
 \end{table}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{fitness_law.png}
+  \caption{The fitness law against the full model ($N=8000$, $\lambda=10^{-3}$, eight economies).  Top:
+  per-firm mean fitness, measured and sampled from Proposition~\ref{prop:law} with the simulation's
+  order parameters; the left skew on heavy tails comes from the mixture over degrees.  Bottom:
+  amplitude $f$ against relative degree (median and quartiles), with the law $f_\kappa\propto\sqrt\kappa$.
+  Source: \texttt{scripts/lifecycle/plot\_fitness\_law.py}.}
+  \label{fig:fitnesslaw}
+\end{figure}
+
 The fraction of time listed follows consequence~3 in its degree dependence (at $\alpha=2.5$ it
 falls from $0.57$ to $0.30$ across the degree range, against $0.50$ to $0.31$) and sits
 $0.04$--$0.07$ above it, because a firm stays listed for a while as it decays after its fitness
@@ -723,14 +761,15 @@ Section~\ref{sec:panels}; for now it is enough that they count different firms.
 graph & panel & $\beta$ & $\zeta_q/\zeta_1$, $q=2,3,4$ & $\beta$ & $\zeta_q/\zeta_1$\\
 \midrule
 $\alpha=6$, $\sigma=1.75$   & survivor & $0.894$ & $1.96,\,2.87,\,3.70$ & $0.862$ & $1.95,\,2.82,\,3.62$\\
-                            & spells   & $0.422$ & $1.86,\,2.55,\,3.07$ & $0.439$ & $1.79,\,2.39,\,2.82$\\
-$\alpha=3.5$, $\sigma=1.9$  & spells   & $0.214$ & $1.80,\,2.31,\,2.54$ & $0.231$ & $1.79,\,2.35,\,2.69$\\
+                            & spells   & $0.554$ & $1.84,\,2.50,\,3.00$ & $0.536$ & $1.77,\,2.33,\,2.74$\\
+$\alpha=3.5$, $\sigma=1.9$  & spells   & $0.284$ & $1.79,\,2.30,\,2.53$ & $0.288$ & $1.79,\,2.37,\,2.76$\\
 $\alpha=2.5$, $\sigma=1.75$ & survivor & $0.414$ & $1.87,\,2.58,\,3.15$ & $0.474$ & $1.87,\,2.60,\,3.21$\\
-                            & spells   & $0.198$ & $1.49,\,1.48,\,1.14$ & $0.185$ & $1.52,\,1.67,\,1.56$\\
+                            & spells   & $0.191$ & $1.42,\,1.34,\,0.95$ & $0.183$ & $1.49,\,1.61,\,1.52$\\
 \bottomrule
 \end{tabular}
-\caption{The surrogate against the full model ($T=480$ for spells).  Data: $\beta\approx0.20$,
-ratios $2.0,\,2.6,\,2.9$.}
+\caption{The surrogate against the full model ($T=480$ for spells).  Spell rows use the fixed-range
+estimator of Section~\ref{sec:data}; survivor rows use the peak-start fit of the original analysis.
+Data: $\beta\approx0.20$, ratios $2.0,\,2.6,\,2.9$.  Source: \texttt{scripts/lifecycle/recompute\_tables.py}.}
 \label{tab:surrogate}
 \end{table}
 
@@ -739,8 +778,9 @@ Under both panels, $\beta$ and the ratio curve are properties of the one-firm pr
 \eqref{eq:firm} driven by a Gaussian fitness.  The graph enters only through the joint law of
 $(\bPhi,f)$ and the correlation time.
 \end{proposition}
-The agreement is within $0.06$ in $\beta$ and $0.25$ in the ratios, except at $q=4$ on the
-flattest heavy-tail curve (Table~\ref{tab:surrogate}).  This is what the cavity picture predicts at
+On the spell panel the agreement is within $0.02$ in $\beta$ and $0.25$ in the ratios, except at
+$q=3$, $4$ on the flattest heavy-tail curve, where the full model bends further; on the survivor
+panel it is within $0.06$ in $\beta$ (Table~\ref{tab:surrogate}).  This is what the cavity picture predicts at
 leading order, where the field on a firm is Gaussian and independent of the firm's own size.  It
 also settles where $\beta$ comes from: a single firm in a Gaussian field contains no cross-firm
 correlation, so the size--volatility law is a property of the one-firm dynamics and of the
@@ -758,7 +798,460 @@ drifting): there the field is carried by about four neighbours (Section~\ref{sec
 not Gaussian, so the cavity step itself fails.
 
 %======================================================================
-\section{Volatility at fixed degree: the adiabatic law}
+\section{Which firms are counted}
+\label{sec:panels}
+
+\subsection{Two panels}
+
+Moran, Secchi and Bouchaud use an unbalanced panel \citep{moran2024}: every Compustat firm with at
+least two annual growth rates contributes, over its own listed life, a volatility
+$v_i=\sqrt{\pi/2}\,T_i^{-1}\sum_t|g_{it}-\bar g_i|$ and a size equal to its lifetime mean.  Two
+estimators are applied to the model.
+\begin{itemize}
+  \item The \emph{survivor} (balanced) panel keeps only firms whose share stays above $10^{-6}$
+        throughout a window of length $T$.  It counts firms on their plateau.
+  \item The \emph{spell} (unbalanced) panel follows the empirical protocol.  A spell is a maximal
+        stretch with $S>\Sthr=8\lambda$ (the share $10^{-6}$ at $\lambda=10^{-3}$, $N=8000$), and
+        each spell counts as one firm.  It counts entries, plateaux and exits.
+\end{itemize}
+The survivor panel has no long-window limit: its survivors are firms that did not dip during
+$T$, and their number vanishes as $T\to\infty$.  At $\alpha=2.5$ its $\beta$ drifts from $0.414$ to
+$0.354$ between $T=60$ and $480$.  Only spells cut by the window edges depend on $T$ in the spell
+panel, and its $\beta$ converges: $0.110$, $0.081$, $0.084$, $0.080$ for $T=240$--$1920$ at
+$\alpha=2.2$, and $0.461$, $0.422$, $0.391$, $0.374$ at $\alpha=6$ (peak-start fit), with the cut-off
+share falling to $3$--$4\%$ (the slow approach is explained in Section~\ref{sec:rice}).  The spell panel is
+therefore the model counterpart of the data, and Section~\ref{sec:spells} treats it.  The survivor
+panel isolates the plateau fluctuations, which are the large-firm limit of every spell; its
+theory (the adiabatic law, an exact sum rule and the degree channel) is in
+Appendices~\ref{sec:adiabatic} and \ref{sec:survivor}.
+
+\subsection{A general multiscaling criterion}
+\label{sec:criterion}
+
+Both panels write the volatility as a deterministic function of size times a random factor.
+
+\begin{proposition}[Multiscaling criterion]\label{prop:criterion}
+Let $v=A(\bar S)\,X$ with $X$ random given $\bar S$, and let $c_n(\bar S)$ be the cumulants of $\ln X$
+given $\bar S$, so that $s^2=c_2=\Var(\ln X\mid\bar S)$.  Then, exactly,
+\begin{equation}
+  \zeta_q-q\,\zeta_1=-\sum_{n\ge2}\frac{q^n-q}{n!}\,\frac{dc_n}{d\ln\bar S}
+  =-\frac{q(q-1)}{2}\,\frac{ds^2}{d\ln\bar S}-\frac{q^3-q}{6}\,\frac{dc_3}{d\ln\bar S}-\dots,
+  \label{eq:criterion}
+\end{equation}
+so at second-cumulant order the ratio curve bends below $q$ if and only if the conditional
+log-variance of $X$ grows with size.
+\end{proposition}
+\begin{proof}
+$\zeta_q=q\beta_A-d\ln\E[X^q\mid\bar S]/d\ln\bar S$ with $\ln\E[X^q\mid\bar S]=\sum_nq^nc_n/n!$.
+Subtract $q$ times the case $q=1$; the $n=1$ terms cancel.
+\end{proof}
+A fixed-shape law has $s^2$ constant and $\zeta_q=q\zeta_1$.  Multiscaling needs a random factor
+whose spread opens up with size.  On the survivor panel $X=\sqrt\kappa$; on the spell panel
+$X=\ell/n$, a log range over a lifetime.  At second-cumulant order \eqref{eq:criterion} bends the curve as $q(q-1)$, which cannot produce a
+hard saturation of the ratio curve; that would need higher cumulants.
+
+%======================================================================
+\section{The spell panel: life cycles}
+\label{sec:spells}
+
+Under the empirical protocol a firm is counted from entry to exit, and its volatility includes
+the rise from the listing threshold and the fall back to it.
+
+\subsection{The lifetime identity}
+\label{sec:identity}
+
+\begin{proposition}[Lifetime identity; exact]\label{prop:identity}
+Let a spell start and end at $\Sthr$, with $n$ growth steps $g_t=\Delta\ln S$.  Then $\bar g=0$ and
+\begin{equation}
+  v=\sqrt{\tfrac\pi2}\;\frac{2\ell+V_p}{n},\qquad\ell=\ln\frac{S_{\max}}{\Sthr},
+  \label{eq:identity}
+\end{equation}
+where $V_p\ge0$ is the total variation in excess of one rise and one fall.  For any firm, with
+entry size $S_a$ and exit size $S_b$,
+\begin{equation}
+  v\ge\sqrt{\tfrac\pi2}\;\frac{2\ln\bigl(S_{\max}/\max(S_a,S_b)\bigr)}{n}.
+  \label{eq:bound}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Split the steps at the peak into a set $A$ (a fraction $x$ of the steps) and $B$.  With
+$R_a=\ln(S_{\max}/S_a)$, $R_b=\ln(S_{\max}/S_b)$ and $\bar g=(R_a-R_b)/n$,
+$\sum_t|g_t-\bar g|\ge|\sum_A(g_t-\bar g)|+|\sum_B(g_t-\bar g)|=2[(1-x)R_a+xR_b]\ge2\min(R_a,R_b)$.  For
+a complete spell $R_a=R_b=\ell$, and the bound is the rise-and-fall part of the total variation.
+\end{proof}
+The bound \eqref{eq:bound} is model-free and can be evaluated firm by firm in data.  In the
+surrogate at $\alpha=6$, \eqref{eq:identity} holds to a median relative error of
+$2.5\times10^{-3}$ on the $87\%$ of spells complete at $T=480$, and the rise-and-fall term carries
+$100\%$, $95\%$ and $74\%$ of $v$ at the low end, middle and top of the decline branch.  Under the
+unbalanced panel a firm's volatility is essentially its log range over its lifetime; plateau
+fluctuations matter only for the largest firms.  The survivor panel is the opposite limit: its
+firms never rise or fall.
+
+\subsection{Spells are humps}
+\label{sec:humps}
+
+The plateau term $V_p$ is smaller than the adiabatic law suggests.  In the single-firm process
+with the $\alpha=6$ fitness, complete decline-branch spells shorter than about $8\tau$ (three
+quarters of them) have total variation $2\ell$ to within the discretisation of the first and last
+step: a spell is a single hump in $\ln S$, rising out of the threshold and falling back.  Its flanks
+are the parabolae of \eqref{eq:mills}, and a parabolic hump,
+$\ln S=\ln S_{\max}-t^2/2w^2$ above $\Sthr$, has
+\begin{equation}
+  \ln\frac{S_{\max}}{\bar S}=\frac12\ln\frac{4\ell}{\pi},
+  \label{eq:hump}
+\end{equation}
+about $1.0$ for $\ell\approx6$, against a measured median of $0.96$--$1.0$ at every spell length.  Adding
+the adiabatic plateau volatility $\sqrt D/\bar S$ to the life-cycle term double-counts the hump and
+overshoots $v$ by a factor of about $1.5$.  Longer spells are $K$ humps merged by $K-1$ dips that
+did not kill: each merge adds about $(0.35$--$0.4)\times2\ell$ to the total variation, and the length
+grows by about $4.3\tau$ per hump.  The resulting hump law,
+$v\simeq\sqrt{\pi/2}\,[\text{range}+2\delta\ell(K-1)]/n$ with $\delta\simeq0.35$, gives the volatility
+of each spell to $4$--$10\%$, so the volatility of a spell is set by the same dip statistics as its
+lifetime.  It does not yet give the exponents: they come out about $0.08$ too high at every $q$,
+because the largest firms carry extra variation from fitness fluctuations that never reach zero.
+The spell exponents quoted below are therefore those of the single-firm process
+(Proposition~\ref{prop:reduction}), computed numerically; the hump picture explains their structure.
+Source: \texttt{scripts/lifecycle/spell\_anatomy\_merges.py}.
+
+\subsection{Exponents of the life-cycle part}
+
+Write the rise-and-fall part as $v_{\rm tr}=c\,\ell/n$, $c=2\sqrt{\pi/2}$.  If $\ell$ and $n$ are
+independent at fixed $\bar S$ and $S_{\max}\propto\bar S$,
+\begin{equation}
+  \zeta_q^{\rm tr}\simeq\zeta_q[n^{-1}]-\frac{d\ln\E[\ell^q\mid\bar S]}{d\ln\bar S}
+  \simeq\zeta_q[n^{-1}]-\frac q\ell ,
+  \label{eq:lifetimerep}
+\end{equation}
+where $\zeta_q[n^{-1}]$ are the exponents of the inverse lifetime.  The life-cycle exponent is a
+lifetime--size exponent lowered by a logarithmic correction set by the depth of entry.
+
+\begin{table}[htbp]
+\centering\footnotesize\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{c|cc|c|c|c|c}
+\toprule
+$\lambda$ & $\ell$ & $\frac{d\ln\ell}{d\ln S}$ ($1/\ell$) & $\zeta_q^{\rm tr}$ & r.h.s.\ of \eqref{eq:lifetimerep} & $\zeta_q[n^{-1}]$ & $\zeta_q/\zeta_1$ of $v$\\
+\midrule
+$10^{-4}$ & $8.3$ & $0.089$ ($0.121$) & $.444,\,.748,\,.969,\,1.14$ & $.445,\,.749,\,.973,\,1.15$ & $.534,\,.927,\,1.24,\,1.51$ & $1.87,\,2.59,\,3.17$\\
+$10^{-3}$ & $6.0$ & $0.132$ ($0.167$) & $.521,\,.885,\,1.16,\,1.39$ & $.520,\,.883,\,1.16,\,1.39$ & $.652,\,1.15,\,1.56,\,1.91$ & $1.90,\,2.67,\,3.32$\\
+$10^{-2}$ & $3.7$ & $0.241$ ($0.269$) & $.611,\,1.05,\,1.39,\,1.67$ & $.610,\,1.04,\,1.37,\,1.65$ & $.850,\,1.52,\,2.10,\,2.62$ & $1.93,\,2.77,\,3.50$\\
+\bottomrule
+\end{tabular}
+\caption{Complete spells on the decline branch; surrogate with the $\alpha=6$ fitness, $T=480$,
+$q=1,\dots,4$, fixed-range bins.  Eq.~\eqref{eq:lifetimerep} holds for the life-cycle part to $0.02$.}
+\label{tab:lifetime}
+\end{table}
+
+Equation~\eqref{eq:lifetimerep} is exact for $v_{\rm tr}$ to within $0.02$
+(Table~\ref{tab:lifetime}), but $v$ also contains the plateau part, which dilutes the bend.  At
+$\lambda=10^{-3}$ the full volatility of complete spells has $\zeta_q=0.396$, $0.751$, $1.06$, $1.32$,
+against $0.521$, $0.885$, $1.16$, $1.39$ for $v_{\rm tr}$: the life-cycle part alone bends the ratio
+curve two to three times as strongly as $v$ does.  The life cycle is the mechanism, but a quantitative spell
+theory must combine it with the plateau law of Section~\ref{sec:adiabatic}, and the two are not
+additive (Section~\ref{sec:open}).
+
+\subsection{Why the ratio curve bends}
+
+By Proposition~\ref{prop:criterion} with $X=\ell/n$, the relevant spread is that of $\ln n$.  At
+$\alpha=6$ ($\lambda=10^{-3}$), $\Var(\ln n\mid\bar S)$ rises from $0.29$ to $0.65$ across the larger
+half of spells while the mean lifetime grows from $21$ to $86$.  The measured bend of the lifetime
+exponents, $\zeta_q[n^{-1}]-q\zeta_1[n^{-1}]=0$, $-0.16$, $-0.40$, $-0.70$, has the predicted sign;
+the second-cumulant estimate ($0$, $-0.23$, $-0.68$, $-1.35$) is close at $q=2$ and overshoots at
+higher $q$, as an expansion in $q^2$ must.
+
+The mechanism is a crossover between two kinds of exit.  A small firm lives through a single
+positive excursion of its fitness, and such excursions have fairly regular lengths.  A large firm
+exits only on a rare deep dip, a nearly memoryless event, so its lifetime is close to
+exponential, for which $\Var\ln n=\pi^2/6\approx1.64$.  The spread grows with size until exits
+are memoryless and then saturates.  Like the degree channel, the life-cycle bend is a crossover,
+not an asymptotic law.
+
+\subsection{The lifetime law}
+\label{sec:rice}
+
+\paragraph{Exact solution of the one-firm equation.}  At $\lambda=0$, \eqref{eq:firm} is linear in
+$1/S$: $d(1/S)/dt=-\Phi/S+1$.  With the integrated fitness $\mathcal A(t)=\int^t\Phi$,
+\begin{equation}
+  \frac1{S(t)}=\int_{-\infty}^t e^{-[\mathcal A(t)-\mathcal A(t')]}\,dt' .
+  \label{eq:exact}
+\end{equation}
+The size is a soft minimum over the drawdowns of the integrated fitness.  Near a downcrossing of
+$\Phi$ with slope $-s$, $\Phi\simeq-s(t-t_0)$, \eqref{eq:exact} gives the inverse Mills ratio,
+\begin{equation}
+  S(t)=\sqrt s\,\frac{\phiN(\theta)}{\PhiN(-\theta)}\Big|_{\theta=\sqrt s\,(t-t_0)}\!\!,\qquad
+  S(t_0)=\sqrt{2s/\pi},\qquad
+  S(t)\simeq\sqrt{\tfrac{s}{2\pi}}\;e^{-[\mathcal A(t_0)-\mathcal A(t)]}\quad(\theta\gg1):
+  \label{eq:mills}
+\end{equation}
+the firm tracks its fitness until the crossing, and then decays by the area of the dip, with a
+prefactor fixed by the crossing slope.  Near the floor, with $S\ll\Phi$, the immigration term
+gives the mirror image, $S(t)\simeq\lambda\int^te^{\mathcal A(t)-\mathcal A(t')}dt'$.
+
+\paragraph{Kill and entry rules.}  A spell therefore ends at the first negative excursion of $\Phi$
+whose area exceeds
+\begin{equation}
+  \ell_c(s)=\ln\frac{\sqrt{s/2\pi}}{\Sthr},
+  \label{eq:kill}
+\end{equation}
+and a firm at the floor lists once $\mathcal A$ has risen by $\ell_e(s)=\ln\bigl(\Sthr\sqrt{s/2\pi}/\lambda\bigr)$
+since the upcrossing.  Both thresholds are explicit and contain no fitted constant.  In the
+one-firm process with the $\alpha=6$ fitness ($f=1.82$, $\tau=3.51$, $\lambda=10^{-3}$), the kill rule
+classifies $96$--$98\%$ of the dips of listed firms correctly at every $u$, and the empirical
+threshold sits at area $=\ell_c$.  The errors are dips that begin before $S$ has recovered from
+the previous one, where \eqref{eq:mills} overestimates $S(t_0)$.  Applied to the Gaussian
+fitness path alone, the two rules reproduce the spell lifetimes above their lower quartile to
+$5$--$10\%$; they miss only the $4$--$9\%$ of spells shorter than four time units, in which the
+firm never reaches its fitness.
+
+\paragraph{Mean lifetime.}  The spell lifetime is thus a functional of a Gaussian process.  Kills
+occur at Rice's downcrossing rate $\nu(u)=e^{-u^2/2}/(2\pi\tau)$, $u=\bPhi/f$, thinned by the
+probability that a dip kills, so
+\begin{equation}
+  \bar L(u)=\frac{\PhiN(u)}{\nu(u)\,P_{\rm kill}(u)},\qquad
+  P_{\rm kill}(u)=\Pr\bigl[\text{dip area}>\ell_c(f\dot s)\bigm|\text{downcrossing of }{-u}\bigr].
+  \label{eq:lifetime}
+\end{equation}
+$P_{\rm kill}$ is a level-crossing statistic, computed from the Slepian model: $\eta$
+conditioned on $\eta(0)=-u$ and $\eta'(0)=-\dot s$, with $\dot s$ drawn from the Rayleigh law of
+crossing slopes.  Rice excursions merge into one spell by the factor $1/P_{\rm kill}$, which is not a constant: it
+grows from $1.5$ at $u=-0.5$ to $5$ at $u=2$.  For $u\gg1$ dips are short parabolae,
+$\Phi\simeq f[ut^2/2\tau^2-\dot st]$, of area $\tfrac23f\dot s^3\tau^4/u^2$, and
+\begin{equation}
+  -\ln P_{\rm kill}\simeq\frac12\left(\frac{3\,\ell_c}{2f\tau}\right)^{2/3}u^{4/3},\qquad
+  \ln\bar L\simeq\frac{u^2}2+\frac12\left(\frac{3\,\ell_c}{2f\tau}\right)^{2/3}u^{4/3}+\ln(2\pi\tau) .
+  \label{eq:largeu}
+\end{equation}
+
+\begin{table}[htbp]
+\centering\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{c|ccc|cc|c}
+\toprule
+$u$ & $P_{\rm kill}$ ODE & Slepian & \eqref{eq:largeu} & $\bar L$ ODE & $\bar L$ \eqref{eq:lifetime} & $\Var\ln L$ ODE\\
+\midrule
+$-0.5$ & $0.719$ & $0.669$ & -- & $14.9$ & $11.5$ & $0.81$\\
+$0$    & $0.626$ & $0.575$ & -- & $22.7$ & $19.2$ & $0.92$\\
+$0.5$  & $0.511$ & $0.475$ & $0.846$ & $40.2$ & $36.4$ & $1.08$\\
+$1.0$  & $0.390$ & $0.374$ & $0.642$ & $83.2$ & $81.8$ & $1.33$\\
+$1.5$  & $0.294$ & $0.284$ & $0.458$ & $221.5$ & $223$ & $1.63$\\
+$2.0$  & $0.214$ & $0.207$ & $0.312$ & $(645)$ & $769$ & $(1.81)$\\
+$3.0$  & $0.116$ & $0.098$ & $0.128$ & -- & -- & --\\
+$5.0$  & -- & $0.015$ & $0.015$ & -- & -- & --\\
+\bottomrule
+\end{tabular}
+\caption{Lifetime law of the one-firm process, $\alpha=6$ fitness.  ODE: $300$ firms over
+$T=1500$ ($120$ over $T=6000$ for $u\ge1.5$); bracketed values are biased by spells as long as the
+run.  The column \eqref{eq:lifetime} uses the Slepian $P_{\rm kill}$ and $\PhiN(u)$ and no
+simulation.  Source: \texttt{scripts/lifecycle/kill\_rule.py}.}
+\label{tab:rice}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{lifetime_law.png}
+  \caption{Kill rule and lifetime law, $\alpha=6$ fitness.  (a) A fitness path with its dips: red dips
+  have area above $\ell_c(s)$ and end the spell ($\ln S$, right axis, crosses the threshold, dotted);
+  light dips merge neighbouring excursions.  (b) $P_{\rm kill}(u)$ from the one-firm ODE, the Slepian
+  model and the large-$u$ asymptote \eqref{eq:largeu}.  (c) Mean lifetime: ODE against
+  \eqref{eq:lifetime} with the Slepian $P_{\rm kill}$, and the single-excursion Rice value; the hollow
+  point is biased short by the run length.  Source: \texttt{scripts/lifecycle/plot\_lifetime\_law.py}.}
+  \label{fig:lifetime}
+\end{figure}
+
+Table~\ref{tab:rice} shows three things.  The Slepian $P_{\rm kill}$ is within $0.05$ of the ODE
+everywhere and exact for $u\ge1.5$; the deficit at small $u$ is the unrecovered dips.  With no
+simulation input, \eqref{eq:lifetime} gives the mean lifetime to $3\%$ for $u\ge1$ and runs
+$10$--$20\%$ low for $u\le0.5$, where short spells and the entry and exit delays matter.  And
+$\Var\ln L$ rises to $\pi^2/6=1.645$ at $u=1.5$, the value for an exponential law: large firms exit
+on rare, memoryless kills, exactly as the crossover argument of the previous subsection assumed.
+The asymptotic form \eqref{eq:largeu} sets in only for $u\gtrsim4$, because at moderate $u$ the
+killing dips last about $\tau$ and are not parabolic.
+
+Two consequences follow.
+\begin{enumerate}
+  \item \emph{Lifetime grows faster than any power of size.}  With $\bar S\simeq\bPhi=uf$ for long
+        spells, $\ln\bar L$ grows as $\bar S^2/2f^2$ plus a $\bar S^{4/3}$ correction.  Through
+        \eqref{eq:lifetimerep} the life-cycle part of the volatility has a local exponent that
+        increases along the decline branch, so the spell $\beta$ is an effective exponent whose
+        value depends on the fitted size range, and the model's decline branch steepens with size.
+  \item \emph{Slow convergence.}  Firms whose lifetime exceeds the panel length $T$ appear as one
+        cut-off spell dominated by the plateau ($v\propto1/S$); shorter-lived firms are dominated
+        by the rise and fall.  The crossover is at $\bar L(u_\times)\simeq T$, so $u_\times$ grows
+        only as $\sqrt{2\ln T}$.  This is why the spell $\beta$ converges slowly in $T$, even
+        though it has a limit.
+\end{enumerate}
+
+\subsection{The degree channel is amplitude heterogeneity}
+
+At $\alpha=2.5$ the spell ratio curve is flat.  The surrogate isolates the cause:
+
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+$\alpha=2.5$, spells & $\beta$ & $\zeta_q/\zeta_1$\\
+\midrule
+full model & $0.191$ & $1.42,\,1.34,\,0.95$\\
+surrogate, measured $(\bPhi_i,f_i)$ & $0.183$ & $1.49,\,1.61,\,1.52$\\
+$f$ shuffled across firms & $0.092$ & $1.40,\,1.47,\,1.31$\\
+$f$ homogeneous & $0.493$ & $1.89,\,2.64,\,3.25$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Breaking the link between $\bPhi$ and $f$ keeps the curve flat; removing the spread of
+$f$ restores the plain life-cycle bend.  The heavy-tail flattening is the spread of fitness
+amplitudes, $f\propto\sqrt\kappa$, which at fixed size adds lifetime dispersion on top of the life
+cycle: Proposition~\ref{prop:criterion} with two random factors.  On heavy tails the degree
+moments also grow faster than $q$ and lower $\zeta_1$ from $0.29$ to $0.18$, and dividing the
+same absolute bend by a smaller $\zeta_1$ flattens the curve further.
+
+\subsection{Closing the chain}
+
+Sampling $(\bPhi,f)$ from Proposition~\ref{prop:law} and running the single-firm process gives the
+spell statistics with progressively less simulation input:
+
+\begin{center}\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|c|c|c|c}
+\toprule
+spells, $T=480$ & full model & measured $(\bPhi_i,f_i)$ & law (sim.\ order par.) & law (HDMFT)\\
+\midrule
+$\alpha=6$, $\sigma=1.75$   & $0.554$; $1.84,2.50,3.00$ & $0.536$; $1.77,2.33,2.74$ & $0.636$; $1.82,2.45,2.93$ & $0.532$; $1.85,2.53,3.06$\\
+$\alpha=3.5$, $\sigma=1.9$  & $0.284$; $1.79,2.30,2.53$ & $0.288$; $1.79,2.37,2.76$ & $0.347$; $1.78,2.34,2.70$ & $0.383$; $1.80,2.41,2.85$\\
+$\alpha=2.5$, $\sigma=1.75$ & $0.191$; $1.42,1.34,0.95$ & $0.183$; $1.49,1.61,1.52$ & $0.248$; $1.55,1.73,1.70$ & $0.237$; $1.57,1.80,1.82$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Each entry is $\beta$; $\zeta_q/\zeta_1$ for $q=2,3,4$.  The last column has no simulation
+input: the HDMFT solved on the degree sequence gives the order parameters,
+Proposition~\ref{prop:law} gives $(\bPhi,f)$, the one-firm process gives the life cycles, and the
+MSB estimator is applied to them.  The ratio curve is reproduced at every level of input, to
+$0.1$--$0.3$ on light tails.  The level of $\beta$ is more fragile.  With the simulation's own order
+parameters the law gives a $\beta$ $0.06$--$0.10$ above the full model, because the leading-order
+law lacks the $\pm13\%$ spread of amplitudes at fixed degree (Table~\ref{tab:cavity}) that comes from
+quenched neighbourhoods; less amplitude spread means less flattening and a steeper decline.  With
+the HDMFT order parameters, which are within about $10\%$ of the simulated ones, $\beta$ lands within
+$0.02$ of the full model at $\alpha=6$ and $0.10$ at $\alpha=3.5$; the close agreement at $\alpha=6$ is
+partly a cancellation and should not be over-read.
+
+\subsection{Where the model meets the data}
+\label{sec:data}
+
+\paragraph{Estimator.}  On the spell panel the binned volatility has a hump at small sizes, made of
+spells that barely clear the listing threshold, and a flat top.  A fit that starts at the peak
+bin is unstable: the start moves by a bin between economies and $\beta$ jumps by up to $0.09$.  We
+therefore fit every exponent on the larger half of spells by $\bar S$, in ten equal-count bins of
+$v^q$ (\texttt{msb.upper\_zeta}).  The range is fixed by spell counts, so $\beta$ varies by $\pm0.03$
+between economies.  All spell-panel tables use this estimator; the window-convergence
+values quoted in Section~\ref{sec:panels} and the survivor panel use the peak-start fit of the
+original analysis, with which $\beta$ is $0.07$--$0.14$ lower and the ratios differ by at most $0.06$.
+
+\paragraph{Shape against level.}  Figure~\ref{fig:data} and the table below give the full model at
+four points.  The ratio curve is robust: it does not depend on the estimator, and on light tails
+it is close to the data, $1.84$, $2.50$, $3.00$ at $\alpha=6$ against $2.0$, $2.6$, $2.9$.  Its bend is
+the life-cycle mechanism of this section.  The level of $\beta$ is not robust.  It depends on the
+fitted size range, because the decline branch steepens with size (Figure~\ref{fig:data}a, as the
+lifetime law of Section~\ref{sec:rice} predicts), and on the entry size, which sets the rise term
+$\ell$.  With the fixed range no point gives $\beta\approx0.2$ together with data-like ratios: light
+tails give data-like ratios with $\beta=0.55$, heavy tails give $\beta\approx0.2$ with a flat or falling
+ratio curve, the result of amplitude heterogeneity.  The model therefore accounts for the shape of
+the multiscaling and for a size--volatility law of the right sign, but not for the empirical
+value of $\beta$ under a protocol-matched estimator.  The empirical curve flattens at the top,
+while the model's steepens; we read this as the main quantitative mismatch.
+
+\begin{center}\small\setlength{\tabcolsep}{5pt}
+\begin{tabular}{l|cc|cc}
+\toprule
+full model, spells, $T=480$ & $\beta$ (fixed range) & $\zeta_q/\zeta_1$ & $\beta$ (peak start) & $\zeta_q/\zeta_1$\\
+\midrule
+$\alpha=6$, $\sigma=1.75$, $\lambda=10^{-3}$ & $0.55\pm0.03$ & $1.84,\,2.50,\,3.00$ & $0.42$ & $1.86,\,2.55,\,3.07$\\
+$\alpha=3.5$, $\sigma=1.9$, $\lambda=10^{-3}$ & $0.28\pm0.03$ & $1.79,\,2.30,\,2.53$ & $0.20$ & $1.80,\,2.31,\,2.54$\\
+$\alpha=3.5$, $\sigma=1.9$, $\lambda=10^{-2}$ & $0.30\pm0.03$ & $1.79,\,2.27,\,2.39$ & $0.23$ & $1.78,\,2.24,\,2.32$\\
+$\alpha=2.5$, $\sigma=1.75$, $\lambda=10^{-3}$ & $0.19$ & $1.42,\,1.34,\,0.95$ & $0.16$ & $1.49,\,1.48,\,1.14$\\
+\midrule
+Compustat & $0.15$--$0.20$ & $2.0,\,2.6,\,2.9$ & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Medians over eight economies, $N=8000$, $C=200$, $\mu=-1.76$, spells of at least two growth
+rates.  Across the earlier $36$-point scan the growth rates stay fat-tailed (excess kurtosis
+$3$--$16$).  Sources: \texttt{scripts/headline\_spells.py}, \texttt{scripts/plot\_data\_comparison.py}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{data_comparison.png}
+  \caption{Full model under the spell panel against the empirical facts.  (a) $\E[v\mid\bar S]$ over
+  all spells, pooled over eight economies; the fixed estimator fits the larger half of spells
+  (right of the dotted line).  The decline branch steepens with size.  (b) $\zeta_q/\zeta_1$ with the
+  fixed estimator (mean and spread over economies), the Compustat values of \citet{moran2024} and
+  the fixed-shape line.}
+  \label{fig:data}
+\end{figure}
+
+%======================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{The picture.}
+Scale invariance turns the economy into a replicator in which each firm is a logistic unit
+tracking a fitness field.  Mean-field theory makes that field Gaussian, with mean and amplitude
+set by the degree, and organises the phase diagram.  Below the stability line the economy has a
+unique frozen composition; degree heterogeneity lowers the line, a mean interaction of either
+sign raises it, and competition, which removes the noisiest firms, raises it most.  Above the
+line the composition is chaotic or trapped by one of many equilibria, and the growth boundary is
+almost independent of the network.  In the fluctuating, growing phase every firm is an
+independent one-dimensional problem with a known law of parameters.  The empirical protocol counts
+whole lives, and a firm's volatility is then its log range over its lifetime: it enters when its
+fitness has risen enough, exits on the first fitness dip whose area exceeds an explicit threshold,
+and in between is one hump or a few merged ones.  The empirical exponents are therefore lifetime
+exponents, and the bend of the ratio curve is the growing spread of lifetimes with size: regular
+single excursions for small firms, memoryless exits for large ones.  The bend is a crossover.  In
+this model multiscaling is an effective property of a finite size range, not an asymptotic law,
+consistent with the reading of \citet{moran2024}.  The plateau mechanism (an adiabatic
+$\sqrt D/S$ law and a degree channel, Appendices~\ref{sec:adiabatic}--\ref{sec:survivor}) governs only
+firms present throughout a window.
+
+\paragraph{Predictions for data.}
+\begin{enumerate}
+  \item \emph{Survivorship.}  Restricting a panel to firms present throughout should raise $\beta$
+        (in the model, $0.41$ against $0.20$ at $\alpha=2.5$).
+  \item \emph{Lifetime bound.}  Eq.~\eqref{eq:bound} bounds each firm's volatility from below by
+        its life-cycle range and lifetime.  The MSB growth rates are overlapping annual differences
+        sampled quarterly, so the bound must be adapted to that sampling before the test.
+  \item \emph{Age.}  Removing each firm's entry and exit years, or conditioning on age, should move
+        $\zeta_q/\zeta_1$ towards $q$.
+\end{enumerate}
+
+\subsection{Open problems}
+\label{sec:open}
+\begin{itemize}
+  \item \emph{Growth in the fluctuating phase.}  The zero-growth line agrees with simulation only
+        as the continuation of an unstable fixed point; the controlled condition $\bar g=0$ needs
+        the two-time theory.  In the coexistence region above $\sigma_c$ the trapping probability
+        grows with the observation time (Section~\ref{sec:above}); its dependence on $N$ and $T$,
+        and whether trapping survives $N\to\infty$, is not mapped.
+  \item \emph{Light-tail $\bad$.}  Linear response is $0.09$--$0.12$ low on light tails; the
+        nonlinear one-firm response is not derived.
+  \item \emph{Sparse cavity.}  At $\alpha\lesssim2.2$ the field is carried by about four neighbours
+        and is not Gaussian.  A few-neighbour cavity theory is needed.
+  \item \emph{Finite connectivity.}  The spread of amplitudes at fixed degree, which comes from
+        quenched neighbourhoods, is not derived.  It controls $\varepsilon_C$ on the survivor panel and
+        the extra flattening on the spell panel, and its $N$ dependence sets the slow approach to
+        the limit.
+  \item \emph{A full spell theory.}  Spells are humps merged by non-killing dips
+        (Section~\ref{sec:humps}), and this gives each spell's volatility to $4$--$10\%$, but not yet
+        the exponents: the largest firms carry extra variation from fitness fluctuations that never
+        reach zero.  The lifetime law \eqref{eq:lifetime} also misses the shortest spells and the
+        dips that start before the firm has recovered.  With these, the $(\bPhi,f)$ ensemble would
+        give $\zeta_q$ analytically.
+  \item \emph{Entry size.}  Model firms enter at $\Sthr\approx10^{-2}$ of the mean size and rise by
+        $e^\ell\sim e^5$; real firms enter Compustat at their IPO size.  The model probably
+        overstates the rise-and-fall share; the entry size should be calibrated from data rather
+        than treated as a free parameter.
+\end{itemize}
+
+\appendix
+%======================================================================
+\section{Plateau volatility: the adiabatic law}
 \label{sec:adiabatic}
 
 \paragraph{Observables.}
@@ -839,59 +1332,7 @@ $0.09$--$0.12$ low on light tails, where it cannot exceed one while the measurem
 $1.01$.  The light-tail gap is a nonlinear one-firm effect, not yet derived.
 
 %======================================================================
-\section{Which firms are counted}
-\label{sec:panels}
-
-\subsection{Two panels}
-
-Moran, Secchi and Bouchaud use an unbalanced panel \citep{moran2024}: every Compustat firm with at
-least two annual growth rates contributes, over its own listed life, a volatility
-$v_i=\sqrt{\pi/2}\,T_i^{-1}\sum_t|g_{it}-\bar g_i|$ and a size equal to its lifetime mean.  Two
-estimators are applied to the model.
-\begin{itemize}
-  \item The \emph{survivor} (balanced) panel keeps only firms whose share stays above $10^{-6}$
-        throughout a window of length $T$.  It counts firms on their plateau.
-  \item The \emph{spell} (unbalanced) panel follows the empirical protocol.  A spell is a maximal
-        stretch with $S>\Sthr=8\lambda$ (the share $10^{-6}$ at $\lambda=10^{-3}$, $N=8000$), and
-        each spell counts as one firm.  It counts entries, plateaux and exits.
-\end{itemize}
-The survivor panel has no long-window limit: its survivors are firms that did not dip during
-$T$, and their number vanishes as $T\to\infty$.  At $\alpha=2.5$ its $\beta$ drifts from $0.414$ to
-$0.354$ between $T=60$ and $480$.  Only spells cut by the window edges depend on $T$ in the spell
-panel, and its $\beta$ converges: $0.110$, $0.081$, $0.084$, $0.080$ for $T=240$--$1920$ at
-$\alpha=2.2$, and $0.461$, $0.422$, $0.391$, $0.374$ at $\alpha=6$, with the cut-off share falling to
-$3$--$4\%$ (the slow approach is explained in Section~\ref{sec:rice}).  The spell panel is
-therefore the model counterpart of the data.  The survivor panel is still useful: it isolates
-the plateau fluctuations, which are the large-firm limit of every spell, and it is analytically
-transparent.  Section~\ref{sec:survivor} treats it, Section~\ref{sec:spells} the spell panel.
-
-\subsection{A general multiscaling criterion}
-\label{sec:criterion}
-
-Both panels write the volatility as a deterministic function of size times a random factor.
-
-\begin{proposition}[Multiscaling criterion]\label{prop:criterion}
-Let $v=A(\bar S)\,X$ with $X$ random given $\bar S$, and let $c_n(\bar S)$ be the cumulants of $\ln X$
-given $\bar S$, so that $s^2=c_2=\Var(\ln X\mid\bar S)$.  Then, exactly,
-\begin{equation}
-  \zeta_q-q\,\zeta_1=-\sum_{n\ge2}\frac{q^n-q}{n!}\,\frac{dc_n}{d\ln\bar S}
-  =-\frac{q(q-1)}{2}\,\frac{ds^2}{d\ln\bar S}-\frac{q^3-q}{6}\,\frac{dc_3}{d\ln\bar S}-\dots,
-  \label{eq:criterion}
-\end{equation}
-so at second-cumulant order the ratio curve bends below $q$ if and only if the conditional
-log-variance of $X$ grows with size.
-\end{proposition}
-\begin{proof}
-$\zeta_q=q\beta_A-d\ln\E[X^q\mid\bar S]/d\ln\bar S$ with $\ln\E[X^q\mid\bar S]=\sum_nq^nc_n/n!$.
-Subtract $q$ times the case $q=1$; the $n=1$ terms cancel.
-\end{proof}
-A fixed-shape law has $s^2$ constant and $\zeta_q=q\zeta_1$.  Multiscaling needs a random factor
-whose spread opens up with size.  On the survivor panel $X=\sqrt\kappa$; on the spell panel
-$X=\ell/n$, a log range over a lifetime.  At second-cumulant order \eqref{eq:criterion} bends the curve as $q(q-1)$, which cannot produce a
-hard saturation of the ratio curve; that would need higher cumulants.
-
-%======================================================================
-\section{The survivor panel: plateau fluctuations and the degree channel}
+\section{The survivor panel and the degree channel}
 \label{sec:survivor}
 
 \subsection{Sum rule}
@@ -1132,315 +1573,6 @@ part of the bend also comes from the spread of amplitudes within a class ($\zeta
 3.68$--$3.87$), so simulation and HDMFT reach nearly the same curve by slightly different routes.
 
 %======================================================================
-\section{The spell panel: life cycles}
-\label{sec:spells}
-
-Under the empirical protocol a firm is counted from entry to exit, and its volatility includes
-the rise from the listing threshold and the fall back to it.
-
-\subsection{The lifetime identity}
-\label{sec:identity}
-
-\begin{proposition}[Lifetime identity; exact]\label{prop:identity}
-Let a spell start and end at $\Sthr$, with $n$ growth steps $g_t=\Delta\ln S$.  Then $\bar g=0$ and
-\begin{equation}
-  v=\sqrt{\tfrac\pi2}\;\frac{2\ell+V_p}{n},\qquad\ell=\ln\frac{S_{\max}}{\Sthr},
-  \label{eq:identity}
-\end{equation}
-where $V_p\ge0$ is the total variation in excess of one rise and one fall.  For any firm, with
-entry size $S_a$ and exit size $S_b$,
-\begin{equation}
-  v\ge\sqrt{\tfrac\pi2}\;\frac{2\ln\bigl(S_{\max}/\max(S_a,S_b)\bigr)}{n}.
-  \label{eq:bound}
-\end{equation}
-\end{proposition}
-\begin{proof}
-Split the steps at the peak into a set $A$ (a fraction $x$ of the steps) and $B$.  With
-$R_a=\ln(S_{\max}/S_a)$, $R_b=\ln(S_{\max}/S_b)$ and $\bar g=(R_a-R_b)/n$,
-$\sum_t|g_t-\bar g|\ge|\sum_A(g_t-\bar g)|+|\sum_B(g_t-\bar g)|=2[(1-x)R_a+xR_b]\ge2\min(R_a,R_b)$.  For
-a complete spell $R_a=R_b=\ell$, and the bound is the rise-and-fall part of the total variation.
-\end{proof}
-The bound \eqref{eq:bound} is model-free and can be evaluated firm by firm in data.  In the
-surrogate at $\alpha=6$, \eqref{eq:identity} holds to a median relative error of
-$2.5\times10^{-3}$ on the $87\%$ of spells complete at $T=480$, and the rise-and-fall term carries
-$100\%$, $95\%$ and $74\%$ of $v$ at the low end, middle and top of the decline branch.  Under the
-unbalanced panel a firm's volatility is essentially its log range over its lifetime; plateau
-fluctuations matter only for the largest firms.  The survivor panel is the opposite limit: its
-firms never rise or fall.
-
-\subsection{Exponents of the life-cycle part}
-
-Write the rise-and-fall part as $v_{\rm tr}=c\,\ell/n$, $c=2\sqrt{\pi/2}$.  If $\ell$ and $n$ are
-independent at fixed $\bar S$ and $S_{\max}\propto\bar S$,
-\begin{equation}
-  \zeta_q^{\rm tr}\simeq\zeta_q[n^{-1}]-\frac{d\ln\E[\ell^q\mid\bar S]}{d\ln\bar S}
-  \simeq\zeta_q[n^{-1}]-\frac q\ell ,
-  \label{eq:lifetimerep}
-\end{equation}
-where $\zeta_q[n^{-1}]$ are the exponents of the inverse lifetime.  The life-cycle exponent is a
-lifetime--size exponent lowered by a logarithmic correction set by the depth of entry.
-
-\begin{table}[htbp]
-\centering\footnotesize\setlength{\tabcolsep}{2.5pt}
-\begin{tabular}{c|cc|c|c|c|c}
-\toprule
-$\lambda$ & $\ell$ & $\frac{d\ln\ell}{d\ln S}$ ($1/\ell$) & $\zeta_q^{\rm tr}$ & r.h.s.\ of \eqref{eq:lifetimerep} & $\zeta_q[n^{-1}]$ & $\zeta_q/\zeta_1$ of $v$\\
-\midrule
-$10^{-4}$ & $8.1$ & $0.107$ ($0.124$) & $.328,\,.546,\,.699,\,.815$ & $.329,\,.551,\,.712,\,.837$ & $.437,\,.766,\,1.03,\,1.27$ & $1.85,\,2.55,\,3.09$\\
-$10^{-3}$ & $5.8$ & $0.150$ ($0.172$) & $.427,\,.718,\,.931,\,1.10$ & $.428,\,.722,\,.940,\,1.11$ & $.578,\,1.02,\,1.39,\,1.72$ & $1.88,\,2.61,\,3.20$\\
-$10^{-2}$ & $3.5$ & $0.285$ ($0.287$) & $.518,\,.876,\,1.14,\,1.35$ & $.519,\,.877,\,1.14,\,1.36$ & $.803,\,1.45,\,2.00,\,2.49$ & $1.91,\,2.68,\,3.32$\\
-\bottomrule
-\end{tabular}
-\caption{Complete spells on the decline branch; surrogate with the $\alpha=6$ fitness, $T=480$,
-$q=1,\dots,4$.  Eq.~\eqref{eq:lifetimerep} holds for the life-cycle part to $0.02$.}
-\label{tab:lifetime}
-\end{table}
-
-Equation~\eqref{eq:lifetimerep} is exact for $v_{\rm tr}$ to within $0.02$
-(Table~\ref{tab:lifetime}), but $v$ also contains the plateau part, which dilutes the bend.  At
-$\lambda=10^{-3}$ the full volatility has $\zeta_q=0.316$, $0.593$, $0.824$, $1.01$, against
-$0.427$, $0.718$, $0.931$, $1.10$ for $v_{\rm tr}$: the life-cycle part alone bends the ratio curve
-about twice as strongly as $v$ does (by a factor $1.8$--$2.7$ for $q=2$--$4$).  The life cycle is the mechanism, but a quantitative spell
-theory must combine it with the plateau law of Section~\ref{sec:adiabatic}, and the two are not
-additive (Section~\ref{sec:open}).
-
-\subsection{Why the ratio curve bends}
-
-By Proposition~\ref{prop:criterion} with $X=\ell/n$, the relevant spread is that of $\ln n$.  At
-$\alpha=6$ ($\lambda=10^{-3}$), $\Var(\ln n\mid\bar S)$ rises from $0.20$ to $0.62$ along the decline
-branch while the mean lifetime grows from $14$ to $81$.  The measured bend of the lifetime
-exponents, $\zeta_q[n^{-1}]-q\zeta_1[n^{-1}]=0$, $-0.13$, $-0.34$, $-0.60$, has the predicted sign;
-the second-cumulant estimate ($0$, $-0.19$, $-0.58$, $-1.16$) is right at $q=2$ and overshoots at
-higher $q$, as an expansion in $q^2$ must.
-
-The mechanism is a crossover between two kinds of exit.  A small firm lives through a single
-positive excursion of its fitness, and such excursions have fairly regular lengths.  A large firm
-exits only on a rare deep dip, a nearly memoryless event, so its lifetime is close to
-exponential, for which $\Var\ln n=\pi^2/6\approx1.64$.  The spread grows with size until exits
-are memoryless and then saturates.  Like the degree channel, the life-cycle bend is a crossover,
-not an asymptotic law.
-
-\subsection{The lifetime law}
-\label{sec:rice}
-
-\paragraph{Exact solution of the one-firm equation.}  At $\lambda=0$, \eqref{eq:firm} is linear in
-$1/S$: $d(1/S)/dt=-\Phi/S+1$.  With the integrated fitness $\mathcal A(t)=\int^t\Phi$,
-\begin{equation}
-  \frac1{S(t)}=\int_{-\infty}^t e^{-[\mathcal A(t)-\mathcal A(t')]}\,dt' .
-  \label{eq:exact}
-\end{equation}
-The size is a soft minimum over the drawdowns of the integrated fitness.  Near a downcrossing of
-$\Phi$ with slope $-s$, $\Phi\simeq-s(t-t_0)$, \eqref{eq:exact} gives the inverse Mills ratio,
-\begin{equation}
-  S(t)=\sqrt s\,\frac{\phiN(\theta)}{\PhiN(-\theta)}\Big|_{\theta=\sqrt s\,(t-t_0)}\!\!,\qquad
-  S(t_0)=\sqrt{2s/\pi},\qquad
-  S(t)\simeq\sqrt{\tfrac{s}{2\pi}}\;e^{-[\mathcal A(t_0)-\mathcal A(t)]}\quad(\theta\gg1):
-  \label{eq:mills}
-\end{equation}
-the firm tracks its fitness until the crossing, and then decays by the area of the dip, with a
-prefactor fixed by the crossing slope.  Near the floor, with $S\ll\Phi$, the immigration term
-gives the mirror image, $S(t)\simeq\lambda\int^te^{\mathcal A(t)-\mathcal A(t')}dt'$.
-
-\paragraph{Kill and entry rules.}  A spell therefore ends at the first negative excursion of $\Phi$
-whose area exceeds
-\begin{equation}
-  \ell_c(s)=\ln\frac{\sqrt{s/2\pi}}{\Sthr},
-  \label{eq:kill}
-\end{equation}
-and a firm at the floor lists once $\mathcal A$ has risen by $\ell_e(s)=\ln\bigl(\Sthr\sqrt{s/2\pi}/\lambda\bigr)$
-since the upcrossing.  Both thresholds are explicit and contain no fitted constant.  In the
-one-firm process with the $\alpha=6$ fitness ($f=1.82$, $\tau=3.51$, $\lambda=10^{-3}$), the kill rule
-classifies $96$--$98\%$ of the dips of listed firms correctly at every $u$, and the empirical
-threshold sits at area $=\ell_c$.  The errors are dips that begin before $S$ has recovered from
-the previous one, where \eqref{eq:mills} overestimates $S(t_0)$.  Applied to the Gaussian
-fitness path alone, the two rules reproduce the spell lifetimes above their lower quartile to
-$5$--$10\%$; they miss only the $4$--$9\%$ of spells shorter than four time units, in which the
-firm never reaches its fitness.
-
-\paragraph{Mean lifetime.}  The spell lifetime is thus a functional of a Gaussian process.  Kills
-occur at Rice's downcrossing rate $\nu(u)=e^{-u^2/2}/(2\pi\tau)$, $u=\bPhi/f$, thinned by the
-probability that a dip kills, so
-\begin{equation}
-  \bar L(u)=\frac{\PhiN(u)}{\nu(u)\,P_{\rm kill}(u)},\qquad
-  P_{\rm kill}(u)=\Pr\bigl[\text{dip area}>\ell_c(f\dot s)\bigm|\text{downcrossing of }{-u}\bigr].
-  \label{eq:lifetime}
-\end{equation}
-$P_{\rm kill}$ is a level-crossing statistic, computed from the Slepian model: $\eta$
-conditioned on $\eta(0)=-u$ and $\eta'(0)=-\dot s$, with $\dot s$ drawn from the Rayleigh law of
-crossing slopes.  Rice excursions merge into one spell by the factor $1/P_{\rm kill}$, which is not a constant: it
-grows from $1.5$ at $u=-0.5$ to $5$ at $u=2$.  For $u\gg1$ dips are short parabolae,
-$\Phi\simeq f[ut^2/2\tau^2-\dot st]$, of area $\tfrac23f\dot s^3\tau^4/u^2$, and
-\begin{equation}
-  -\ln P_{\rm kill}\simeq\frac12\left(\frac{3\,\ell_c}{2f\tau}\right)^{2/3}u^{4/3},\qquad
-  \ln\bar L\simeq\frac{u^2}2+\frac12\left(\frac{3\,\ell_c}{2f\tau}\right)^{2/3}u^{4/3}+\ln(2\pi\tau) .
-  \label{eq:largeu}
-\end{equation}
-
-\begin{table}[htbp]
-\centering\small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{c|ccc|cc|c}
-\toprule
-$u$ & $P_{\rm kill}$ ODE & Slepian & \eqref{eq:largeu} & $\bar L$ ODE & $\bar L$ \eqref{eq:lifetime} & $\Var\ln L$ ODE\\
-\midrule
-$-0.5$ & $0.719$ & $0.669$ & -- & $14.9$ & $11.5$ & $0.81$\\
-$0$    & $0.626$ & $0.575$ & -- & $22.7$ & $19.2$ & $0.92$\\
-$0.5$  & $0.511$ & $0.475$ & $0.846$ & $40.2$ & $36.4$ & $1.08$\\
-$1.0$  & $0.390$ & $0.374$ & $0.642$ & $83.2$ & $81.8$ & $1.33$\\
-$1.5$  & $0.294$ & $0.284$ & $0.458$ & $221.5$ & $223$ & $1.63$\\
-$2.0$  & $0.214$ & $0.207$ & $0.312$ & $(645)$ & $769$ & $(1.81)$\\
-$3.0$  & $0.116$ & $0.098$ & $0.128$ & -- & -- & --\\
-$5.0$  & -- & $0.015$ & $0.015$ & -- & -- & --\\
-\bottomrule
-\end{tabular}
-\caption{Lifetime law of the one-firm process, $\alpha=6$ fitness.  ODE: $300$ firms over
-$T=1500$ ($120$ over $T=6000$ for $u\ge1.5$); bracketed values are biased by spells as long as the
-run.  The column \eqref{eq:lifetime} uses the Slepian $P_{\rm kill}$ and $\PhiN(u)$ and no
-simulation.  Source: \texttt{scripts/lifecycle/kill\_rule.py}.}
-\label{tab:rice}
-\end{table}
-
-Table~\ref{tab:rice} shows three things.  The Slepian $P_{\rm kill}$ is within $0.05$ of the ODE
-everywhere and exact for $u\ge1.5$; the deficit at small $u$ is the unrecovered dips.  With no
-simulation input, \eqref{eq:lifetime} gives the mean lifetime to $3\%$ for $u\ge1$ and runs
-$10$--$20\%$ low for $u\le0.5$, where short spells and the entry and exit delays matter.  And
-$\Var\ln L$ rises to $\pi^2/6=1.645$ at $u=1.5$, the value for an exponential law: large firms exit
-on rare, memoryless kills, exactly as the crossover argument of the previous subsection assumed.
-The asymptotic form \eqref{eq:largeu} sets in only for $u\gtrsim4$, because at moderate $u$ the
-killing dips last about $\tau$ and are not parabolic.
-
-Two consequences follow.
-\begin{enumerate}
-  \item \emph{Lifetime grows faster than any power of size.}  With $\bar S\simeq\bPhi=uf$ for long
-        spells, $\ln\bar L$ grows as $\bar S^2/2f^2$ plus a $\bar S^{4/3}$ correction.  Through
-        \eqref{eq:lifetimerep} the life-cycle part of the volatility has a local exponent that
-        increases along the decline branch, so the spell $\beta$ is an effective exponent whose
-        value depends on the fitted size range, and the model's decline branch steepens with size.
-  \item \emph{Slow convergence.}  Firms whose lifetime exceeds the panel length $T$ appear as one
-        cut-off spell dominated by the plateau ($v\propto1/S$); shorter-lived firms are dominated
-        by the rise and fall.  The crossover is at $\bar L(u_\times)\simeq T$, so $u_\times$ grows
-        only as $\sqrt{2\ln T}$.  This is why the spell $\beta$ converges slowly in $T$, even
-        though it has a limit.
-\end{enumerate}
-
-\subsection{The degree channel is amplitude heterogeneity}
-
-At $\alpha=2.5$ the spell ratio curve is flat.  The surrogate isolates the cause:
-
-\begin{center}\small
-\begin{tabular}{lcc}
-\toprule
-$\alpha=2.5$, spells & $\beta$ & $\zeta_q/\zeta_1$\\
-\midrule
-full model & $0.198$ & $1.49,\,1.48,\,1.14$\\
-surrogate, measured $(\bPhi_i,f_i)$ & $0.185$ & $1.52,\,1.67,\,1.56$\\
-$f$ shuffled across firms & $0.116$ & $1.50,\,1.61,\,1.38$\\
-$f$ homogeneous & $0.365$ & $1.90,\,2.67,\,3.29$\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Breaking the link between $\bPhi$ and $f$ keeps the curve flat; removing the spread of
-$f$ restores the plain life-cycle bend.  The heavy-tail flattening is the spread of fitness
-amplitudes, $f\propto\sqrt\kappa$, which at fixed size adds lifetime dispersion on top of the life
-cycle: Proposition~\ref{prop:criterion} with two random factors.  On heavy tails the degree
-moments also grow faster than $q$ and lower $\zeta_1$ from $0.29$ to $0.18$, and dividing the
-same absolute bend by a smaller $\zeta_1$ flattens the curve further.
-
-\subsection{Closing the chain}
-
-Sampling $(\bPhi,f)$ from Proposition~\ref{prop:law} and running the single-firm process gives the
-spell statistics with progressively less simulation input:
-
-\begin{center}\footnotesize\setlength{\tabcolsep}{3pt}
-\begin{tabular}{l|c|c|c|c}
-\toprule
-spells, $T=480$ & full model & measured $(\bPhi_i,f_i)$ & law (sim.\ order par.) & law (HDMFT)\\
-\midrule
-$\alpha=6$, $\sigma=1.75$   & $0.422$; $1.86,2.55,3.07$ & $0.439$; $1.79,2.39,2.82$ & $0.432$; $1.85,2.52,3.03$ & $0.403$; $1.86,2.56,3.10$\\
-$\alpha=3.5$, $\sigma=1.9$  & $0.214$; $1.80,2.31,2.54$ & $0.231$; $1.79,2.35,2.69$ & $0.277$; $1.80,2.38,2.73$ & $0.285$; $1.81,2.43,2.86$\\
-$\alpha=2.5$, $\sigma=1.75$ & $0.198$; $1.49,1.48,1.14$ & $0.185$; $1.52,1.67,1.56$ & $0.235$; $1.60,1.83,1.80$ & $0.216$; $1.63,1.91,1.92$\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\noindent Each entry is $\beta$; $\zeta_q/\zeta_1$ for $q=2,3,4$.  The last column has no simulation
-input: the HDMFT solved on the degree sequence gives the order parameters,
-Proposition~\ref{prop:law} gives $(\bPhi,f)$, the one-firm process gives the life cycles, and the
-MSB estimator is applied to them.  At $\alpha=6$ it reproduces the full model to $0.02$ in $\beta$
-and $0.03$ in the ratios.  The main remaining difference is finite connectivity: at fixed degree
-the measured amplitudes spread by $\pm13\%$ (Table~\ref{tab:cavity}), which the leading-order law
-lacks; less amplitude spread means less flattening and a higher $\beta$ on heavy tails.  The
-closure itself is within about $10\%$ of the simulated order parameters.
-
-\subsection{Where the model meets the data}
-
-A scan over $\alpha\in\{2.5,3,3.5,6\}$, $\sigma\in\{1.6,1.75,1.9\}$ and
-$\lambda\in\{10^{-4},10^{-3},10^{-2}\}$ at $\mu=-1.76$ shows the two targets pulling apart.  A
-$\beta$ in the empirical range needs heavy tails or large $\sigma$; a data-like ratio curve needs
-light tails, where the amplitude spread is small.  They meet near $\alpha\approx3.5$,
-$\sigma\approx1.9$: with spells of at least $20$ growth rates and $\lambda=10^{-2}$, $\beta=0.19$ and
-$\zeta_q/\zeta_1=1.80$, $2.41$, $2.83$.  On light tails raising $\sigma$ lowers $\beta$ without
-damaging the ratios, so the joint region probably extends past the scanned range.  Across all 36
-points the growth rates stay fat-tailed (excess kurtosis $3$--$16$).
-
-%======================================================================
-\section{Discussion}
-\label{sec:discussion}
-
-\paragraph{The picture.}
-Scale invariance turns the economy into a replicator in which each firm is a logistic unit
-tracking a fitness field.  Mean-field theory makes that field Gaussian, with mean and amplitude
-set by the degree, so every firm is an independent one-dimensional problem with a known law of
-parameters.  Volatility then has two sources.  On its plateau a firm tracks its fitness and its
-volatility is $\sqrt D/S$, giving $\beta=1$ at fixed degree; size selects on degree, and
-amplitude grows as $\sqrt\kappa$, which lowers $\beta$.  Over its life a firm rises from the entry
-threshold and falls back to it, and its volatility is its log range over its lifetime.  The
-empirical protocol counts whole lives, so the empirical exponents are lifetime exponents, and the
-bend of the ratio curve is the growing spread of lifetimes with size: regular single excursions
-for small firms, memoryless exits for large ones.  Both mechanisms are crossovers.  In this
-model, multiscaling is an effective property of a finite size range, not an asymptotic law,
-consistent with the reading of \citet{moran2024}.
-
-\paragraph{Predictions for data.}
-\begin{enumerate}
-  \item \emph{Survivorship.}  Restricting a panel to firms present throughout should raise $\beta$
-        (in the model, $0.41$ against $0.20$ at $\alpha=2.5$).
-  \item \emph{Lifetime bound.}  Eq.~\eqref{eq:bound} bounds each firm's volatility from below by
-        its life-cycle range and lifetime.  The MSB growth rates are overlapping annual differences
-        sampled quarterly, so the bound must be adapted to that sampling before the test.
-  \item \emph{Age.}  Removing each firm's entry and exit years, or conditioning on age, should move
-        $\zeta_q/\zeta_1$ towards $q$.
-\end{enumerate}
-
-\subsection{Open problems}
-\label{sec:open}
-\begin{itemize}
-  \item \emph{Growth in the fluctuating phase.}  The zero-growth line agrees with simulation only
-        as the continuation of an unstable fixed point; the controlled condition $\bar g=0$ needs
-        the two-time theory.  The weak-competition region above $\sigma_c$, where equilibria
-        and chaos coexist (Section~\ref{sec:above}), should be mapped by the frozen fraction
-        against $\sigma$, $N$ and $T$.
-  \item \emph{Light-tail $\bad$.}  Linear response is $0.09$--$0.12$ low on light tails; the
-        nonlinear one-firm response is not derived.
-  \item \emph{Sparse cavity.}  At $\alpha\lesssim2.2$ the field is carried by about four neighbours
-        and is not Gaussian.  A few-neighbour cavity theory is needed.
-  \item \emph{Finite connectivity.}  The spread of amplitudes at fixed degree, which comes from
-        quenched neighbourhoods, is not derived.  It controls $\varepsilon_C$ on the survivor panel and
-        the extra flattening on the spell panel, and its $N$ dependence sets the slow approach to
-        the limit.
-  \item \emph{A full spell theory.}  The life-cycle part \eqref{eq:lifetimerep} and the plateau law
-        \eqref{eq:A} are each understood, but a spell's volatility is not their sum.  The lifetime
-        law \eqref{eq:lifetime} misses the shortest spells and the dips that start before the
-        firm has recovered.  A spell ensemble $(\kappa,\bar S,n)$ built from the
-        extreme-value law of Section~\ref{sec:ensemble} would give $\zeta_q$ analytically.
-  \item \emph{Entry size.}  Model firms enter at $\Sthr\approx10^{-2}$ of the mean size and rise by
-        $e^\ell\sim e^5$; real firms enter Compustat at their IPO size.  The model probably
-        overstates the rise-and-fall share; the entry size should be calibrated from data rather
-        than treated as a free parameter.
-\end{itemize}
-
-\appendix
-%======================================================================
 \section{Gaussian integrals}
 \label{app:gauss}
 
@@ -1457,9 +1589,10 @@ $w_0=w_2$ only at $\Delta=0$, where $w_0=w_2=\tfrac12$ and $w_1=1/\sqrt{2\pi}$.
 \paragraph{Resolution.}  A chaotic trajectory does not survive a change of integration tolerance,
 so re-integrating the same economies at $10^{-6}$ instead of $10^{-4}$ resamples the late window.
 Eight-economy medians of $\beta$ and $\bad$ then move by up to $0.05$ and $0.07$.  On spell panels
-the fit start (the peak of the binned volatility) sits on a flat top, and moving it by one bin
-changes $\beta$ by up to $0.09$.  Differences in $\beta$ below about $0.05$ (survivor) and $0.09$
-(spells) are not resolved; ratios $\zeta_q/\zeta_1$ are considerably more stable.
+a fit that starts at the peak of the binned volatility moves by a bin between economies and
+changes $\beta$ by up to $0.09$; the fixed-range estimator of Section~\ref{sec:data} reduces the
+spread to $\pm0.03$.  Ratios $\zeta_q/\zeta_1$ are considerably more stable than $\beta$ under any of
+these choices.
 
 \paragraph{Sources.}  Scripts are in \texttt{scripts/} unless a path is given.
 \begin{center}\small
@@ -1476,6 +1609,9 @@ fitness statistics and law & \texttt{lifecycle/}: \texttt{fitness\_stats}, \text
 surrogate & \texttt{lifecycle/}: \texttt{surrogate}, \texttt{survivor\_check}, \texttt{window\_surrogate}\\
 lifetimes, kill rule, ablation & \texttt{lifecycle/}: \texttt{lifetime}, \texttt{kill\_rule}, \texttt{ablation}\\
 spell panel, parameter scan & \texttt{beta\_spells.py}, \texttt{scan\_spells.py}\\
+headline numbers, data figure & \texttt{headline\_spells.py}, \texttt{plot\_data\_comparison.py}\\
+phase diagram & \texttt{phase\_*.py}, \texttt{plot\_phase\_theory.py}\\
+fitness-law and lifetime figures & \texttt{lifecycle/}: \texttt{plot\_fitness\_law}, \texttt{plot\_lifetime\_law}\\
 \bottomrule
 \end{tabular}
 \end{center}
