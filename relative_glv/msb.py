@@ -60,6 +60,21 @@ def _decline_beta(Sbar, vol, n_bins=20):
     return float(-c[0]), r2, bx, by, pk
 
 
+def upper_zeta(Sbar, vol, qs=(1, 2, 3, 4), lo_quantile=0.5, n_bins=10):
+    """zeta_q from E[vol^q | Sbar] ~ Sbar^-zeta_q on the larger firms only: the firms above the
+    lo_quantile of Sbar, in n_bins equal-count bins, bin means of vol^q, least squares in log-log.
+    zeta_1 is beta.  A fixed quantile range replaces the peak search of _decline_beta, whose start
+    bin jumps on the flat top of spell panels (beta moves by up to 0.09 between economies)."""
+    ok = (vol > 0) & np.isfinite(vol) & (Sbar > 0)
+    Sbar, vol = Sbar[ok], vol[ok]
+    top = Sbar >= np.quantile(Sbar, lo_quantile)
+    Sbar, vol = Sbar[top], vol[top]
+    o = np.argsort(Sbar)
+    P = np.array_split(o, n_bins)
+    lx = np.log([Sbar[p].mean() for p in P])
+    return np.array([-np.polyfit(lx, np.log([np.mean(vol[p] ** q) for p in P]), 1)[0] for q in qs])
+
+
 def size_volatility(W, t, *, window, dt, n_bins=20):
     """Size-volatility relation sigma(S) ~ S^-beta from a shares trajectory.
 

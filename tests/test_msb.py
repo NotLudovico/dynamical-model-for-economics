@@ -56,3 +56,14 @@ def test_spell_volatility_splits_spells_and_matches_balanced_panel():
     assert (sp["firm"][:2] == 0).all() and (sp["firm"][2:] == np.arange(1, N)).all()
     assert np.allclose(sp["vol"][2:], sv["vol"])          # undipped firms: identical estimator
     assert abs(sp["beta"] - 0.3) < 0.08
+
+
+def test_upper_zeta_recovers_planted_multiscaling():
+    from relative_glv.msb import upper_zeta
+    rng = np.random.default_rng(0)
+    S = np.exp(rng.uniform(-1, 3, 200_000))
+    # vol = S^-0.3 * X with log X Gaussian of variance growing with ln S: zeta_q - q zeta_1 = -q(q-1)/2 * 0.05
+    lnX = rng.standard_normal(S.size) * np.sqrt(0.05 * np.log(S) + 0.2)
+    z = upper_zeta(S, S ** -0.3 * np.exp(lnX), lo_quantile=0.0, n_bins=20)
+    expect = np.array([q * 0.3 - (q * q) / 2 * 0.05 for q in (1, 2, 3, 4)])
+    assert np.allclose(z, expect, atol=0.02)          # 4th moment: sampling noise ~0.016
