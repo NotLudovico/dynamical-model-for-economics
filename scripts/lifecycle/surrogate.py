@@ -8,8 +8,8 @@ DATA = os.path.join(ROOT, "data", "lifecycle")
 import numpy as np
 from scipy.optimize import curve_fit
 from joblib import Parallel, delayed
-from beta_spells import cq_one, START, DT
-from relative_glv.msb import spell_volatility
+from beta_spells import START, DT
+from relative_glv.msb import spell_volatility, upper_zeta
 
 T, NE, DTI = 480.0, 8000, 0.02
 
@@ -39,7 +39,8 @@ def run(m, f, tau, lam, seed, smooth=True, t_end=START + T):
 def analyse(S, lam, min_growth=2):
     t = START + DT * np.arange(S.shape[1])
     sp = spell_volatility(S / NE, t, window=(START, t[-1]), dt=DT, floor=8 * lam / NE, min_growth=min_growth)
-    return sp["beta"], cq_one(sp["Sbar"], sp["vol"]), sp
+    z = upper_zeta(sp["Sbar"], sp["vol"])                   # frozen estimator: larger half of spells
+    return z[0], z, sp
 
 def surrogate(fitfile, lam=None, tau=None, f_scale=1.0, m_shift=0.0, smooth=True, min_growth=2, seeds=8):
     d = np.load(fitfile)

@@ -25,11 +25,10 @@ def spells(S, thr, min_growth=2):
                             a > 0 and b < x.size, np.exp(x[a:b].max()), np.abs(g).sum()))
     return np.array(out)
 
-def branch(S, v, nb=20):
-    o = np.argsort(S); P = np.array_split(o, nb)
-    bx = np.array([S[p].mean() for p in P]); pk = int(np.argmax([np.median(v[p]) for p in P]))
-    dec = np.where(S > bx[pk])[0]; dec = dec[np.argsort(S[dec])]
-    return np.array_split(dec, max(6, nb - pk))
+def branch(S, v, nb=10):
+    """Bins of the frozen estimator (msb.upper_zeta): the larger half of spells by Sbar, nb equal-count bins."""
+    dec = np.where(S >= np.median(S))[0]; dec = dec[np.argsort(S[dec])]
+    return np.array_split(dec, nb)
 
 def zq(S, y, P):
     lx = np.log([S[p].mean() for p in P])
