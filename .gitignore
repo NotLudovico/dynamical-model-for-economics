@@ -16,3 +16,6 @@ scripts/*.npz
 # Regenerable intermediates of scripts/lifecycle (mf_law.py, ablation.py rewrite them)
 data/lifecycle/law_*.npz
 data/lifecycle/ablation_*.npz
+
+# Raw per-spell data of the headline runs (~110 MB); scripts/headline_spells.py regenerates it
+data/headline_spells/
