@@ -19,3 +19,6 @@ data/lifecycle/ablation_*.npz
 
 # Raw per-spell data of the headline runs (~110 MB); scripts/headline_spells.py regenerates it
 data/headline_spells/
+
+# Regenerable output of scripts/demographic (batch ~150 MB per point, facts ~60 MB)
+data/demographic/

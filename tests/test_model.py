@@ -95,3 +95,15 @@ def test_survivors_mask_length_and_dtype():
     r = integrate(a, tmax=30.0, n_eval=150, seed=2)
     m = survivors(r["W"])
     assert m.shape == (150,) and m.dtype == bool
+
+
+def test_integrate_demographic_conserves_mass_and_replaces_dead_firms():
+    from relative_glv.model import integrate_demographic
+    a = coupling(300, 1.76, 1.75, kind="fc", seed=0)
+    r = integrate_demographic(a, D=0.1, tmax=20.0, dt_save=1.0, seed=0)
+    S, life = r["S"], r["life"]
+    assert S.shape == (300, 21) and life.shape == S.shape
+    assert np.allclose(S.sum(0), 300.0)            # mean firm stays 1
+    assert (S > 0).all()                           # dead firms are reborn at D
+    assert life[:, -1].sum() > 0                   # turnover happens
+    assert (np.diff(life, axis=1) >= 0).all()      # death counters only grow

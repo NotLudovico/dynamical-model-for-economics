@@ -158,6 +158,43 @@ def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,
     return dict(t=r.t, W=W, lnM=r.y[N], success=bool(r.success))
 
 
+def integrate_demographic(alpha, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed=0):
+    """Relative GLV with demographic noise and firm turnover instead of the lambda floor.
+
+    In relative sizes S_i = x_i / m (m the mean firm, sum_i S_i = N):
+
+        dS_i = S_i (f_i - fbar) dt + sqrt(D S_i) dW_i - (S_i/N) sum_j sqrt(D S_j) dW_j
+        f_i  = 1 - S_i - (alpha S)_i,   fbar = sum_i S_i f_i / N
+
+    i.e. the GLV x_i' = x_i (1 - x_i/m - (alpha x)_i/m) plus birth-death noise sqrt(D m x_i).
+    A firm that reaches S <= 0 dies and a newborn of one unit (S = D) takes its node.
+    Euler-Maruyama with step dt; sizes renormalised to sum N after every step.
+
+    Returns dict(t, S, life): S shape (N, n_save) sampled every dt_save from t_start;
+    life[i, k] counts the deaths at node i up to that sample, so a life is a maximal
+    run of samples with the same counter.
+    """
+    N = alpha.shape[0]
+    rng = np.random.default_rng(seed)
+    S = rng.uniform(0.5, 1.5, N)
+    S *= N / S.sum()
+    life = np.zeros(N, dtype=np.int64)
+    every, nsteps = int(round(dt_save / dt)), int(round(tmax / dt))
+    t_out, S_out, L_out = [], [], []
+    for step in range(nsteps + 1):
+        if step % every == 0 and step * dt >= t_start - 1e-9:
+            t_out.append(step * dt); S_out.append(S.copy()); L_out.append(life.copy())
+        f = 1.0 - S - alpha @ S
+        xi = np.sqrt(D * S * dt) * rng.standard_normal(N)
+        S = S + S * (f - S @ f / N) * dt + xi - S * xi.sum() / N
+        dead = S <= 0
+        if dead.any():
+            S[dead] = D
+            life[dead] += 1
+        S *= N / S.sum()
+    return dict(t=np.array(t_out), S=np.array(S_out).T, life=np.array(L_out).T)
+
+
 def growth_rate(t, lnM, frac=0.5):
     """Aggregate growth rate g_eff = d lnM/dt, as the slope of lnM over the late
     fraction `frac` of the trajectory (after the initial-condition transient)."""
