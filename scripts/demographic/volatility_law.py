@@ -40,6 +40,7 @@ for seed in (0, 1):
         Bf = np.mean(D / x[:-1] ** 2 * (1 - np.exp(-x[:-1] * DTg)))
         rows.append((x.mean(), g.var(), gd.var(), Bf))
 R = np.array(rows)
+np.savez(os.path.join(DATA, "volatility_law.npz"), rows=R)   # columns: Sbar, var g, V_det, B_filt
 P = np.array_split(np.argsort(R[:, 0]), 10)
 print(f"lives >= 20: {len(R)}")
 print(f"{'Sbar':>6} | {'sd g':>6} | {'sqrt(Vdet+Bf)':>13} | ratio | {'sqrt Vdet':>9} {'sqrt Bf':>7}")
