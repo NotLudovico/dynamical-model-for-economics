@@ -1,0 +1,14 @@
+- [Article goal](project-article-goal.md) — thesis submitted; current theory work is for a journal article
+- [Standard LV scaling only](user-standard-lv-scaling.md) — don't pursue rowavg normalization
+- [No window-dependent beta](feedback-no-window-dependent-beta.md) — user rejects beta(T); want window-free observables
+- [MSB protocol vs repo estimator](project-msb-protocol-spells.md) — survivor filter causes beta(T); spell estimator converges, multiscaling on light tails
+- [Life-cycle theory note](project-lifecycle-theory.md) — single-firm surrogate, lifetime identity, spell-panel exponents; note in thesis/standalone/lifecycle_theory
+- [_ALPHA_PL global gotcha](reference-alpha-pl-global.md) — powerlaw exponent is a module global; set it in the process building the graph
+- [Decline-beta peak instability](reference-decline-beta-peak-instability.md) — argmax-peak fit start makes beta jump ~0.09 on spells
+- [Minimal parameters](feedback-minimal-parameters.md) — gamma=0, no K/extra knobs; search mu, sigma, alpha, C, lambda only
+- [Size-volatility exploration](project-size-volatility-exploration.md) — hump=Sbar selection, bimodality trade-off, failed K/portfolio/lambda=0
+- [Fontanelli 2025](reference-fontanelli2025.md) — French data: steep -0.5 small firms, flat large; opposite curvature to our model
+- [Slot model](project-slot-model.md) — firm=portfolio of killed-GBM links; solvable but fails size conditioning; v2 customer cap also fails
+- [Demographic noise test](project-demographic-noise.md) — sqrt(DS) noise + newborn at D replaces lambda; removes life-panel hump, bimodality and top-steepening remain
+- [No sensitivity scans](feedback-no-sensitivity-scans.md) — user doesn't care that beta depends strongly on sigma; don't push fine scans
+- [Zero-sum model test](project-zero-sum-model.md) — deterministic antisymmetric exchange, flux exponent a gives current-size beta=1-a; life panel beta~0, no Zipf
