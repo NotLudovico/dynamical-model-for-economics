@@ -1,0 +1,138 @@
+[Parallel(n_jobs=12)]: Using backend LokyBackend with 12 concurrent workers.
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:47: RuntimeWarning: Mean of empty slice
+  cs = np.array([np.log10(s0[idx == j].mean()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:219: RuntimeWarning: Degrees of freedom <= 0 for slice
+  ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:178: RuntimeWarning: invalid value encountered in divide
+  arrmean = um.true_divide(arrmean, div, out=arrmean,
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:211: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+[Parallel(n_jobs=12)]: Done  48 tasks      | elapsed: 25.3min
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:47: RuntimeWarning: Mean of empty slice
+  cs = np.array([np.log10(s0[idx == j].mean()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:219: RuntimeWarning: Degrees of freedom <= 0 for slice
+  ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:178: RuntimeWarning: invalid value encountered in divide
+  arrmean = um.true_divide(arrmean, div, out=arrmean,
+/home/notludovico/Work/dynamical-model-for-economics/.venv/lib/python3.14/site-packages/numpy/_core/_methods.py:211: RuntimeWarning: invalid value encountered in divide
+  ret = ret.dtype.type(ret / rcount)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:65: RuntimeWarning: overflow encountered in exp
+  x = x * np.exp(r * dt)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:75: RuntimeWarning: invalid value encountered in add
+  x = x + lam * (1.0 - x) * dt          # m = 1 here
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:65: RuntimeWarning: overflow encountered in exp
+  x = x * np.exp(r * dt)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:75: RuntimeWarning: invalid value encountered in add
+  x = x + lam * (1.0 - x) * dt          # m = 1 here
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) if (idx == j).sum() > 1 else np.nan for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) if (idx == j).sum() > 1 else np.nan for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:48: RuntimeWarning: divide by zero encountered in log10
+  cv = np.array([np.log10(gg[idx == j].std()) for j in range(10)])
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:65: RuntimeWarning: overflow encountered in exp
+  x = x * np.exp(r * dt)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:75: RuntimeWarning: invalid value encountered in add
+  x = x + lam * (1.0 - x) * dt          # m = 1 here
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:65: RuntimeWarning: overflow encountered in exp
+  x = x * np.exp(r * dt)
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/variants.py:75: RuntimeWarning: invalid value encountered in add
+  x = x + lam * (1.0 - x) * dt          # m = 1 here
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+[Parallel(n_jobs=12)]: Done  88 out of  92 | elapsed: 31.5min remaining:  1.4min
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/score.py:28: RuntimeWarning: divide by zero encountered in scalar divide
+  return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+[Parallel(n_jobs=12)]: Done  92 out of  92 | elapsed: 31.7min finished
+/home/notludovico/Work/dynamical-model-for-economics/scripts/screen/run.py:97: RuntimeWarning: Mean of empty slice
+  try:
+variant                 al |  dec-3 -2 -1  hill   top   cur |   beta          ratios loc.spr    b kurt lo/hi  lag1 | pass  failing
+base_demog D.1         6.0 |  11  43  18%  5.27 0.004  0.49 |  0.149 2.54 4.28  6.07    0.59  5.3  nan/ 8.6  0.15 | 4.0  zipf ratios straight kurt
+base_demog D.1         2.5 |   8  35  24%  4.64 0.004  0.40 |  0.084 3.12 5.13  6.55    0.35  5.3  nan/ 6.3  0.14 | 3.5  zipf beta ratios straight kurt
+base                   2.5 |   6   6  13%  4.95 0.004  0.27 | -0.038 3.77 8.37 14.17    1.20  4.1  0.7/18.3  0.66 | 3.0  zipf beta ratios straight kurt
+base+exit.02           2.5 |   8   7  13%  4.99 0.004  0.20 | -0.043 2.28 4.17  6.72    0.75  4.5  0.2/21.8  0.50 | 3.0  zipf beta ratios straight kurt
+base+exit.02           6.0 |   7   5   9%  6.29 0.004  0.25 | -0.010 3.10 7.49 13.77    0.92  4.7 -0.1/39.0  0.57 | 3.0  zipf beta ratios straight kurt
+base+exit.1            2.5 |  15  10  13%  4.49 0.005  0.14 | -0.086 1.83 2.72  3.77    0.38  5.0  0.0/ 7.7  0.37 | 3.0  zipf beta ratios straight kurt
+base+exit.1            6.0 |  13   8  10%  5.76 0.004  0.17 | -0.058 1.80 2.65  3.59    0.57  5.8 -0.1/ 9.1  0.36 | 3.0  zipf beta ratios straight kurt
+base_demog D.01        2.5 |  32  13  15%  4.55 0.004  0.25 | -0.003 2.03 2.98  3.76    0.49  5.5  nan/12.9  0.38 | 3.0  zipf beta ratios straight kurt
+base_demog D.01        6.0 |  40  11  10%  5.49 0.004  0.33 |  0.045 2.82 4.75  6.56    0.82  6.0  nan/12.0  0.50 | 3.0  zipf beta ratios straight kurt
+base                   6.0 |   4   4   9%  6.32 0.004  0.38 |  0.005 2.38 4.33  6.84    1.58  5.0  0.1/15.4  0.84 | 2.0  small zipf beta ratios straight kurt
+minflow                2.5 |   2   2  23% 22.48 0.001  1.27 |  0.861 2.37 3.75  5.07    2.20  2.1 60.2/84.4  0.98 | 2.0  small zipf beta ratios straight tailb
+minflow                6.0 |   2   2  18% 25.13 0.001  1.08 |  0.537 2.49 4.16  5.84    2.28  2.5 29.9/11.4  0.99 | 2.0  small zipf beta ratios straight tailb
+minflow_nb+exit.05     6.0 |  15   6   3%  1.07 0.213  0.03 | -0.066 1.70 2.23  2.65    0.78  6.1  0.1/ 1.3  0.77 | 2.0  small nocond beta ratios straight tailb kurt
+sublin a.6             2.5 |  11  18  15%  1.17 0.123   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 1.5  zipf nocond beta ratios straight tailb kurt
+sublin a.6             6.0 |  20  16  10%  1.33 0.122   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 1.5  zipf nocond beta ratios straight tailb kurt
+minflow_nb+exit.05     2.5 |  19   6   3%  0.81 0.343  0.01 | -0.098 1.62 1.94  2.03    3.02  3.3  0.3/ 7.3  0.62 | 1.0  small zipf nocond beta ratios straight tailb kurt
+minflow_nb             2.5 |   7   2   0%  0.94 0.461 -0.11 | -0.225 1.79 2.45  3.06   11.77  2.5 44.6/10.5  1.00 | 0.5  small zipf nocond beta ratios straight tailb kurt
+minflow_nb             6.0 |   6   3   1%  1.03 0.277 -0.06 | -0.155 1.94 2.83  3.69    7.69  2.7  5.2/ 5.0  0.99 | 0.5  small zipf nocond beta ratios straight tailb kurt
+nobrake                2.5 |   0   0   0% 1678697.17 0.899   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+nobrake                6.0 |   0   0   0%   inf 1.000   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+nobrake+exit.02        2.5 |   0   0   0% 1590996.30 0.907   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+nobrake+exit.02        6.0 |   0   0   0%   inf 0.980   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+nobrake+exit.1         2.5 |   0   0   0% 2626659.30 0.879   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+nobrake+exit.1         6.0 |   0   0   0%   inf 0.976   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+capacity eps1          2.5 |   0   0   0% 417.60 0.834   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+capacity eps1          6.0 |   0   0   0%   inf 0.964  0.57 |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.01             2.5 |  15   0   0%  0.29 0.913   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.01             6.0 |  25   0   0% 322639.42 0.936   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.1              2.5 |   2  16   0%  0.50 0.916   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.1              6.0 |   0   0   0% 9553693.75 1.000   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau.1          2.5 |   0   0   0%   inf 0.999   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau.1          6.0 |   0   0   0%   inf 0.998   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau1           2.5 |   0   0   0%   inf 0.999   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau1           6.0 |   0   0   0%   inf 1.000   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+capacity eps1+exit.05  2.5 |   0   0   0%   inf 0.923 -0.08 |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+capacity eps1+exit.05  6.0 |   0   0   0% 17744.78 0.884 -0.06 |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.1+exit.05      2.5 |   8  14   0%  0.38 0.879   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+demog D.1+exit.05      6.0 |  13  10   0%  0.42 0.918   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau1+exit.05   2.5 |   0   0   0%   inf 1.000   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+inertia tau1+exit.05   6.0 |   0   0   0%   inf 0.997   nan |    nan  nan  nan   nan     nan  nan  nan/ nan   nan | 0.0  small zipf nocond beta ratios straight tailb kurt
+capacity eps.1         2.5 | numerical failure
+capacity eps.1         6.0 | numerical failure
+sublin a.8             2.5 | numerical failure
+sublin a.8             6.0 | numerical failure
+sublin a.8+exit.05     2.5 | numerical failure
+sublin a.8+exit.05     6.0 | numerical failure
+targets: dec>=5% each, hill .8-1.3, top<.05, beta .12-.30, ratios 2.0 2.6 2.9 (+-.3), local-beta spread<.25, b 3.5-6, kurt>1 both and ratio<4
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  5 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value
+ ** On entry to DLASCL parameter number  5 had an illegal value
+ ** On entry to DLASCL parameter number  4 had an illegal value

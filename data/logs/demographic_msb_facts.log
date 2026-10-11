@@ -1,0 +1,30 @@
+loading lives ...
+
+F1/F2  E[v^q | Sbar] ~ Sbar^-zeta_q, all 25 bins     (MSB: 0.20 0.39 0.51 0.58; vol 1.22 -> 0.22)
+  MAD lives>= 2: zeta 0.172 0.417 0.681 0.938  ratios 2.42 3.95 5.45  largest bin vs line -0.089  vol 1.12 -> 0.46  (1768646 lives)
+  MAD lives>= 5: zeta 0.199 0.378 0.522 0.628  ratios 1.89 2.62 3.15  largest bin vs line -0.097  vol 1.12 -> 0.40  (554610 lives)
+  MAD lives>=20: zeta 0.246 0.430 0.563 0.653  ratios 1.75 2.29 2.66  largest bin vs line -0.083  vol 0.70 -> 0.30  (160427 lives)
+  SD lives>= 2: zeta 0.162 0.400 0.664 0.928  ratios 2.47 4.09 5.72  largest bin vs line -0.040  vol 1.25 -> 0.55  (1768646 lives)
+  SD lives>= 5: zeta 0.170 0.328 0.468 0.586  ratios 1.93 2.75 3.45  largest bin vs line -0.060  vol 1.18 -> 0.49  (554610 lives)
+  SD lives>=20: zeta 0.191 0.323 0.416 0.481  ratios 1.69 2.18 2.52  largest bin vs line -0.075  vol 0.77 -> 0.39  (160427 lives)
+
+F3  collapse of sigma/sigmabar across size        (MSB: collapses, unimodal, inverse gamma b = 4.6)
+  lives>= 2: max KS distance between size fifths 0.240; inverse-gamma shape b = 0.39; Hill top 5% 4.42; local maxima of log-density 1
+  lives>=20: max KS distance between size fifths 0.213; inverse-gamma shape b = 10.29; Hill top 5% 6.58; local maxima of log-density 1
+
+F4  rescaled growth by size fifth (lives>=10)     (MSB: fat stretched-exp tails, same at every size)
+  excess kurtosis: 1.28 3.02 5.27 9.23 15.18
+  stretched-exponential tail exponent (1 = exponential, 2 = Gaussian): 1.14 0.95 0.86 0.79 0.75
+
+F5  persistence: excess kurtosis of rescaled k-step growth vs iid k1/k (lives>=20)
+  fifth 0: k=1: 4.05 (iid 4.05)  k=2: 1.85 (iid 2.03)  k=3: 1.09 (iid 1.35)  k=4: 0.53 (iid 1.01)
+  fifth 1: k=1: 6.27 (iid 6.27)  k=2: 2.82 (iid 3.14)  k=3: 1.61 (iid 2.09)  k=4: 1.00 (iid 1.57)
+  fifth 2: k=1: 8.89 (iid 8.89)  k=2: 4.08 (iid 4.44)  k=3: 2.66 (iid 2.96)  k=4: 1.81 (iid 2.22)
+  fifth 3: k=1: 12.13 (iid 12.13)  k=2: 6.15 (iid 6.06)  k=3: 4.17 (iid 4.04)  k=4: 3.32 (iid 3.03)
+  fifth 4: k=1: 16.09 (iid 16.09)  k=2: 10.53 (iid 8.05)  k=3: 8.32 (iid 5.36)  k=4: 7.30 (iid 4.02)
+
+F6  co-movement by size fifth                     (MSB: rises with size)
+  corr with aggregate:            0.206 0.287 0.346 0.399 0.470
+  mean pairwise corr within fifth: 0.0794 0.1400 0.1894 0.2349 0.3025
+
+wrote /home/notludovico/Work/dynamical-model-for-economics/data/demographic/msb_facts.npz
