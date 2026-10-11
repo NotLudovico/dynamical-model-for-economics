@@ -2,6 +2,8 @@
 
 The relative (scale-invariant) generalised Lotka-Volterra model of firm growth. Interactions act on the mean firm, giving a self-consistently growing economy without finite-time blow-up. The model reproduces the stylized facts of firm-size dynamics observed in empirical firm-growth studies: a symmetric fat-tailed growth-rate distribution, and a size-variance relation (volatility declining with size) matching real data.
 
+> Current research status, results and next steps: [`docs/STATUS.md`](docs/STATUS.md).
+
 ## The Model
 
 The relative GLV describes competition among firms through a nonlinear replicator equation:
