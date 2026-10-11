@@ -20,4 +20,4 @@ Outputs go to `data/demographic/` (gitignored, regenerable); printed results are
 | `plot_factsheet.py`, `plot_msb_facts.py`, `plot_robustness.py`, `plot_retune.py`, `plot_multiscaling.py` | figures into `thesis/assets/figures/demographic_*.png` | |
 
 Run any script with `uv run python scripts/demographic/<script>.py`; most take `summary` or `analyse`
-to reprint results from cached output. See `docs/STATUS.md` for what the results mean.
+to reprint results from cached output. See `docs/STORY.md` for what the results mean and `docs/CEMETERY.md` for what was dropped.

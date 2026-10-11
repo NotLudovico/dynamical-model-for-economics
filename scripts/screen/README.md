@@ -23,4 +23,4 @@ of sigma/sigmabar, rescaled-growth kurtosis by size.
 Round 5 was smoke-tested only (scratch scripts, not registered in `run.py`). Lesson across rounds:
 granular families give ratios at or above q under the MSB protocol, and a firm-specific scale removes
 the size dependence of volatility. The model kept for the paper is the demographic-noise relative GLV
-(`scripts/demographic/`).
+(`scripts/demographic/`). Full list of dropped models with reasons: `docs/CEMETERY.md`.
