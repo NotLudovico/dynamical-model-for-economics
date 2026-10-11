@@ -12,14 +12,18 @@ Reference point: α = 2.5, σ = 1.70, D = 0.1, C = 200 (code sign `mu=1.76`), on
 
 | Script | Purpose | Log |
 |---|---|---|
-| `robustness.py` | one economy per job, every MSB fact; N = 8k–64k, seeds, D, σ, α, C; `robustness.py retune` scans σ × D at N = 16k | `demographic_robustness.log`, `demographic_retune.log` |
+| `robustness.py` | one economy per job, every MSB fact; N = 8k–64k, seeds, D, σ, α, C; `retune` scans σ × D at N = 16k; `prod` is the paper's production run (σ = 1.70, N = 32k, 8 economies) | `demographic_robustness.log`, `demographic_retune.log`, `demographic_prod.log` |
 | `msb_facts.py` | every MSB fact by size fifth at the reference point (simulates its own economies) | `demographic_msb_facts.log` (old point) |
-| `multiscaling_theory.py` | test of ζ_q = (q/2)⟨w⟩_q: decomposition by degree, two-term law, regular-graph ablation | `demographic_multiscaling.log` |
+| `multiscaling_theory.py` | simulates the two reference economies (power-law and regular graph, N = 16k) and fits v² = Aκ^g + B | `demographic_multiscaling.log` |
+| `multiscaling_law.py` | the identity ζ_q = (q/2) b ⟨w⟩_q on the per-life decomposition, both graphs; figure `demographic_multiscaling_law.png` | `demographic_multiscaling_law.log` |
+| `reference.py` | loader of the reference economies (field Φ, couplings) shared by the theory scripts | |
+| `field_law.py` | degree-resolved field: mean, amplitude ∝ κ^0.54, correlation time | `demographic_field_law.log` |
 | `b_null.py` | null test for the tail index b | printed |
 | `phase_lines.py` | renewal theory: σ_c(D), zero-growth line, turnover | |
-| `reduction.py` | one-firm reduction (a firm in its measured field plus its own noise) | |
+| `reduction.py` | one-firm reduction (a firm in its measured field plus its own noise), reference economies | `demographic_reduction.log` |
 | `constant_fitness.py` | exact one-firm results at constant field (quadratures) | |
-| `facts.py`, `volatility_law.py`, `facts_plot.py` | stylised facts and the volatility law v² = V_F + B (old point σ = 1.75) | |
+| `volatility_law.py` | the volatility law v² = V_F + B per life, reference economies | `demographic_volatility_law.log` |
+| `facts.py`, `facts_plot.py` | other stylised facts (old point σ = 1.75) | |
 | `plot_*.py` | figures `demographic_{msb_facts,robustness,retune,multiscaling}.png` | |
 
 ## `phase/`: phase diagram of the deterministic model

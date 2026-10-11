@@ -1,0 +1,17 @@
+
+[prod: 1 of 8 economies in a collective burst (aggregate volatility > 0.3) excluded]
+
+=== prod: alpha 2.5 sigma 1.7 D 0.1 N 32000 C 200  (7 economies, 29 min each)
+  MAD n>= 2: zeta 0.178 0.431 0.706 0.968 (beta sd 0.016)  ratios 2.42 3.96 5.43  local 0.11 0.22 0.09 0.12 0.24  top-bin -0.10  vol 1.11->0.44  2.1 dec
+  MAD n>= 5: zeta 0.205 0.394 0.554 0.679 (beta sd 0.020)  ratios 1.92 2.70 3.31  local 0.26 0.17 0.14 0.23 0.27  top-bin -0.07  vol 1.11->0.40  2.0 dec
+  MAD n>=10: zeta 0.214 0.381 0.501 0.577 (beta sd 0.022)  ratios 1.79 2.35 2.70  local 0.22 0.12 0.22 0.31 0.25  top-bin -0.06  vol 0.91->0.37  1.8 dec
+  MAD n>=20: zeta 0.249 0.443 0.587 0.688 (beta sd 0.026)  ratios 1.78 2.35 2.76  local 0.20 0.23 0.28 0.31 0.26  top-bin -0.02  vol 0.70->0.32  1.4 dec
+  SD n>= 5: zeta 0.175 0.342 0.494 0.625 (beta sd 0.018)  ratios 1.96 2.82 3.58  local 0.24 0.15 0.12 0.19 0.21  top-bin -0.03  vol 1.18->0.50  2.0 dec
+  sigma/sigmabar: KS max (n>=10) 0.191; Hill b top 5%: n>=2 4.41, n>=10 5.53
+  kurtosis by fifth 1.4 3.0 5.4 9.5 22.0;  tail exp 1.13 0.95 0.86 0.79 0.72
+  persistence ratio k=3 by fifth 0.73 0.75 0.86 0.97 1.32
+  corr agg 0.098 0.138 0.176 0.214 0.273;  pair 0.019 0.031 0.044 0.060 0.094
+  aggregate vol/step 0.0813 ± 0.0634;  lag1 at 0.5/1/2: +0.13 +0.18 +0.00;  turnover 0.597
+  sizes: Hill top1% 4.54; firm-time per decade [-4..2): 1 8 36 24 31 0%; top share 0.0007
+
+MSB: zeta [0.2  0.39 0.51 0.58], vol 1.22 -> 0.22 over 4 decades, top bin above line, b 4.6, no Gaussianisation, persistence, co-movement rising with size

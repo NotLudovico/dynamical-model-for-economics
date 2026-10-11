@@ -1,0 +1,14 @@
+seed 0: surrogate mean size 1.029 (full 1); exits per node per unit time full 0.592, surrogate 0.581
+seed 1: surrogate mean size 1.030 (full 1); exits per node per unit time full 0.650, surrogate 0.637
+
+nmin        beta  ratios            local exponents (fifths)
+   2 full  0.179  2.42 3.97 5.51  0.10 0.23 0.09 0.12 0.25  (1825636 lives, 2.2 dec)
+   2 sur   0.186  2.41 3.96 5.54  0.11 0.25 0.12 0.12 0.26  (1793328 lives, 2.2 dec)
+   5 full  0.209  1.94 2.74 3.36  0.25 0.17 0.13 0.24 0.32  (625099 lives, 2.0 dec)
+   5 sur   0.217  1.94 2.76 3.42  0.26 0.17 0.14 0.25 0.34  (617474 lives, 2.0 dec)
+  10 full  0.222  1.82 2.42 2.82  0.22 0.12 0.23 0.36 0.28  (344694 lives, 1.8 dec)
+  10 sur   0.230  1.82 2.42 2.83  0.21 0.13 0.24 0.36 0.28  (343233 lives, 1.8 dec)
+  20 full  0.254  1.80 2.42 2.88  0.19 0.22 0.29 0.32 0.22  (197636 lives, 1.4 dec)
+  20 sur   0.265  1.81 2.43 2.89  0.19 0.25 0.31 0.36 0.24  (198191 lives, 1.4 dec)
+exit rate full 0.621, surrogate 0.609, relative difference -0.019
+wrote /home/notludovico/Work/dynamical-model-for-economics/thesis/assets/figures/demographic_reduction.png

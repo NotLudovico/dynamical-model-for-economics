@@ -73,7 +73,7 @@ if __name__ == "__main__":
         ax[0].plot(d["D"], d["sigma_c"][k], "o-", color=c, lw=2, ms=4, label=f"$\\sigma_c(D)$, α = {a:g}")
         ax[0].plot(d["D"], d["sigma_0"][k], "s--", color=c, lw=1.5, ms=4, label=f"zero growth, α = {a:g}")
     ax[0].plot(d["D"], d["fc_sigma_c"], ":", color=INK, lw=1.5, label="$\\sigma_c(D)$, fully connected")
-    ax[0].plot([0.1], [1.75], "*", color=ORANGE, ms=12, label="reference point")
+    ax[0].plot([0.1], [1.70], "*", color=ORANGE, ms=12, label="reference point")
     ax[0].set(xlabel="demographic noise D", ylabel="disorder σ", title="(a) static theory, μ = 1.76")
     ax[1].plot(d["sigmas_sim"], d["share_sim"], "o-", color=BLUE, lw=2, label="simulation")
     ax[1].plot(d["sigmas_sim"], d["share_th"], "s--", color=LIGHT, lw=2, label="static theory (no feedback)")

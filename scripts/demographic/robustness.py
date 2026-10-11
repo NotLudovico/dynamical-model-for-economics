@@ -13,6 +13,7 @@ within the fifth (40-step windows); aggregate volatility per step; lag-1 autocor
 of 0.5, 1 and 2; size Hill index, firm-time per decade, largest share; turnover.
 
 Run: uv run python scripts/demographic/robustness.py           (all jobs, 12 workers)
+     uv run python scripts/demographic/robustness.py prod      (paper production run at the new reference point)
      uv run python scripts/demographic/robustness.py summary
 """
 import os, sys, time
@@ -41,6 +42,16 @@ RETUNE = tuple(  # aim: beta ~ 0.2 at a converged size (N = 16000); numpy graph 
     (f"rt_s{sg}_D{D:g}", {"N": 16000, "sigma": sg, "D": D, "fast": True}, range(4))
     for sg in (1.70, 1.72) for D in (0.1, 0.15, 0.2)
 ) + (("rt_s1.75_D0.1", {"N": 16000, "fast": True}, range(2)),)   # same point as N16k, other graph builder
+PROD = (  # paper reference point (sigma 1.70 after the retune), N = 32000
+    ("prod", {"N": 32000, "sigma": 1.70, "fast": True}, range(8)),
+)
+BURST = 0.3   # economies whose aggregate volatility per step exceeds this are in a collective burst (prod seed 7:
+              # 0.54, the other seven 0.03-0.23); the paper's facts exclude them and say so
+
+
+def kept(ds):
+    """Drop economies in a collective burst (aggregate volatility above BURST)."""
+    return [d for d in ds if float(d["aggvol"]) <= BURST]
 MSB_ZETA = np.array([0.20, 0.39, 0.51, 0.58])
 
 
@@ -173,6 +184,9 @@ def summary():
         ds = [np.load(path(label, s)) for s in seeds if os.path.exists(path(label, s))]
         if not ds:
             continue
+        if label == "prod":
+            n0 = len(ds); ds = kept(ds)
+            print(f"\n[prod: {n0 - len(ds)} of {n0} economies in a collective burst (aggregate volatility > {BURST}) excluded]")
         p = params(over)
         print(f"\n=== {label}: alpha {p['alpha']} sigma {p['sigma']} D {p['D']} N {p['N']} C {p['C']}  "
               f"({len(ds)} economies, {np.mean([d['secs'] for d in ds]) / 60:.0f} min each)")
@@ -211,6 +225,8 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     if sys.argv[1:2] == ["retune"]:                 # robustness.py retune [summary]
         JOBS = RETUNE; del sys.argv[1]
+    elif sys.argv[1:2] == ["prod"]:                 # robustness.py prod [summary]
+        JOBS = PROD; del sys.argv[1]
     if sys.argv[1:] == ["summary"]:
         summary(); sys.exit()
     from joblib import Parallel, delayed
