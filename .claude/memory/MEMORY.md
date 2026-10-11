@@ -12,3 +12,8 @@
 - [Demographic noise test](project-demographic-noise.md) — sqrt(DS) noise + newborn at D replaces lambda; removes life-panel hump, bimodality and top-steepening remain
 - [No sensitivity scans](feedback-no-sensitivity-scans.md) — user doesn't care that beta depends strongly on sigma; don't push fine scans
 - [Zero-sum model test](project-zero-sum-model.md) — deterministic antisymmetric exchange, flux exponent a gives current-size beta=1-a; life panel beta~0, no Zipf
+- [MSB 2024 facts](reference-msb2024-facts.md) — full target list from the paper: zeta_q, sigma/sigmabar IG b=4.6, no Gaussianisation, persistence, correlation lead
+- [Scope / cascade model](project-scope-model.md) — correlated-shock footprint (beta=1-d_f/d); reduced SDE tests: random growth from tiny entrants gives ratios > q and diluted life-panel beta
+- [Write models in x](feedback-write-models-in-x.md) — state models as x_i' = x_i[...] with m=<x>, not in S or shares
+- [Parallel screening](feedback-parallel-screening.md) — propose many variants, screen in parallel via scripts/screen with a fixed scorecard; CPU 12 cores, GPU Polaris unusable as is
+- [Model complexity](feedback-model-complexity.md) — three-layer market model rejected as too complicated; one layer, few params
