@@ -21,7 +21,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path[:0] = [ROOT, os.path.dirname(os.path.abspath(__file__))]
 os.environ.setdefault("OMP_NUM_THREADS", "1"); os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 import numpy as np
-from scipy import sparse, optimize
+from scipy import optimize
 
 OUT = os.path.join(ROOT, "data", "demographic", "multiscaling")
 N, C, ALPHA, SIGMA, D, MU = 16000, 200, 2.5, 1.70, 0.1, 1.76
@@ -30,24 +30,8 @@ CASES = (("powerlaw", 0), ("powerlaw", 1), ("regular", 0), ("regular", 1))
 
 
 def coupling(kind, seed):
-    rng = np.random.default_rng(seed)
-    if kind == "powerlaw":
-        tail = (1 - rng.uniform(size=N)) ** (-1 / (ALPHA - 1))
-        deg = np.maximum((C * (ALPHA - 2) / (ALPHA - 1) * tail).round().astype(np.int64), 1)
-    else:
-        deg = np.full(N, C, dtype=np.int64)
-    if deg.sum() % 2:
-        deg[deg.argmin()] += 1
-    stubs = np.repeat(np.arange(N, dtype=np.int64), deg); rng.shuffle(stubs)
-    i, j = stubs[0::2], stubs[1::2]; keep = i != j
-    i, j = np.minimum(i[keep], j[keep]), np.maximum(i[keep], j[keep])
-    key = np.unique(i * N + j); ei, ej = key // N, key % N; nE = ei.size
-    C_eff = 2.0 * nE / N
-    a, b = rng.normal(0, 1, nE), rng.normal(0, 1, nE)
-    sc = SIGMA / np.sqrt(2 * C_eff)
-    wij = MU / C_eff + sc * (a + b) / np.sqrt(2) + sc * (a - b) / np.sqrt(2)
-    wji = MU / C_eff + sc * (a + b) / np.sqrt(2) - sc * (a - b) / np.sqrt(2)
-    A = sparse.csr_array((np.concatenate([wij, wji]), (np.concatenate([ei, ej]), np.concatenate([ej, ei]))), shape=(N, N))
+    from relative_glv.model import configuration_coupling
+    A = configuration_coupling(N, MU, SIGMA, alpha=ALPHA, mean_degree=C, seed=seed, regular=(kind == "regular"))
     return A, np.diff(A.indptr)
 
 
@@ -67,17 +51,11 @@ def simulate(kind, seed):
 
 
 def lives(S, L, deg, nmin):
-    lnS, T = np.log(S), S.shape[1]
-    Sb, v, k, n = [], [], [], []
-    for i in range(S.shape[0]):
-        for s in np.split(np.arange(T), np.flatnonzero(np.diff(L[i])) + 1):
-            if s.size < nmin + 1:
-                continue
-            g = np.diff(lnS[i, s]).astype(float)
-            vv = np.sqrt(np.pi / 2) * np.abs(g - g.mean()).mean()
-            if vv > 0:
-                Sb.append(S[i, s].mean()); v.append(vv); k.append(deg[i]); n.append(g.size)
-    return np.array(Sb), np.array(v), np.array(k, float), np.array(n)
+    """(Sbar, v, degree, n) for every life with at least nmin growth rates."""
+    from relative_glv.msb import lives as life_panel
+    lv = [x for x in life_panel(S, L) if x[2] >= nmin]
+    return (np.array([x[0] for x in lv]), np.array([x[1] for x in lv]),
+            np.array([deg[x[5]] for x in lv], float), np.array([x[2] for x in lv]))
 
 
 def zetas(Sb, v, nb=25, qs=(1, 2, 3, 4)):

@@ -4,6 +4,10 @@ Everything that was tried and abandoned, with the reason. The story of what surv
 [`STORY.md`](STORY.md). Entries give the idea, the result, the cause of death, and where the code or
 numbers are (when they were kept; some tests were scratch-only).
 
+The code of most entries was removed on 2026-10-11. Every path below still exists in the commit
+tagged `archive/pre-cleanup`: restore one with `git checkout archive/pre-cleanup -- <path>`. Logs
+with the printed results are in `data/logs/`.
+
 Two lessons recur:
 
 1. **Self-limitation ties the volatility decline to a size cap.** In d ln x = Φ(t) − F(x), size
@@ -151,3 +155,10 @@ relative to m: condenses. Saturating pressure Σ α x_j/(K_i + K_j): Zipf-like (
   it converges to 0.13 at N ≥ 16k, hence the retune to σ = 1.70.
 - **Standalone notes** `beta_theory`, `lifecycle_theory`, `dmft_theory` and `zero_growth_theory`
   under `thesis/standalone/` are superseded by `theory/theory.tex`.
+- **Removed in the cleanup:** the `beta_*` and survivor-theory scripts behind `beta_theory.tex`; the
+  spell scan and headline scripts (`scan_spells.py`, `headline_spells.py`, `plot_data_comparison.py`);
+  the mean-degree cutoff and mechanism probes; the phase onset, attractor and divergence diagnostics;
+  eleven exploratory life-cycle scripts (anatomy, dispersion, lifetime representation, ablations,
+  long windows, survivor checks); the first demographic batch and its draft figures (`batch.py`,
+  `paper_figures.py`); four thesis-era notebooks (`graph_role`, `meandeg_scaling`, `own_vs_mean`,
+  `scale_fix`).

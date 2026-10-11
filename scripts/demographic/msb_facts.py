@@ -1,7 +1,8 @@
-"""Every MSB 2024 fact on the demographic-noise model (reference point alpha 2.5, sigma 1.75, D 0.1).
+"""Every MSB 2024 fact on the demographic-noise model at the reference point.
 
-Uses the trajectories of scripts/demographic/factsheet.py (N 8000, C 200, 4 economies, step 0.5 as
-the year).  Facts, numbered as in MSB 2024 (arXiv:2404.15226):
+Simulates SEEDS economies (alpha 2.5, sigma 1.70, D 0.1, N 16000, C 200, burn-in 100, window 480,
+step 0.5 as the year), keeps the trajectories in data/demographic/msb_facts/, and measures the facts,
+numbered as in MSB 2024 (arXiv:2404.15226):
   F1  E[v^q | Sbar] ~ Sbar^-zeta_q over all 25 bins: zeta = 0.20, 0.39, 0.51, 0.58; lives with >= 2
       growth rates (baseline) and >= 20 (robustness); volatility as sqrt(pi/2) MAD and as SD.
   F2  the largest bin lies above the fitted line; mean volatility 1.22 (smallest) -> 0.22 (largest).
@@ -11,17 +12,21 @@ the year).  Facts, numbered as in MSB 2024 (arXiv:2404.15226):
       size (no Gaussianisation): excess kurtosis and tail exponent by size fifth.
   F5  multi-year rescaled growth has fatter tails than the iid convolution of one-year growth.
   F6  correlation with the aggregate and between firms of similar size rises with size.
-Writes data/demographic/msb_facts.npz for the figure (plot_msb_facts.py).
+Writes data/demographic/msb_facts.npz for the figure (plot_msb_facts.py).  The figure in
+thesis/assets/figures/demographic_msb_facts.png was made at the old point (sigma 1.75, N 8000).
 Run: uv run python scripts/demographic/msb_facts.py
 """
 import os, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path[:0] = [ROOT, os.path.dirname(os.path.abspath(__file__))]
+os.environ.setdefault("OMP_NUM_THREADS", "1"); os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 import numpy as np
 from scipy import stats
-from factsheet import path, lives, hill, exkurt, SEEDS, DT
+from relative_glv.msb import lives, hill, excess_kurtosis as exkurt, tail_exponent
 
-P = (2.5, 1.75, 0.1)
+ALPHA, SIGMA, D = 2.5, 1.70, 0.1
+N, C, MU, START, TOBS, DT, SEEDS = 16000, 200, 1.76, 100.0, 480.0, 0.5, 3
+TRAJ = os.path.join(ROOT, "data", "demographic", "msb_facts")
 OUT = os.path.join(ROOT, "data", "demographic", "msb_facts.npz")
 MSB_ZETA = np.array([0.20, 0.39, 0.51, 0.58])
 
@@ -39,16 +44,25 @@ def zeta_fit(Sb, v, nb=25):
     return np.array(out), resid, np.exp(lx), np.array([v[p].mean() for p in Pb]), Pb
 
 
-def tail_exponent(z):
-    """Stretched-exponential exponent: slope of log(-log P(|z|>x)) against log x over P in [1e-4, 1e-1]."""
-    a = np.sort(np.abs(z))[::-1]
-    p = np.arange(1, a.size + 1) / a.size
-    m = (p > 1e-4) & (p < 1e-1) & (a > 0)
-    return float(np.polyfit(np.log(a[m]), np.log(-np.log(p[m])), 1)[0])
+def simulate(seed):
+    """One economy at the reference point: relative sizes S, death counters L, aggregate growth fbar."""
+    from relative_glv import model
+    f = os.path.join(TRAJ, f"seed{seed}.npz")
+    if not os.path.exists(f):
+        a = model.configuration_coupling(N, MU, SIGMA, alpha=ALPHA, mean_degree=C, seed=seed)
+        r = model.integrate_demographic(a, D=D, tmax=START + TOBS, t_start=START, dt_save=DT, seed=seed, compact=True)
+        S = r["S"]
+        fb = np.array([float(S[:, k].astype(float) @ (1.0 - S[:, k] - a @ S[:, k].astype(float))) / N
+                       for k in range(S.shape[1])])
+        np.savez_compressed(f, S=S, L=r["life"], fbar=fb)
+    return f
 
 
 def main():
-    data = [np.load(path(*P, s)) for s in range(SEEDS)]
+    os.makedirs(TRAJ, exist_ok=True)
+    from joblib import Parallel, delayed
+    files = Parallel(n_jobs=SEEDS)(delayed(simulate)(s) for s in range(SEEDS))
+    data = [np.load(f) for f in files]
     print("loading lives ...", flush=True)
     per = [lives(d["S"].astype(float), d["L"], 1) for d in data]
     allv = [x for e in per for x in e]

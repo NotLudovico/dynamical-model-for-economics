@@ -3,8 +3,8 @@ neighbourhood of the reference point (alpha 2.5, sigma 1.75, D 0.1, C 200, mu 1.
 
 Each job simulates one economy (burn-in 100, window 480, sampled every 0.5 = one year) and
 analyses it in the worker; only per-life arrays and summary statistics are kept, in
-data/demographic/robustness/<label>_seed<k>.npz.  The reference point at N = 8000 reuses the
-trajectories of scripts/demographic/factsheet.py for seeds 0-3.
+data/demographic/robustness/<label>_seed<k>.npz.  Graphs with N >= 32000 (and the retune jobs)
+use model.configuration_coupling, the numpy configuration model.
 
 Per economy: lives (Sbar, MAD and SD volatility, growth count); by size fifth the excess kurtosis
 and stretched-exponential tail exponent of rescaled growth (lives >= 10), the k-step persistence
@@ -44,33 +44,6 @@ RETUNE = tuple(  # aim: beta ~ 0.2 at a converged size (N = 16000); numpy graph 
 MSB_ZETA = np.array([0.20, 0.39, 0.51, 0.58])
 
 
-def fast_coupling(N, mu, sigma, alpha, C, seed):
-    """model.coupling(kind="powerlaw") with the configuration model done in numpy: stubs paired at
-    random, self-loops dropped, multi-edges merged (as nx.Graph(configuration_model) does).  Same
-    ensemble, different random stream; used for N >= 32000, where networkx needs several GB."""
-    from scipy import sparse
-    rng = np.random.default_rng(seed)
-    tail = (1 - rng.uniform(size=N)) ** (-1 / (alpha - 1))
-    deg = np.maximum((C * (alpha - 2) / (alpha - 1) * tail).round().astype(np.int64), 1)
-    if deg.sum() % 2:
-        deg[deg.argmin()] += 1
-    stubs = np.repeat(np.arange(N, dtype=np.int64), deg)
-    rng.shuffle(stubs)
-    i, j = stubs[0::2], stubs[1::2]
-    keep = i != j
-    i, j = np.minimum(i[keep], j[keep]), np.maximum(i[keep], j[keep])
-    key = np.unique(i * N + j)
-    ei, ej = key // N, key % N
-    nE = ei.size
-    C_eff = 2.0 * nE / N
-    a, b = rng.normal(0, 1, nE), rng.normal(0, 1, nE)
-    scale = sigma / np.sqrt(2 * C_eff)
-    w_ij = mu / C_eff + scale * (a + b) / np.sqrt(2) + scale * (a - b) / np.sqrt(2)
-    w_ji = mu / C_eff + scale * (a + b) / np.sqrt(2) - scale * (a - b) / np.sqrt(2)
-    return sparse.csr_array((np.concatenate([w_ij, w_ji]), (np.concatenate([ei, ej]), np.concatenate([ej, ei]))),
-                            shape=(N, N))
-
-
 def params(over):
     p = dict(REF); p.update(over); return p
 
@@ -85,8 +58,7 @@ def _segs(Li, T):
 
 def analyse(S, L, fbar, N, cap=400_000, seed=0):
     """Two streaming passes over firms, so memory stays O(N T) even for 10^7 lives."""
-    from factsheet import hill
-    from msb_facts import tail_exponent
+    from relative_glv.msb import hill, tail_exponent
     out = {}
     lnS = np.log(S)
     T = S.shape[1]
@@ -177,20 +149,16 @@ def job(label, over, seed):
     t0 = time.time()
     p = params(over)
     from relative_glv import model
-    src = os.path.join(ROOT, "data", "demographic", "factsheet", f"a{p['alpha']}_s{p['sigma']}_D{p['D']:g}_seed{seed}.npz")
-    if label == "ref" and os.path.exists(src):
-        d = np.load(src); S, L, fbar = d["S"], d["L"], d["fbar"]
+    if p["N"] >= 32000 or p.get("fast"):
+        a = model.configuration_coupling(p["N"], MU, p["sigma"], alpha=p["alpha"], mean_degree=p["C"], seed=seed)
     else:
-        if p["N"] >= 32000 or p.get("fast"):
-            a = fast_coupling(p["N"], MU, p["sigma"], p["alpha"], p["C"], seed)
-        else:
-            model._ALPHA_PL = p["alpha"]
-            a = model.coupling(p["N"], MU, p["sigma"], kind="powerlaw", seed=seed, mean_degree=p["C"])
-        r = model.integrate_demographic(a, D=p["D"], tmax=START + TOBS, t_start=START, dt_save=DT, seed=seed, compact=True)
-        S, L = r["S"], r["life"]
-        del r
-        fbar = np.array([float(S[:, k].astype(float) @ (1.0 - S[:, k] - a @ S[:, k].astype(float))) / p["N"]
-                         for k in range(S.shape[1])])
+        model._ALPHA_PL = p["alpha"]
+        a = model.coupling(p["N"], MU, p["sigma"], kind="powerlaw", seed=seed, mean_degree=p["C"])
+    r = model.integrate_demographic(a, D=p["D"], tmax=START + TOBS, t_start=START, dt_save=DT, seed=seed, compact=True)
+    S, L = r["S"], r["life"]
+    del r
+    fbar = np.array([float(S[:, k].astype(float) @ (1.0 - S[:, k] - a @ S[:, k].astype(float))) / p["N"]
+                     for k in range(S.shape[1])])
     out = analyse(S, L, fbar, p["N"])
     out["secs"] = time.time() - t0
     np.savez_compressed(f, **out)
@@ -198,22 +166,9 @@ def job(label, over, seed):
 
 
 # ------------------------------------------------------------------ summary
-def zeta_all(Sb, v, nb=25):
-    P = np.array_split(np.argsort(Sb), nb)
-    lx = np.log([Sb[p].mean() for p in P])
-    z, r = [], None
-    for q in (1, 2, 3, 4):
-        ly = np.log([np.mean(v[p] ** q) for p in P]); c = np.polyfit(lx, ly, 1); z.append(-c[0])
-        if q == 1:
-            r = ly - np.polyval(c, lx)
-    mv = np.array([v[p].mean() for p in P])
-    loc = [-np.polyfit(lx[i:i + 5], np.log(mv[i:i + 5]), 1)[0] for i in range(0, nb, 5)]
-    return np.array(z), r[-1], mv[0], mv[-1], (lx[-1] - lx[0]) / np.log(10), loc
-
-
 def summary():
     from scipy import stats
-    from factsheet import hill
+    from relative_glv.msb import hill, zeta_bins
     for label, over, seeds in JOBS:
         ds = [np.load(path(label, s)) for s in seeds if os.path.exists(path(label, s))]
         if not ds:
@@ -225,8 +180,8 @@ def summary():
         Sb, v, sd, n = cat("Sbar").astype(float), cat("v").astype(float), cat("sd").astype(float), cat("n")
         for nm, vol, tag in ((2, v, "MAD"), (5, v, "MAD"), (10, v, "MAD"), (20, v, "MAD"), (5, sd, "SD")):
             sel = (n >= nm) & (vol > 0)
-            z, res, v0, v1, dec, loc = zeta_all(Sb[sel], vol[sel])
-            Ze = np.array([zeta_all(d["Sbar"][(d["n"] >= nm)].astype(float), (d["v"] if tag == "MAD" else d["sd"])[(d["n"] >= nm)].astype(float))[0]
+            z, res, v0, v1, dec, loc = zeta_bins(Sb[sel], vol[sel])
+            Ze = np.array([zeta_bins(d["Sbar"][(d["n"] >= nm)].astype(float), (d["v"] if tag == "MAD" else d["sd"])[(d["n"] >= nm)].astype(float))[0]
                            for d in ds])
             print(f"  {tag} n>={nm:2d}: zeta {' '.join(f'{x:.3f}' for x in z)} (beta sd {Ze[:, 0].std():.3f})  "
                   f"ratios {' '.join(f'{x:.2f}' for x in z[1:] / z[0])}  local {' '.join(f'{x:.2f}' for x in loc)}  "

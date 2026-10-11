@@ -9,7 +9,8 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from robustness import RETUNE, path, zeta_all
+from robustness import RETUNE, path
+from relative_glv.msb import zeta_bins
 from plot_robustness import pooled, curve, style, INK, MUTED
 
 OUT = os.path.join(ROOT, "thesis", "assets", "figures", "demographic_retune.png")
@@ -32,10 +33,10 @@ def main():
         Ds, bs = [], []
         for D in (0.1, 0.15, 0.2):
             ds = load(f"rt_s{sg}_D{D:g}")
-            z = zeta_all(*pooled(ds, 5))[0]
+            z = zeta_bins(*pooled(ds, 5))[0]
             Ds.append(D); bs.append(z[0])
         a.plot(Ds, bs, "o-", color=col, lw=2, ms=9, mec="white", mew=1.5, label=rf"$\sigma={sg:.2f}$")
-    z0 = zeta_all(*pooled(load("rt_s1.75_D0.1"), 5))[0][0]
+    z0 = zeta_bins(*pooled(load("rt_s1.75_D0.1"), 5))[0][0]
     a.plot([0.1], [z0], "o", color="#9a9890", ms=9, mec="white", mew=1.5, label=r"$\sigma=1.75$ (old)")
     a.axhline(0.2, color=INK, lw=1.4, ls=(0, (6, 3)), label=r"Compustat $\beta=0.20$")
     a.set_xticks([0.1, 0.15, 0.2]); a.set_xlabel("noise unit $D$"); a.set_ylabel(r"$\beta$ (lives $\geq5$, all bins)")
@@ -43,7 +44,7 @@ def main():
     q = np.arange(1, 5)
     for lab, name, col in SHOW:
         Sb, v = pooled(load(lab), 5)
-        z, _, _, _, _, loc = zeta_all(Sb, v)
+        z, _, _, _, _, loc = zeta_bins(Sb, v)
         b.plot(q, z, "o-", color=col, lw=2, ms=8, mec="white", mew=1.5, label=name)
         cs, cv = curve(Sb, v)
         c.plot(cs, cv, "o-", color=col, lw=2, ms=4, mec="white", mew=0.8, label=name)

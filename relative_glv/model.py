@@ -116,6 +116,41 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
         "(expected 'fc', 'powerlaw' or 'powerlaw_rowavg')")
 
 
+def configuration_coupling(N, mu, sigma, *, alpha=2.5, mean_degree=200, seed=0, regular=False):
+    """kind="powerlaw" couplings with the configuration model done in numpy (no networkx).
+
+    Degrees follow the same power law as coupling() (or all equal mean_degree if regular=True);
+    stubs are paired at random, self-loops dropped and multi-edges merged, as
+    nx.Graph(configuration_model) does.  Same ensemble as coupling(kind="powerlaw"), different
+    random stream, and it scales to N ~ 10^5 where networkx needs several GB.  gamma = 0.
+    """
+    rng = np.random.default_rng(seed)
+    C = mean_degree
+    if regular:
+        deg = np.full(N, C, dtype=np.int64)
+    else:
+        tail = (1 - rng.uniform(size=N)) ** (-1 / (alpha - 1))
+        deg = np.maximum((C * (alpha - 2) / (alpha - 1) * tail).round().astype(np.int64), 1)
+    if deg.sum() % 2:
+        deg[deg.argmin()] += 1
+    stubs = np.repeat(np.arange(N, dtype=np.int64), deg)
+    rng.shuffle(stubs)
+    i, j = stubs[0::2], stubs[1::2]
+    keep = i != j
+    i, j = np.minimum(i[keep], j[keep]), np.maximum(i[keep], j[keep])
+    key = np.unique(i * N + j)
+    ei, ej = key // N, key % N
+    nE = ei.size
+    C_eff = 2.0 * nE / N
+    a, b = rng.normal(0, 1, nE), rng.normal(0, 1, nE)
+    scale = sigma / np.sqrt(2 * C_eff)
+    sym, anti = (a + b) / np.sqrt(2), (a - b) / np.sqrt(2)
+    w_ij = mu / C_eff + scale * (sym + anti)
+    w_ji = mu / C_eff + scale * (sym - anti)
+    rows, cols = np.concatenate([ei, ej]), np.concatenate([ej, ei])
+    return sparse.csr_array((np.concatenate([w_ij, w_ji]), (rows, cols)), shape=(N, N))
+
+
 def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0, K=None,
               method="LSODA", rtol=1e-7, atol=1e-9):
     """Integrate the relative GLV in the share + log-scale split.

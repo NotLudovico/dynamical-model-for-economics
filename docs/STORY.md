@@ -117,13 +117,16 @@ chaotic-interaction model tested against MSB.
 | What | Where |
 |---|---|
 | Model, theory solvers, statistics | `relative_glv/` (tested in `tests/`) |
-| Demographic studies | `scripts/demographic/` (README inside) |
+| Scripts (one folder per part of the story) | `scripts/` (see `scripts/README.md`) |
+| Demographic studies | `scripts/demographic/` |
+| Phase diagram | `scripts/phase/` |
 | Deterministic life-cycle theory | `scripts/lifecycle/`, `thesis/standalone/theory/theory.tex` |
-| Paper draft | `thesis/standalone/paper/paper.tex` (built around the deterministic model; to be rewritten) |
+| Thesis figure generators | `scripts/thesis/` (map in `thesis/FIGURES.md`) |
+| Paper draft | `thesis/standalone/paper/paper.tex` (built around the deterministic model; to be rewritten; its script citations predate the cleanup) |
 | Demographic draft | `thesis/standalone/demographic/demographic.tex` |
 | Figures | `thesis/assets/figures/` |
 | Run logs with the numbers above | `data/logs/` |
-| Abandoned models | [`CEMETERY.md`](CEMETERY.md), code in `scripts/screen/`, `scripts/zerosum/` |
+| Abandoned models | [`CEMETERY.md`](CEMETERY.md); code removed, restore with `git checkout archive/pre-cleanup -- <path>` |
 
 ## 8. Next steps
 

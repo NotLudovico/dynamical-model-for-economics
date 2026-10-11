@@ -3,7 +3,7 @@ import importlib
 
 
 def test_configure_survival_axes_focuses_on_resolved_degree_and_probability_ranges():
-    from scripts.survival_by_degree import configure_survival_axes
+    from scripts.thesis.survival_by_degree import configure_survival_axes
 
     figure, axis = plt.subplots()
     configure_survival_axes(axis, degree=[75.0, 126.0, 210.0], ci_high=[0.208, 0.162, 0.107])
@@ -16,7 +16,7 @@ def test_configure_survival_axes_focuses_on_resolved_degree_and_probability_rang
 
 def test_survival_study_defaults_to_the_legacy_degree_distribution(monkeypatch):
     monkeypatch.delenv("SBD_MIN_DEGREE", raising=False)
-    import scripts.survival_by_degree as study
+    import scripts.thesis.survival_by_degree as study
 
     study = importlib.reload(study)
 

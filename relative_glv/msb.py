@@ -141,3 +141,67 @@ def tent_stats(g):
     q1, q2, q3 = np.percentile(z, [25, 50, 75])
     bowley = (q3 + q1 - 2 * q2) / (q3 - q1)
     return dict(bowley=float(bowley), exkurt=float(kurtosis(z)))
+
+
+# ---------------------------------------------------------------- life panel (demographic model)
+def lives(S, L, step=1):
+    """Lives of an economy on the `step`-subsampled grid (MSB unbalanced panel).
+
+    S[i, t] are relative sizes and L[i, t] the death counter of node i, so a life is a maximal
+    run of samples with the same counter (window-censored lives included).  Returns one tuple per
+    life with at least 2 growth rates and positive volatility:
+    (Sbar, v, n, g - mean(g), g, node, first sample index), with v = sqrt(pi/2) MAD.
+    """
+    S, L = S[:, ::step], L[:, ::step]
+    lnS, T = np.log(S), S.shape[1]
+    out = []
+    for i in range(S.shape[0]):
+        for seg in np.split(np.arange(T), np.flatnonzero(np.diff(L[i])) + 1):
+            if seg.size < 3:
+                continue
+            g = np.diff(lnS[i, seg])
+            v = np.sqrt(np.pi / 2) * np.abs(g - g.mean()).mean()
+            if v > 0:
+                out.append((S[i, seg].mean(), v, g.size, g - g.mean(), g, i, seg[0]))
+    return out
+
+
+def hill(z, p):
+    """Hill estimate of the tail index from the top fraction p of the sample (at least 10 points)."""
+    z = np.sort(np.asarray(z, float))[::-1]
+    k = max(int(p * len(z)), 10)
+    return float(1.0 / np.mean(np.log(z[:k] / z[k])))
+
+
+def excess_kurtosis(x):
+    x = np.asarray(x, float)
+    return float(np.mean(x ** 4) / np.mean(x ** 2) ** 2 - 3)
+
+
+def tail_exponent(z):
+    """Stretched-exponential exponent of |z|: slope of log(-log P(|z|>x)) against log x over
+    P in [1e-4, 1e-1] (1 = exponential tail, 2 = Gaussian)."""
+    a = np.sort(np.abs(np.asarray(z, float)))[::-1]
+    p = np.arange(1, a.size + 1) / a.size
+    m = (p > 1e-4) & (p < 1e-1) & (a > 0)
+    return float(np.polyfit(np.log(a[m]), np.log(-np.log(p[m])), 1)[0])
+
+
+def zeta_bins(Sbar, vol, n_bins=25, qs=(1, 2, 3, 4)):
+    """MSB exponents over all equal-count bins of Sbar: E[vol^q | Sbar] ~ Sbar^-zeta_q.
+
+    Returns (zeta, largest-bin residual of the q = 1 fit in log units, mean vol of the smallest and
+    largest bin, number of decades spanned, local exponent over each fifth of the bins)."""
+    Sbar, vol = np.asarray(Sbar, float), np.asarray(vol, float)
+    P = np.array_split(np.argsort(Sbar), n_bins)
+    lx = np.log([Sbar[p].mean() for p in P])
+    z, res = [], None
+    for q in qs:
+        ly = np.log([np.mean(vol[p] ** q) for p in P])
+        c = np.polyfit(lx, ly, 1); z.append(-c[0])
+        if q == qs[0]:
+            res = ly - np.polyval(c, lx)
+    mv = np.array([vol[p].mean() for p in P])
+    w = max(n_bins // 5, 2)
+    loc = [-np.polyfit(lx[i:i + w], np.log(mv[i:i + w]), 1)[0] for i in range(0, n_bins - w + 1, w)]
+    return np.array(z), float(res[-1]), float(mv[0]), float(mv[-1]), float((lx[-1] - lx[0]) / np.log(10)), loc

@@ -1,6 +1,6 @@
 from matplotlib.mathtext import MathTextParser
 
-from scripts.plot_hdmft_zero_growth import OUTPUT_DIR, ROOT, UNSTABLE_LABEL
+from scripts.phase.plot_hdmft_zero_growth import OUTPUT_DIR, ROOT, UNSTABLE_LABEL
 
 
 def test_unstable_continuation_label_is_valid_mathtext():

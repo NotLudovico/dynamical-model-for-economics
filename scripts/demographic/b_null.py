@@ -14,7 +14,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path[:0] = [ROOT, os.path.dirname(os.path.abspath(__file__))]
 import numpy as np
 from robustness import path
-from factsheet import hill
+from relative_glv.msb import hill
 
 LABEL, SEEDS = "rt_s1.7_D0.1", range(4)
 

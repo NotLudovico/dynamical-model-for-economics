@@ -12,8 +12,8 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from robustness import JOBS, path, zeta_all
-from factsheet import hill
+from robustness import JOBS, path
+from relative_glv.msb import hill, zeta_bins
 
 OUT = os.path.join(ROOT, "thesis", "assets", "figures", "demographic_robustness.png")
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
@@ -60,8 +60,8 @@ def main():
             ds = data[lab]
             if not ds:
                 continue
-            z = zeta_all(*pooled(ds, nm))[0]
-            per = [zeta_all(d["Sbar"][d["n"] >= nm].astype(float), d["v"][d["n"] >= nm].astype(float))[0][0] for d in ds]
+            z = zeta_bins(*pooled(ds, nm))[0]
+            per = [zeta_bins(d["Sbar"][d["n"] >= nm].astype(float), d["v"][d["n"] >= nm].astype(float))[0][0] for d in ds]
             xs.append(N); ys.append(z[0]); es.append(np.std(per))
         a.errorbar(xs, ys, yerr=es, fmt="o-", color=col, lw=2, ms=8, mec="white", mew=1.5, capsize=3,
                    label=rf"lives $\geq{nm}$")
@@ -74,7 +74,7 @@ def main():
         if not ds:
             continue
         Sb, v = pooled(ds, 5)
-        z = zeta_all(Sb, v)[0]
+        z = zeta_bins(Sb, v)[0]
         b.plot(q, z / z[0], "o-", color=col, lw=2, ms=8, mec="white", mew=1.5, label=f"N = {N // 1000}k")
         cs, cv = curve(Sb, v)
         c.plot(cs, cv, "o-", color=col, lw=2, ms=4, mec="white", mew=0.8, label=f"N = {N // 1000}k")
@@ -90,7 +90,7 @@ def main():
     names = [l for l, _, _ in JOBS if data[l]]
     betas, r4, bs = [], [], []
     for lab in names:
-        Sb, v = pooled(data[lab], 5); z = zeta_all(Sb, v)[0]; betas.append(z[0]); r4.append(z[3] / z[0])
+        Sb, v = pooled(data[lab], 5); z = zeta_bins(Sb, v)[0]; betas.append(z[0]); r4.append(z[3] / z[0])
         Sb2, v2 = pooled(data[lab], 2)
         P = np.array_split(np.argsort(Sb2), 25); r = np.empty(v2.size)
         for p in P:
