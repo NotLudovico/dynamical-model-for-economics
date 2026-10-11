@@ -58,31 +58,42 @@ competition here; the code uses the opposite sign, `mu=1.76`), N ≥ 16000, one 
 4. **Volatility law** (demographic model). v² ≈ V_F + ⟨(D/S²)(1 − e^(−SΔt))⟩: a fitness floor nearly
    independent of size plus demographic noise filtered by the firm's own relaxation. It matches to 5%;
    β ≈ 0.2 is the effective slope of a crossover from −1/2 to 0.
-5. **Multiscaling mechanism** (the central result). Write v_i² = v_F,i² + B(S̄). Then exactly
-   ζ_q = (q/2)⟨w⟩_q, with w = B/(v_F² + B) the noise share and ⟨·⟩_q the v^q-weighted average at fixed
-   size. The ratio curve bends below q if and only if the fitness floor differs between firms. On the
-   network the floor grows with degree: the fitted law v² = Aκ^g + B(S̄) gives g = 1.00, it predicts
-   ratios 1.86, 2.56, 3.06 against 1.80, 2.42, 2.88 measured, and a graph with equal degrees gives
-   1.97, 2.90, 3.78, close to q. (`scripts/demographic/multiscaling_theory.py`)
+5. **Multiscaling mechanism** (the central result). Write v_i² = u_i + B(S̄): a per-firm floor plus a
+   part common to all firms of a size. Then ζ_q = (q/2) b ⟨w⟩_q − c_q, with w = B/(u + B) the noise
+   share, ⟨·⟩_q the v^q-weighted average at fixed size, b = −d ln B/d ln S̄ (measured 0.66–0.87, not 1)
+   and c_q a composition term (non-zero on the network: larger lives have larger degrees). ⟨w⟩_q is
+   non-increasing in q (convexity), so ζ_q/ζ_1 ≤ q with equality iff the floor does not vary at fixed
+   size; granular models (fixed shape) sit at q. Lognormal form: ζ_q/ζ_1 ≈ q e^{−(q−1)s²/2},
+   s² = Var ln(u + B | S̄), checked to 0.06 by fifth. Test on the per-life decomposition of the volatility
+   law (lives ≥ 20, sd volatility): own floor + bin-mean B predicts ratios 1.86, 2.57, 3.10 against 1.77,
+   2.35, 2.78 measured; bin-mean floor gives 2.08, 3.64, 6.55. Floor ∝ κ^0.70, degree explains 14% → 37%
+   of Var ln V_F. Regular graph: the floor is as dispersed in logs but small and falling with size
+   (noise share stays 0.7–0.86), s² ≤ 0.05 against 0.25, ratios 1.93, 2.78, 3.54 (ζ_1 = 0.40). The
+   older fit v² = Aκ^g + B_j (g = 1.00) is in the SM. (`scripts/demographic/multiscaling_law.py`,
+   `multiscaling_theory.py`)
 
 ## 4. Results against the facts
 
-Demographic model at the reference point, N = 16000–64000, lives with at least 5 growth rates,
-all 25 bins:
+Production run (`robustness.py prod`, log `data/logs/demographic_prod_summary.log`): reference point,
+N = 32000, eight economies; one in a collective burst (aggregate volatility 0.54, β 0.07) is excluded by
+the rule aggregate volatility > 0.3 (`robustness.kept`), at the user's request, and disclosed in the SM.
+With it the pooled values are β 0.17, ratios 1.78, 2.26, 2.46. About 5 of 90 stored economies burst.
+Lives with at least 5 growth rates, all 25 bins:
 
 | Fact | Model | Compustat |
 |---|---|---|
-| β | 0.20 | 0.20 |
-| ζ_q | 0.20, 0.38, 0.54, 0.66 | 0.20, 0.39, 0.51, 0.58 |
+| β | 0.205 ± 0.02 | 0.20 |
+| ζ_q | 0.21, 0.39, 0.55, 0.68 | 0.20, 0.39, 0.51, 0.58 |
+| ratios (n ≥ 5 / n ≥ 20) | 1.92, 2.70, 3.31 / 1.78, 2.35, 2.76 | 2.0, 2.6, 2.9 |
 | Hump at small sizes | none | none |
 | Range of the decline | 2 decades | 4 decades |
-| Volatility, smallest → largest bin | 1.11 → 0.41 | 1.22 → 0.22 |
-| Co-movement with the aggregate | rises with size | rises with size |
-| Co-movement between similar-size firms | rises with size | rises with size |
-| Tail b of v/E[v\|S̄], lives ≥ 20 | 6.9 | 4.6 |
-| Rescaled growth across sizes | tails fatten (kurtosis 1 → 15) | roughly universal |
+| Volatility, smallest → largest bin | 1.11 → 0.40 | 1.22 → 0.22 |
+| Co-movement with the aggregate | 0.10 → 0.27 by fifth | rises with size |
+| Co-movement between similar-size firms | 0.02 → 0.09 | rises with size |
+| Tail b of v/E[v\|S̄], lives ≥ 10 | 5.5 | 4.6 |
+| Rescaled growth across sizes | tails fatten (kurtosis 1.4 → 22) | roughly universal |
 | Multi-year persistence | largest firms only | at all sizes |
-| Zipf | no (Hill 4–5) | yes |
+| Zipf | no (Hill 4.5) | yes |
 
 Robustness (`scripts/demographic/robustness.py`): the shape survives N = 8k–64k, seeds and the
 neighbourhood in σ, D, α and C; β converges by N ≈ 16k; σ, D and C set its level.
@@ -122,7 +133,7 @@ chaotic-interaction model tested against MSB.
 | Phase diagram | `scripts/phase/` |
 | Deterministic life-cycle theory | `scripts/lifecycle/`, `thesis/standalone/theory/theory.tex` |
 | Thesis figure generators | `scripts/thesis/` (map in `thesis/FIGURES.md`) |
-| Paper draft | `thesis/standalone/paper/paper.tex` (built around the deterministic model; to be rewritten; its script citations predate the cleanup) |
+| Paper draft | `thesis/standalone/paper/paper.tex` + `sm.tex` (demographic model, PRE format; rewritten 2026-10-11) |
 | Demographic draft | `thesis/standalone/demographic/demographic.tex` |
 | Figures | `thesis/assets/figures/` |
 | Run logs with the numbers above | `data/logs/` |
@@ -130,7 +141,8 @@ chaotic-interaction model tested against MSB.
 
 ## 8. Next steps
 
-1. Production run at the reference point (N = 32000, 6–8 economies) for the paper's data section.
-2. Rewrite the paper around the demographic model, with the multiscaling mechanism as the main result.
+1. Finish the paper: fill the TODOs (production numbers, phase figure, robustness at σ = 1.70, the
+   β × range check with noise), compile (no TeX on this machine).
+2. The deterministic life-cycle theory (kill rule, lifetime law) becomes a separate note.
 3. Missing theory: field statistics above σ_c (two-time theory with noise), β(σ, D), co-movement
    rising with size, the 2-decade range.
