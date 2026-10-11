@@ -162,7 +162,7 @@ def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0, K=None,
     return dict(t=r.t, W=W, lnM=r.y[N], success=bool(r.success))
 
 
-def integrate_demographic(alpha, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed=0):
+def integrate_demographic(alpha, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed=0, compact=False):
     """Relative GLV with demographic noise and firm turnover instead of the lambda floor.
 
     In relative sizes S_i = x_i / m (m the mean firm, sum_i S_i = N):
@@ -176,7 +176,8 @@ def integrate_demographic(alpha, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, 
 
     Returns dict(t, S, life): S shape (N, n_save) sampled every dt_save from t_start;
     life[i, k] counts the deaths at node i up to that sample, so a life is a maximal
-    run of samples with the same counter.
+    run of samples with the same counter.  compact=True stores S as float32 and life as int32
+    (same dynamics; for large N).
     """
     N = alpha.shape[0]
     rng = np.random.default_rng(seed)
@@ -187,7 +188,9 @@ def integrate_demographic(alpha, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, 
     t_out, S_out, L_out = [], [], []
     for step in range(nsteps + 1):
         if step % every == 0 and step * dt >= t_start - 1e-9:
-            t_out.append(step * dt); S_out.append(S.copy()); L_out.append(life.copy())
+            t_out.append(step * dt)
+            S_out.append(S.astype(np.float32) if compact else S.copy())
+            L_out.append(life.astype(np.int32) if compact else life.copy())
         f = 1.0 - S - alpha @ S
         xi = np.sqrt(D * S * dt) * rng.standard_normal(N)
         S = S + S * (f - S @ f / N) * dt + xi - S * xi.sum() / N
