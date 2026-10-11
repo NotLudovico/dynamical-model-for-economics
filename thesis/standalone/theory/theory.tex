@@ -548,7 +548,7 @@ $0.01$ everywhere.  (An earlier version of the solver evaluated the $\lambda>0$ 
 with 80 Hermite nodes, which do not resolve the kink of \eqref{eq:immigration} over a width
 $\sim\sqrt\lambda$; the stability radius then jumped between neighbouring $\sigma$.)
 
-Figure~\ref{fig:phasetheory}b shows the lines for the whole family of graphs.  Heavier degree tails
+Figure~\ref{fig:phasetheory}b shows the stability lines for the whole family of graphs.  Heavier degree tails
 lower $\sigma_c$ at weak competition ($0.79$ at $\alpha=2.2$ against $1.38$ at $\alpha=6$, $\mu=0$) and make
 it rise faster with competition, so the lines cross near $\mu\simeq-1.5$ and the order is reversed at
 strong competition ($1.71$ against $1.42$ at $\mu=-2.5$): competition removes the hubs, which are the
@@ -560,15 +560,16 @@ every graph is above $\sigma_c$ and on the growing side of the line.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{phase_theory.png}
-  \caption{(a) Simulated regimes on the $\alpha=2.5$ phase grid ($N=4000$, $C=100$, $\lambda=10^{-3}$,
-  ten realisations per cell; grey: median churn below $0.035$; red: shrinking; blue: fluctuating and
-  growing; dark: integration failed, a numerical artefact of the solver tolerance) with the HDMFT stability line ($60$ classes, SCM kernel,
-  $\lambda=10^{-3}$) and the zero-growth line.  Grey cells above the black line are not a unique fixed
-  point: most of their runs are trapped by one of many equilibria or fluctuate with an amplitude
-  below the churn cutoff (Section~\ref{sec:above}).  (b) HDMFT
-  stability lines (solid) and the stable part of the zero-growth lines (dotted) for
-  $\alpha=2.2$--$6$ at $\lambda=0$, with the fully connected limit.  Source:
-  \texttt{scripts/plot\_phase\_theory.py}, \texttt{scripts/phase\_theory\_lines.py}.}
+  \caption{(a) Phase diagram for $\alpha=2.5$ ($N=4000$, $C=100$, $\lambda=10^{-3}$).  Regions
+  from the HDMFT: below the stability line $\sigma_c(\mu)$ (black; 60 classes, SCM kernel) the
+  composition has a unique fixed point; above it chaos coexists with trapping equilibria.  The
+  zero-growth line (white; dashed where it continues an unstable fixed point) separates growing from
+  shrinking economies.  Symbols are simulation: zero crossings of the growth rate, the $\sigma$ above
+  which the median churn exceeds $0.035$ (the old freezing line; hollow where it is already exceeded
+  at the lowest simulated $\sigma=1.28$), cells whose integration failed, and the operating point.
+  (b) Stability line for $\alpha=2.2$--$6$ ($\lambda=0$) with the closed form for the bilinear kernel
+  (dashed, where that kernel is a probability) and the regular-graph value $\sqrt2$.  (c) Fraction of
+  runs chaotic at $T=1600$ against the distance from each graph's own $\sigma_c$, ten graphs per point.  Source: \texttt{scripts/plot\_phase\_theory.py}.}
   \label{fig:phasetheory}
 \end{figure}
 
@@ -598,7 +599,7 @@ solution $\sigma^2w_2(\Delta)=1$ (\texttt{scripts/phase\_zero\_growth\_bilinear.
 bilinear line to $0.004$ at $\alpha=6$).  Heterogeneity moves the zero-growth line slightly towards
 competition, so a heterogeneous economy grows a little faster at given $(\mu,\sigma)$.  The
 coefficient is at most a third of that of $\sigma_c$ in \eqref{eq:sigmac-v}, which is why the zero-growth
-lines of different graphs nearly coincide (Figure~\ref{fig:phasetheory}b).  Each point must also be tested
+lines of different graphs nearly coincide.  Each point must also be tested
 against \eqref{eq:stability}: the solution is a controlled prediction only where the fixed point
 is stable.
 

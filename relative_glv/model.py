@@ -116,7 +116,7 @@ def coupling(N, mu, sigma, *, kind="fc", gamma=0.0, seed=0, mean_degree=None,
         "(expected 'fc', 'powerlaw' or 'powerlaw_rowavg')")
 
 
-def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,
+def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0, K=None,
               method="LSODA", rtol=1e-7, atol=1e-9):
     """Integrate the relative GLV in the share + log-scale split.
 
@@ -135,18 +135,22 @@ def integrate(alpha, *, tmax, n_eval=1500, lam=0.0, seed=0,
 
     Returns dict(t, W, lnM, success): W shape (N, n_eval), columns renormalised
     to the simplex; lnM the log aggregate (lnM(0)=0).
+
+    K optionally gives each firm a carrying capacity in units of the mean firm,
+    f_i = 1 - N w_i / K_i - N (alpha w)_i; None is K_i = 1.
     """
     N = alpha.shape[0]
     rng = np.random.default_rng(seed)
     w0 = rng.uniform(0.5, 1.5, N)
     w0 /= w0.sum()
+    invK = 1.0 if K is None else 1.0 / np.asarray(K, dtype=float)
 
     def rhs(t, state):
         w = np.clip(state[:N], 0.0, None)
         s = w.sum()
         if s > 0:
             w = w / s
-        f = 1.0 - N * w - N * (alpha @ w)
+        f = 1.0 - N * w * invK - N * (alpha @ w)
         fbar = float(w @ f)
         dw = w * (f - fbar) + lam * (1.0 / N - w)
         return np.concatenate([dw, [fbar]])

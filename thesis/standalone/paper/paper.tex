@@ -1,0 +1,356 @@
+% Main text of the article.  Derivations, checks and tables are in the Supplemental Material,
+% ../theory/theory.tex.  Build: latexmk -pdf paper.tex   (from this directory)
+\documentclass[pre,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\graphicspath{{../../assets/figures/}}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\PhiN}{\Phi_{\mathcal N}}
+\newcommand{\bPhi}{\bar\Phi}
+\newcommand{\Sthr}{S_{\rm thr}}
+
+\begin{document}
+
+\title{Chaos, growth and firm life cycles in a scale-invariant Lotka--Volterra economy}
+\author{Ludovico Furlanetto}
+\date{\today}
+
+\begin{abstract}
+We study a generalised Lotka--Volterra model of firms on a heterogeneous interaction network, in
+which interactions are measured in units of the mean firm size.  The economy then grows
+exponentially at a self-consistent rate while its composition follows a disordered replicator
+equation.  Heterogeneous dynamical mean-field theory gives the phase diagram.  For an
+uncorrelated network the unique stationary composition loses stability at a disorder
+$\sigma_c\simeq\sqrt2\,[1-\tfrac12\Var\kappa\,(1-\mu^2/2\pi)]$, to first order in the degree
+variance; above it, trapping equilibria coexist with chaos, and the boundary between growing and
+shrinking economies is nearly independent of the network.  In the chaotic, growing phase each
+firm is an independent logistic unit driven by a Gaussian fitness whose mean and amplitude are set
+by its degree.  The one-firm equation is solvable for any fitness path: a firm exits on the
+first fitness dip whose area exceeds an explicit threshold, which yields its lifetime law.  Under
+the unbalanced panel used for firm data, a firm's volatility is its log range over its lifetime,
+and the multiscaling of the size--volatility relation follows from the growing spread of
+lifetimes with size.  The model reproduces the empirical shape of the multiscaling but not the
+level of the size--volatility exponent.
+\end{abstract}
+
+\maketitle
+
+%----------------------------------------------------------------------
+\section{Introduction}
+
+Large firms grow less erratically than small ones, but not by as much as independent subunits
+would imply.  If $v_i$ is the volatility of firm $i$'s growth rate and $\bar S_i$ its mean size,
+the conditional moments scale as $\E[v^q\mid\bar S]\sim\bar S^{-\zeta_q}$ with $\beta=\zeta_1\approx0.2$
+\cite{stanley1996,amaral1997,sutton2002}, and the ratio curve $\zeta_q/\zeta_1\approx2.0$, $2.6$, $2.9$
+for $q=2,3,4$ bends below the line $\zeta_q/\zeta_1=q$ of a volatility law of fixed shape
+\cite{moran2024}.  Granular explanations attribute both to the internal structure of firms
+\cite{wyartbouchaud2003,moran2024}; network explanations to the propagation of shocks between them
+\cite{acemoglu2012,herskovic2020}.
+
+Here we ask what an economy of interacting firms does when nothing in it is tuned to grow.  We use
+the generalised Lotka--Volterra (GLV) model, the reference model of disordered interacting
+populations \cite{may1972,bunin2017,galla2018,roy2020}, with one change: interactions and
+self-limitation are measured in units of the mean firm size.  The model becomes scale invariant.
+The aggregate grows exponentially at a rate the dynamics selects, and the composition of the
+economy, the shares of the firms, obeys a disordered replicator equation \cite{diederich1989}.
+Simulations on a power-law interaction network reproduce fat-tailed growth rates, a
+size--volatility law and multiscaling.
+
+We give the theory of this behaviour in three steps.  Heterogeneous dynamical mean-field theory
+(HDMFT) \cite{aguirrelopez,patil2026} gives the phase diagram, including a closed form for the
+stability line (Sec.~\ref{sec:phase}).  In the chaotic phase the network reduces to independent
+firms driven by a Gaussian fitness of known law (Sec.~\ref{sec:onefirm}).  The one-firm problem is
+solvable, and under the empirical protocol the size--volatility statistics are those of firm life
+cycles (Sec.~\ref{sec:life}).  We then compare with data (Sec.~\ref{sec:data}).  Derivations, checks
+and further results are in the Supplemental Material (SM).
+
+%----------------------------------------------------------------------
+\section{Model}
+\label{sec:model}
+
+Firm $i=1,\dots,N$ has size $x_i$, and $m=N^{-1}\sum_jx_j$ is the mean size.  The relative GLV is
+\begin{equation}
+  \dot x_i=x_i\Bigl[1-\frac{x_i}{m}+\frac1m\sum_jW_{ij}x_j\Bigr]+\lambda(m-x_i),
+  \label{eq:model}
+\end{equation}
+with $W_{ij}=A_{ij}(\mu/C+\sigma z_{ij}/\sqrt C)$ on a configuration-model graph of degree law
+$p(k)\propto k^{-\alpha}$ and mean degree $C$, independent Gaussian $z_{ij}$, and $\mu<0$ for
+competition.  The immigration term $\lambda(m-x_i)$ keeps firms above a floor and acts as entry.
+We use $N=8000$, $C=N/40$, $\lambda=10^{-3}$, $\alpha\in[2.2,6]$, and the operating point
+$(\mu,\sigma)=(-1.76,1.75)$.
+
+The right-hand side is homogeneous of degree one in $x$.  With relative sizes $S_i=x_i/m$,
+\begin{equation}
+  \frac{\dot m}{m}=g(t)=\langle SF\rangle,\qquad
+  \dot S_i=S_i\bigl[F_i-g(t)\bigr]+\lambda(1-S_i),
+  \label{eq:replicator}
+\end{equation}
+with $F_i=1-S_i+(WS)_i$: the scale grows at the share-weighted mean fitness, and the composition is
+a replicator equation.  Writing $\Phi_i=1-g+(WS)_i$ for the \emph{fitness} of firm $i$,
+\begin{equation}
+  \frac{d\ln S_i}{dt}=\Phi_i(t)-S_i+\lambda\bigl(S_i^{-1}-1\bigr),
+  \label{eq:firm}
+\end{equation}
+a logistic equation with a moving carrying capacity.  Averaging over any stationary stretch gives
+$\bar S_i=\bPhi_i$ up to the floor term: a firm's mean size is its mean fitness.
+
+%----------------------------------------------------------------------
+\section{Mean-field theory and phase diagram}
+\label{sec:phase}
+
+For $C\to\infty$ the field on a firm of relative degree $\kappa=k/C$ becomes Gaussian.  The HDMFT
+replaces Eq.~\eqref{eq:firm} by one stochastic process per degree class, closed by
+self-consistent averages over neighbours, which are drawn in proportion to degree.  For an
+uncorrelated kernel the fitness is
+\begin{equation}
+  \Phi(t)=1-g(t)+\mu\kappa\bar B+\sigma\sqrt\kappa\,\xi(t),
+  \label{eq:fitness}
+\end{equation}
+with $\E[\xi(t)\xi(t')]=Q(t-t')$,
+and $\bar B$ and $Q$ degree-weighted averages of $S$ and $S(t)S(t')$.  The structural cutoff of
+the hubs is handled with a soft-configuration kernel \cite{patil2026}.
+
+\paragraph{Stability line.}
+If the composition relaxes, the stationary abundances are clipped Gaussians and the unique fixed
+point loses stability when the Perron root of $\sigma^2\varphi_pK_{pr}$ reaches one, with $\varphi_p$
+the survival fraction of class $p$ and $K_{pr}$ the connection kernel.  On a regular graph the
+mean interaction is a uniform shift that cancels in the replicator, and
+$\sigma_c=\sqrt2/(1+\gamma)$ for coupling reciprocity $\gamma$, independent of $\mu$.  On a
+heterogeneous, uncorrelated graph the stability operator has rank one, and the threshold reduces
+to two scalar equations: with $\Delta_\kappa=A\kappa^{-1/2}+M\kappa^{1/2}$ and $w_n(\Delta)=\int_{-\Delta}^\infty
+(\Delta+z)^n\,\phi(z)\,dz$,
+\begin{equation}
+  \begin{gathered}
+  \sigma_c^{-2}=\bigl\langle\kappa^2\PhiN(\Delta_\kappa)\bigr\rangle,\\
+  \bigl\langle\kappa^2\Delta_\kappa w_1(\Delta_\kappa)\bigr\rangle=0,\qquad
+  M=\mu\bigl\langle\kappa^{3/2}w_1(\Delta_\kappa)\bigr\rangle .
+  \end{gathered}
+  \label{eq:sigmac}
+\end{equation}
+To first order in the degree variance,
+\begin{equation}
+  \sigma_c(\mu)\simeq\sqrt2\Bigl[1-\frac{\Var\kappa}{2}\Bigl(1-\frac{\mu^2}{2\pi}\Bigr)\Bigr].
+  \label{eq:sigmac-v}
+\end{equation}
+Degree heterogeneity lowers the threshold, because hubs feel noise of amplitude $\propto\sqrt\kappa$.
+A mean interaction of either sign raises it; beyond first order competition raises it more,
+because it removes the noisiest firms.  Equation~\eqref{eq:sigmac} agrees with the full HDMFT to
+$0.002$ at $\alpha=6$ and $0.03$ at $\alpha=3.5$ (SM).  Heavy-tailed graphs are the least stable at weak
+competition and the most stable at strong competition (Fig.~\ref{fig:phase}b).
+
+\paragraph{Growth.}
+Since $g^*=1-a$ for the fixed-point closure, the zero-growth line follows by fixing $a=1$.  On a
+regular graph it is $\mu^{(0)}=-g_0(\sigma)$, with $g_0=1-\Delta/w_1(\Delta)$ and $\sigma^2w_2(\Delta)=1$.
+Heterogeneity shifts it by $c(\sigma)\Var\kappa$, with $c$ running from $0$ at weak disorder to
+$5/4-\pi/2\simeq-0.32$ at $\sigma_c$.  The coefficient is at most a third of that of $\sigma_c$, which is
+why the growth boundary hardly depends on the topology.  Its continuation above $\sigma_c$ tracks the
+simulated contour to $0.03$ in $\mu$ (Fig.~\ref{fig:phase}a).
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{phase_theory.png}
+  \caption{(a) Phase diagram for $\alpha=2.5$ ($N=4000$, $C=100$, $\lambda=10^{-3}$).  Regions
+  from the HDMFT: below the stability line $\sigma_c(\mu)$ (black; 60 classes, SCM kernel) the
+  composition has a unique fixed point; above it chaos coexists with trapping equilibria.  The
+  zero-growth line (white; dashed where it continues an unstable fixed point) separates growing from
+  shrinking economies.  Symbols are simulation: zero crossings of the growth rate, the $\sigma$ above
+  which the median churn exceeds $0.035$ (the old freezing line; hollow where it is already exceeded
+  at the lowest simulated $\sigma=1.28$), cells whose integration failed, and the operating point.
+  (b) Stability line for $\alpha=2.2$--$6$ ($\lambda=0$) with the closed form for the bilinear kernel
+  (dashed, where that kernel is a probability) and the regular-graph value $\sqrt2$.  (c) Fraction of
+  runs chaotic at $T=1600$ against the distance from each graph's own $\sigma_c$, ten graphs per point.}
+  \label{fig:phase}
+\end{figure*}
+
+\paragraph{Above the line.}
+Below $\sigma_c$ three different initial conditions freeze into the same state.  At $\sigma_c$ no
+simulated run is chaotic.  Above it, runs are either trapped in one of many stable equilibria or
+chaotic with a persistent amplitude, and which one depends on the realisation: at $\mu=-1.97$ the
+chaotic fraction of ten graphs is $0.2$, $0.1$, $0.8$ and $1$ at $\sigma-\sigma_c=0.025$, $0.05$, $0.1$
+and $0.2$, and at $\mu=-1.05$ chaos takes over only by $\sigma_c+0.2$.  (Fig.~\ref{fig:phase}c).  This is the
+multiple-attractor regime of the disordered GLV.  A simulated ``freezing line'' that classifies
+cells by the churn of their growth rates lies $0.1$--$0.3$ above $\sigma_c$ and is a statistic of this
+coexistence region, not a second transition.  The region of failed integrations at weak
+competition and strong disorder is a numerical artefact of the solver tolerance: there the
+economy is strongly concentrated and grows fast, but stays bounded.
+
+%----------------------------------------------------------------------
+\section{Firms as independent units}
+\label{sec:onefirm}
+
+At the operating point the composition never settles: over a few hundred time units most firms
+fall to the floor and climb back.  Equation~\eqref{eq:fitness} predicts the fitness of every firm.
+Within a firm, $\Phi_i=\bPhi_i+f_i\eta_i(t)$ with $\eta_i$ a smooth unit-variance process of
+correlation time $\tau$, and at fixed degree
+\begin{equation}
+  \bPhi\mid\kappa\sim\mathcal N\bigl(r_\kappa,\;\sigma^2\kappa Q_T\bigr),\qquad
+  f_\kappa=\sigma\sqrt{\kappa(Q_0-Q_T)},
+  \label{eq:law}
+\end{equation}
+with $r_\kappa=1-\bar g+\mu\kappa\bar B$ and $Q_T$ the part of $Q$ that is static over a window.
+Five numbers and the degree law fix the fitness of every firm.  Measured firm by firm in the full
+model, the static field is Gaussian once its predicted mean and spread are removed, the amplitude
+grows as $\sqrt\kappa$ over the whole degree range, and the strong skew of $\bPhi$ on heavy-tailed
+graphs comes from the mixture over degrees (Fig.~\ref{fig:fitness}).
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.9\textwidth]{fitness_law.png}
+  \caption{The fitness law against the full model.  Top: per-firm mean fitness, measured and sampled
+  from Eq.~\eqref{eq:law}.  Bottom: fitness amplitude against relative degree (median and quartiles),
+  with $f\propto\sqrt\kappa$.}
+  \label{fig:fitness}
+\end{figure*}
+
+Replacing the network by independent copies of Eq.~\eqref{eq:firm}, each driven by a Gaussian
+fitness with its firm's measured $(\bPhi_i,f_i)$, reproduces the size--volatility exponent of the
+full model to $0.02$ on every graph and its ratio curve to $0.25$ (SM).  The size--volatility
+statistics are therefore properties of a single firm and of the distribution of fitness across
+firms; the network enters only through Eq.~\eqref{eq:law}.
+
+%----------------------------------------------------------------------
+\section{Life cycles}
+\label{sec:life}
+
+Firm data form an unbalanced panel: every firm contributes over its own listed life
+\cite{moran2024}.  In the model a firm is listed while $S>\Sthr$, and each listed spell counts as one
+firm.  Its volatility is the MAD estimate $v=\sqrt{\pi/2}\,\overline{|g_t-\bar g|}$ of its growth rates
+$g_t=\Delta\ln S$ over $n$ steps.  For a spell that enters and leaves at $\Sthr$, exactly,
+\begin{equation}
+  v=\sqrt{\tfrac\pi2}\;\frac{2\ell+V_p}{n},\qquad\ell=\ln\frac{S_{\max}}{\Sthr},
+  \label{eq:identity}
+\end{equation}
+with $V_p\ge0$ the variation in excess of one rise and fall.  Spells shorter than about $8\tau$ have
+$V_p\simeq0$: a spell is a single hump in $\ln S$, and longer spells are a few humps merged by
+fitness dips that did not end them.  A firm's volatility is thus essentially its log range over
+its lifetime.
+
+\paragraph{Exact solution and kill rule.}
+At $\lambda=0$ Eq.~\eqref{eq:firm} is linear in $1/S$.  With $\mathcal A(t)=\int^t\Phi$,
+\begin{equation}
+  \frac1{S(t)}=\int_{-\infty}^te^{-[\mathcal A(t)-\mathcal A(t')]}\,dt' ,
+  \label{eq:exact}
+\end{equation}
+so the size is a soft minimum over drawdowns of the integrated fitness.  Near a downcrossing of
+$\Phi$ with slope $-s$ the solution is an inverse Mills ratio, and during a dip
+$S\simeq\sqrt{s/2\pi}\,e^{-[\mathcal A(t_0)-\mathcal A(t)]}$.  A spell therefore ends at the first
+negative excursion of the fitness whose area exceeds
+\begin{equation}
+  \ell_c(s)=\ln\frac{\sqrt{s/2\pi}}{\Sthr},
+  \label{eq:kill}
+\end{equation}
+with no fitted constant; the rule classifies $96$--$98\%$ of dips correctly (Fig.~\ref{fig:life}a).
+
+\paragraph{Lifetime law.}
+Dips occur at Rice's rate $\nu(u)=e^{-u^2/2}/2\pi\tau$, with $u=\bPhi/f$, and end the spell with
+probability $P_{\rm kill}(u)$, a level-crossing statistic of the Gaussian fitness computable from
+the Slepian model.  The mean lifetime is
+\begin{equation}
+  \bar L(u)=\frac{\PhiN(u)}{\nu(u)\,P_{\rm kill}(u)},
+  \label{eq:lifetime}
+\end{equation}
+which matches the one-firm process to $3\%$ for $u\ge1$ with no simulation input
+(Fig.~\ref{fig:life}b,c).  For $u\gg1$ dips are short parabolae and
+$-\ln P_{\rm kill}\simeq\tfrac12(3\ell_c/2f\tau)^{2/3}u^{4/3}$, so lifetime grows faster than any power of
+size: the size--volatility exponent of the life-cycle part is an effective exponent that increases
+along the size range.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{lifetime_law.png}
+  \caption{Kill rule and lifetime law ($\alpha=6$ fitness).  (a) A fitness path: dips with area above
+  $\ell_c(s)$ (red) end the spell, as $\ln S$ (right axis) crosses the threshold (dotted); light dips
+  merge excursions.  (b) $P_{\rm kill}$: one-firm process, Slepian model and large-$u$ asymptote.
+  (c) Mean lifetime: one-firm process against Eq.~\eqref{eq:lifetime}; the hollow point is biased by the
+  run length.}
+  \label{fig:life}
+\end{figure*}
+
+\paragraph{Multiscaling.}
+Write $v=A(\bar S)X$ with $X$ random at fixed size.  If $c_n$ are the cumulants of $\ln X$ at fixed
+$\bar S$, then exactly
+\begin{equation}
+  \zeta_q-q\,\zeta_1=-\sum_{n\ge2}\frac{q^n-q}{n!}\,\frac{dc_n}{d\ln\bar S},
+  \label{eq:criterion}
+\end{equation}
+so at second-cumulant order the ratio curve bends below $q$ if and only if $\Var(\ln X\mid\bar S)$
+grows with size.  For life cycles $X=\ell/n$ and the spread is that of $\ln n$.  Small firms live
+through a single fitness excursion, of fairly regular length; large firms exit on rare,
+memoryless kills, for which $\Var\ln n=\pi^2/6$.  In the one-firm process $\Var(\ln n\mid\bar S)$ rises
+from $0.29$ to $0.65$ across the larger half of spells, and $\Var\ln L$ reaches $\pi^2/6$ at $u\simeq1.5$.
+The bend is therefore a crossover between two kinds of exit.  On heavy-tailed graphs the spread
+of fitness amplitudes, $f\propto\sqrt\kappa$, adds lifetime dispersion at fixed size and flattens the
+ratio curve further; making $f$ homogeneous restores the plain life-cycle bend (SM).
+
+%----------------------------------------------------------------------
+\section{Comparison with data}
+\label{sec:data}
+
+On the spell panel the binned volatility has a hump at small sizes, made of spells that barely
+clear the listing threshold, and a flat top that makes a peak-started fit unstable.  We fit all
+exponents on the larger half of spells by size, which fixes $\beta$ to $\pm0.03$ between
+realisations.  Figure~\ref{fig:data} and Table~\ref{tab:data} give the full model.
+
+\begin{table}[b]
+\caption{Full model under the spell panel, larger half of spells, medians over eight economies.}
+\label{tab:data}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+ & $\beta$ & $\zeta_q/\zeta_1$, $q=2,3,4$\\
+\hline
+$\alpha=6$, $\sigma=1.75$ & $0.55$ & $1.84$, $2.50$, $3.00$\\
+$\alpha=3.5$, $\sigma=1.9$ & $0.28$ & $1.79$, $2.30$, $2.53$\\
+$\alpha=2.5$, $\sigma=1.75$ & $0.19$ & $1.42$, $1.34$, $0.95$\\
+Compustat \cite{moran2024} & $0.15$--$0.20$ & $2.0$, $2.6$, $2.9$\\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The shape of the multiscaling is robust: the ratio curve does not depend on the fit range, and on
+weakly heterogeneous graphs it is close to the data.  Its bend is the life-cycle mechanism of
+Sec.~\ref{sec:life}.  The level of $\beta$ is not robust.  It depends on the fitted size range,
+because the decline branch steepens with size, as the lifetime law implies (Fig.~\ref{fig:data}a),
+and on the entry size, which sets the rise term $\ell$.  No graph gives $\beta\approx0.2$ together
+with a data-like ratio curve: light tails give the right curve with $\beta=0.55$, heavy tails
+$\beta\approx0.2$ with a curve flattened by amplitude heterogeneity.  Model firms enter at about
+$10^{-2}$ of the mean size, while real firms enter the data at their IPO size, so the model
+probably overstates the rise-and-fall share; the steepening of the model's curve where the data
+flatten is the main quantitative mismatch.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{data_comparison.png}
+  \caption{(a) $\E[v\mid\bar S]$ over all spells; the fit uses the spells right of the dotted line.
+  (b) $\zeta_q/\zeta_1$ for the full model, the Compustat values and the fixed-shape line.}
+  \label{fig:data}
+\end{figure}
+
+The theory makes three predictions for firm data.  Restricting a panel to firms present
+throughout should raise $\beta$, since such firms are observed only on their plateau (in the model,
+$0.41$ against $0.19$ at $\alpha=2.5$).  Equation~\eqref{eq:identity} gives a model-free lower bound
+on each firm's volatility from its entry, peak and exit sizes and its lifetime.  And removing each
+firm's entry and exit years, or conditioning on age, should move $\zeta_q/\zeta_1$ towards $q$.
+
+%----------------------------------------------------------------------
+\section{Discussion}
+
+Measuring interactions in units of the mean size turns a disordered Lotka--Volterra community
+into a growing economy whose composition is a replicator.  Its phase diagram is controlled by
+the stability of the unique stationary composition, which degree heterogeneity lowers and
+competition raises, while the growth boundary is almost blind to the network.  In the chaotic
+phase each firm is a logistic unit tracking a Gaussian fitness, and the size--volatility
+statistics measured on an unbalanced panel are those of firm life cycles: entry when the fitness
+has risen enough, exit on the first dip of large enough area, and a volatility equal to the log
+range over the lifetime.  Multiscaling is then a crossover in the spread of lifetimes rather than
+an asymptotic law, in line with its reading as a subleading effect \cite{moran2024}.  Open
+problems are a controlled growth line in the chaotic phase, which needs the two-time theory, the
+fate of trapping as $N\to\infty$, a sparse cavity theory for the heaviest tails, where a firm's
+field is carried by a few neighbours, and a theory of the spell exponents that includes the
+fluctuations of the largest firms.
+
+\bibliography{../../bib}
+
+\end{document}
