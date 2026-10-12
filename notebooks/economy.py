@@ -4,7 +4,7 @@ graphs        powerlaw_coupling (networkx, the thesis-era phase grid), configura
 dynamics      integrate_demographic: the model with birth-death noise and turnover, in relative sizes
 measurement   lives, zeta_bins, hill: the Moran-Secchi-Bouchaud (MSB) life panel and its exponents
 reference     the paper's reference point, its two stored economies and the per-life volatility law
-plotting      tidy
+plotting      tidy; paper_style, panel, save_paper and the colours PAL, FIFTHS for the paper figures
 
 Sign convention: mu > 0 is mean competition (the notebooks' text uses mu < 0).
 """
@@ -79,7 +79,8 @@ def integrate_demographic(a, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed
     """dS_i = S_i (f_i - fbar) dt + sqrt(D S_i) dW_i - (S_i/N) sum_j sqrt(D S_j) dW_j,  f_i = 1 - S_i - (a S)_i,
     fbar = sum_i S_i f_i / N: the model x_i' = x_i (1 - x_i/m - (a x)_i/m) + sqrt(D m x_i) noise in relative sizes.
     A firm that reaches S <= 0 exits and a newborn of size D takes its node.  Euler-Maruyama, sum S = N restored
-    after every step.  Returns t, S (N, n_save) and life (N, n_save), the death counter of each node: a life is a
+    after every step; the restoring after an entry dilutes every firm, an extra drift -nu D S_i with nu the
+    entries per node per unit time.  Returns t, S (N, n_save) and life (N, n_save), the death counter of each node: a life is a
     maximal run of samples with the same counter.  compact=True stores float32/int32.  theta != 1 makes the
     self-limitation and the interactions act through S^theta: f_i = 1 - S_i^theta - (a S^theta)_i."""
     n = a.shape[0]
@@ -168,13 +169,16 @@ def simulate_reference(seed, kind="powerlaw"):
 
 
 def reference_economy(seed, kind="powerlaw"):
-    """Sizes S (N, T), death counters L, degrees, couplings a and the field Phi = 1 - aS - fbar."""
+    """Sizes S (N, T), death counters L, degrees, couplings a and the field Phi = 1 - aS - fbar, with fbar the
+    growth rate of the mean firm: the drift sum_i S_i f_i / N plus the entry dilution D nu (entries per node per
+    unit time over the next sampling interval)."""
     d = np.load(simulate_reference(seed, kind))
     S, L, deg = d["S"].astype(float), d["L"], d["deg"]
     a = reference_coupling(seed, kind)
     assert np.array_equal(np.diff(a.indptr), deg), "coupling does not match the stored economy"
     aS = a @ S
-    fbar = (S * (1.0 - S - aS)).sum(0) / N
+    nu = np.diff(L, axis=1).sum(0) / (N * DT)
+    fbar = (S * (1.0 - S - aS)).sum(0) / N + D * np.r_[nu, nu[-1]]
     return S, L, deg, a, 1.0 - aS - fbar
 
 
@@ -234,7 +238,39 @@ def tidy(ax, xticks=None, yticks=None):
             axis.set_major_formatter(FormatStrFormatter("%g"))
             if ticks is not None:
                 axis.set_ticks(ticks)
-    ax.grid(True, which="major", color="#e4e3df", lw=0.5)
+    ax.grid(True, which="major", color=PAL["grid"], lw=0.5)
     ax.set_axisbelow(True)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
+
+
+# ---------------------------------------------------------------------------------------------- paper figures
+COL1, COL2 = 3.4, 7.0                       # revtex column and page widths, inches
+PAL = dict(model="#2a78d6", regular="#eb6834", data="#1baf7a",          # categorical, validated all-pairs
+           ink="#0b0b0b", muted="#52514e", faint="#9a9890", grid="#e9e8e4")
+FIFTHS = ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab", "#104281"]   # sequential blue, smallest to largest size fifth
+
+
+def paper_style():
+    """Computer Modern at 8 pt like the revtex text, thin marks, no top/right spines, vector output."""
+    import matplotlib.pyplot as plt
+    plt.rcParams.update({
+        "font.family": "serif", "font.serif": ["cmr10"], "mathtext.fontset": "cm",
+        "axes.formatter.use_mathtext": True, "axes.unicode_minus": False,
+        "font.size": 8, "axes.labelsize": 8, "xtick.labelsize": 7, "ytick.labelsize": 7, "legend.fontsize": 7,
+        "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6, "xtick.minor.width": 0.4,
+        "ytick.minor.width": 0.4, "xtick.major.size": 2.5, "ytick.major.size": 2.5, "xtick.minor.size": 1.5,
+        "ytick.minor.size": 1.5, "axes.edgecolor": PAL["muted"], "xtick.color": PAL["muted"],
+        "ytick.color": PAL["muted"], "axes.labelcolor": PAL["ink"], "text.color": PAL["ink"],
+        "lines.linewidth": 1.3, "lines.markersize": 3.5, "legend.frameon": False, "legend.handlelength": 1.8,
+        "axes.spines.top": False, "axes.spines.right": False, "figure.dpi": 150, "savefig.dpi": 300,
+        "savefig.bbox": "tight", "savefig.pad_inches": 0.02, "pdf.fonttype": 42})
+
+
+def panel(ax, letter):
+    """Panel letter at the top-left corner, outside the axes."""
+    ax.text(-0.02, 1.03, f"({letter})", transform=ax.transAxes, ha="right", va="bottom", fontsize=8.5)
+
+
+def save_paper(fig, name):
+    fig.savefig(FIGURES / f"{name}.pdf")

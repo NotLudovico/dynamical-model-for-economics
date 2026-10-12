@@ -6,10 +6,11 @@ self-limitation measured in units of the mean firm, birth–death noise and turn
 
 $$dx_i = x_i\Big[1 - \frac{x_i}{m} + \sum_j J_{ij}\frac{x_j}{m}\Big]dt + \sqrt{D\,m\,x_i}\,dW_i,\qquad m = \langle x\rangle,$$
 
-with a newborn of size $Dm$ replacing every firm that reaches zero. It reproduces the size–volatility
-exponents of Compustat ($\zeta_q = 0.21, 0.39, 0.55, 0.68$ against $0.20, 0.39, 0.51, 0.58$) and a ratio
-curve $\zeta_q/\zeta_1$ that bends below $q$, with a derived mechanism: a firm's growth variance is a
-fitness floor plus a demographic part, $\zeta_q = (q/2)\,b\,\langle w\rangle_q$, and the curve bends iff the
+with a newborn of size $Dm$ replacing every firm that reaches zero. For lives with at least 20 growth
+rates it gives a monotone size–volatility decline ($\zeta_q = 0.25, 0.44, 0.59, 0.69$ against Compustat's
+$0.20, 0.39, 0.51, 0.58$) and a ratio curve $\zeta_q/\zeta_1 = 1.78, 2.35, 2.76$ that bends below $q$ as in
+Compustat ($2.0, 2.6, 2.9$), with a derived mechanism: a firm's growth variance is a
+fitness floor plus a demographic part, $\zeta_q = (q/2)\,b\,\langle w\rangle_q$, and the curve bends only if the
 floor differs between firms of equal size — which on the network it does, through the degree. It does
 not give Zipf's law or a four-decade range, and the reason is structural.
 
