@@ -75,12 +75,13 @@ def configuration_coupling(n, mu, sigma, *, alpha=2.5, mean_degree=200, seed=0, 
 
 
 # ---------------------------------------------------------------------------------------------- dynamics
-def integrate_demographic(a, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed=0, compact=False):
+def integrate_demographic(a, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed=0, compact=False, theta=1.0):
     """dS_i = S_i (f_i - fbar) dt + sqrt(D S_i) dW_i - (S_i/N) sum_j sqrt(D S_j) dW_j,  f_i = 1 - S_i - (a S)_i,
     fbar = sum_i S_i f_i / N: the model x_i' = x_i (1 - x_i/m - (a x)_i/m) + sqrt(D m x_i) noise in relative sizes.
     A firm that reaches S <= 0 exits and a newborn of size D takes its node.  Euler-Maruyama, sum S = N restored
     after every step.  Returns t, S (N, n_save) and life (N, n_save), the death counter of each node: a life is a
-    maximal run of samples with the same counter.  compact=True stores float32/int32."""
+    maximal run of samples with the same counter.  compact=True stores float32/int32.  theta != 1 makes the
+    self-limitation and the interactions act through S^theta: f_i = 1 - S_i^theta - (a S^theta)_i."""
     n = a.shape[0]
     rng = np.random.default_rng(seed)
     S = rng.uniform(0.5, 1.5, n)
@@ -93,7 +94,8 @@ def integrate_demographic(a, *, D, tmax, t_start=0.0, dt_save=0.5, dt=0.01, seed
             t_out.append(step * dt)
             S_out.append(S.astype(np.float32) if compact else S.copy())
             L_out.append(life.astype(np.int32) if compact else life.copy())
-        f = 1.0 - S - a @ S
+        St = S if theta == 1.0 else S ** theta
+        f = 1.0 - St - a @ St
         xi = np.sqrt(D * S * dt) * rng.standard_normal(n)
         S = S + S * (f - S @ f / n) * dt + xi - S * xi.sum() / n
         dead = S <= 0
