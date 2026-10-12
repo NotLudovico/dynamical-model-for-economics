@@ -28,7 +28,7 @@ recomputes what is missing.
 | [`06_facts`](notebooks/06_facts.ipynb) | every MSB fact, collective bursts, robustness, the $b$ null, no Zipf | 2 min |
 
 Without the cache, the reference economies (notebooks 04–05, about an hour each) and the robustness
-runs (notebook 06, 90 economies, hours on many cores) are simulated on first use.
+runs (notebook 06, 80 economies, hours on many cores) are simulated on first use.
 
 ## Layout
 

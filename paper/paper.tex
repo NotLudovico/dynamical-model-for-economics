@@ -3,10 +3,10 @@
 % one-firm solution, kill rule, lifetime law) is notebooks/03_life_cycles.ipynb.
 % Build: latexmk -pdf paper.tex   (from this directory)
 %
-% Draft status (2026-10-11): rewritten around the demographic model, with the multiscaling
-% mechanism as the main result.  Reference point alpha 2.5, sigma 1.70, D 0.1, C 200.  Numbers
-% marked \todo{} need a computation that does not exist yet or a re-run.  Every figure in figures/
-% is written by a notebook in ../notebooks/.
+% Draft status (2026-10-12): rewritten around the demographic model, with the multiscaling
+% mechanism as the main result.  Reference point alpha 2.5, sigma 1.70, D 0.1, C 200.  No \todo{}
+% is open; paper.pdf and sm.pdf predate the 2026-10-12 edits and need a rebuild.  Every figure in
+% figures/ is written by a notebook in ../notebooks/.
 \documentclass[pre,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{graphicx}
@@ -43,8 +43,9 @@ curve bends below $q$ if and only if the floor differs between firms of equal si
 the floor grows with the degree; the floor's heterogeneity alone predicts ratios $1.86$, $2.57$, $3.10$
 against $1.77$, $2.35$, $2.78$ measured and $2.0$, $2.6$, $2.9$ in Compustat, while a graph with equal
 degrees, where the floor stays small against the noise, gives ratios close to $q$.  The same self-limitation that produces the decline caps firm size, so the model
-has no Zipf law and the decline spans two decades rather than four; without noise the product of the
-exponent and the range is fixed by the self-limitation.
+has no Zipf law and the decline spans two decades rather than four.  Without noise a softer
+self-limitation would trade the exponent for the range; with noise the range stays set by the newborn
+size, and a softer self-limitation fattens the size distribution but removes the bend.
 \end{abstract}
 
 \maketitle
@@ -88,7 +89,14 @@ sit on a scale-free network, as production and competition networks do
 \cite{acemoglu2012,carvalho2019}.  And the immigration that keeps species from extinction is
 replaced by birth--death noise with turnover: a firm that reaches zero exits and a newborn takes its
 place.  The model has five parameters: the mean $\mu$ and spread $\sigma$ of the interactions, the
-degree tail $\alpha$ and mean degree $C$, and the noise $D$.
+degree tail $\alpha$ and mean degree $C$, and the noise $D$.  Anomalous moment scaling has been derived
+for GLV communities before: with multiplicative environmental noise and migration, abundances are
+power-law distributed and obey Taylor's law, $\langle N^{1+p}\rangle\propto\langle N\rangle^{1+D/T}$ with
+a single exponent for every $p$ \cite{alhiyasat2026}; the mean-field equation there is the
+Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000} with GLV interactions.  That law concerns
+the moments of an abundance, with an exponent independent of the order; ours concerns the moments of
+the growth volatility conditioned on size, whose exponents grow with $q$ and bend below $q\zeta_1$.
+Neither network structure nor turnover enters there.
 
 Our results are the following.
 \begin{enumerate}
@@ -97,9 +105,9 @@ Our results are the following.
   order in the degree variance, and its shift with the noise, $\sigma_c(D)$, from an exact renewal law
   for a single node, which also predicts the turnover rate.
 \item One firm is enough (Sec.~\ref{sec:onefirm}): a firm driven by its own measured field and its own
-  noise reproduces the size--volatility statistics of the full economy, and the field has a
-  degree-resolved Gaussian law whose amplitude grows as $\sqrt\kappa$ with the relative degree
-  $\kappa$.
+  noise reproduces the size--volatility statistics of the full economy, and the field follows
+  the degree-resolved mean-field law: its mean falls and its temporal amplitude grows as $\sqrt\kappa$ with
+  the relative degree $\kappa$.
 \item A volatility law (Sec.~\ref{sec:law}): a firm's growth variance is a fitness floor, nearly
   independent of size, plus demographic noise filtered by the firm's relaxation.  The exponent
   $\zeta_1\simeq0.2$ is the effective slope of the crossover between them.
@@ -110,7 +118,8 @@ Our results are the following.
   with equal degrees the ratios return close to $q$.
 \item A comparison with every MSB fact (Sec.~\ref{sec:facts}) and a structural limit
   (Sec.~\ref{sec:limits}): the self-limitation that makes volatility depend on size also caps firm
-  size, so the range of the decline and the exponent trade off, and the model has no Zipf law.
+  size, so the decline spans two decades, from the newborn size to the plateau, and the model has no
+  Zipf law; softening the self-limitation fattens the size distribution but removes the bend.
 \end{enumerate}
 Derivations, numerical checks and robustness tests are in the Supplemental Material (SM).
 
@@ -211,7 +220,7 @@ T(D)=\int_0^\infty s(\min(x,D))\,m(x)\,dx,
 \end{gather}
 with turnover rate $1/T(D)$.  The law has two parts: a Gaussian plateau of variance $D/2$ around $h$,
 and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
-exit times follow from the same quadratures and agree with direct simulation to $1.5\%$ (SM,
+exit times follow from the same quadratures and agree with direct simulation to $3\%$ (SM,
 Sec.~S3).
 
 \paragraph{Instability line with noise.}  Replacing the clipped Gaussian by the renewal law in the
@@ -221,7 +230,7 @@ $\sigma^2{\rm diag}(\E\chi^2)K$ is below one.  Noise smooths $\chi$ and raises t
 $D$ (SM, Fig.~S1): from $1.460$ to $1.577$ at $\alpha=2.5$ and from $1.399$ to $1.551$ at
 $\alpha=6$ between $D=0.003$ and $0.3$; as $D\to0$ it tends to the deterministic line ($1.399$ against
 $1.400$ at $\alpha=6$, and $\sqrt2$ on the complete graph).  The same theory predicts the turnover rate
-to $0.5\%$ below $\sigma_c$ and to $1.5\%$ above it, where it is no longer controlled ($\alpha=6$; SM,
+to $1\%$ below $\sigma_c$ and to $2\%$ above it, where it is no longer controlled ($\alpha=6$; SM,
 Sec.~S3).  Turnover is set by
 the nodes with $h<0$, where a newborn's life does not depend on $D$, and is nearly independent of the
 noise.  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
@@ -257,8 +266,8 @@ size--volatility statistics is therefore a one-firm problem, given the statistic
 The field follows the degree-resolved law of Eq.~\eqref{eq:hdmft}.  Over the window, a node's mean field
 falls with its degree, from $0.5$ at $\kappa\simeq0.4$ to $-2.3$ at $\kappa\simeq2$: hubs compete with more
 firms.  Its temporal amplitude grows as $f\propto\kappa^{0.54}$, against $\kappa^{1/2}$ in Eq.~\eqref{eq:hdmft},
-and decorrelates over about $4.5$ time units.  Within a degree class the mean field is close to
-Gaussian (skewness $-0.3$).  The degree therefore sets both how long a firm lives and how strongly it
+and decorrelates over about $4.5$ time units.  Within a degree class the mean field is nearly
+symmetric (skewness $-0.3$) but fatter-tailed than a Gaussian (excess kurtosis $2.0$).  The degree therefore sets both how long a firm lives and how strongly it
 is shaken while alive; the second effect drives the multiscaling.
 
 %======================================================================
@@ -282,9 +291,12 @@ for slowly relaxing firms and to $D\langle S^{-2}\rangle$ for fast ones.
 compute $V_F$ by integrating the noise-free equation along the life's measured field, and $B$ from
 its sizes.  Equation~\eqref{eq:law} reproduces the measured volatility to within $5\%$ over a decade and a half of $\Sb$, and $9\%$ in the
 lowest decile (Fig.~\ref{fig:law}; SM, Table~S4).  A
-version without the filter, $\Var(\Delta\ln\Phi)+D\Delta t\langle S^{-1}\rangle$, overestimates by a nearly constant
-factor of $1.5$: a firm does not follow the fast part of its field \todo{scratch result at
-$\sigma=1.75$; add to notebooks/04\_volatility\_law.ipynb}.
+version without the filter, $\Var(\Delta\ln\Phi)+D\Delta t\langle S^{-1}\rangle$ over the steps where
+$\Phi>0$, overestimates the volatility by a factor $1.6$ in the lowest decile and $1.1$ in the highest,
+and nearly doubles the slope ($0.32$ against $0.17$).  The excess is all in the field term:
+$\sqrt{\Var\Delta\ln\Phi}$ falls from $0.90$ to $0.44$ with size while $\sqrt{V_F}$ stays at
+$0.32$--$0.37$.  A firm does not follow the fast part of its field, least of all a small firm,
+whose field is low and therefore fluctuates strongly in relative terms.
 
 \begin{figure}[t]
 \includegraphics[width=0.85\linewidth]{demographic_volatility_law.png}
@@ -305,7 +317,7 @@ from slope $-1/2$, where noise dominates, to slope $0$, where the floor does.  T
 $\Sb\simeq1.5$.  The shape is the one
 reported for French firms \cite{fontanelli2025}, and $\zeta_1\simeq0.2$ is the effective slope over the
 range where the two parts are comparable.  The crossover scale grows with $D$, so the effective
-exponent does too: at $\sigma=1.70$, $\beta=0.20$, $0.21$ and $0.25$ for $D=0.1$, $0.15$ and $0.2$
+exponent does too: at $\sigma=1.70$, $\zeta_1=0.20$, $0.23$ and $0.25$ for $D=0.1$, $0.15$ and $0.2$
 ($n_{\min}=5$; SM, Sec.~S5).
 
 %======================================================================
@@ -441,9 +453,9 @@ lives with $n_{\min}=5$ ($3.31$ against $2.9$ at $q=4$), and by about the empiri
 The bend comes from the mechanism of Sec.~\ref{sec:multiscaling}.  The co-movement of a firm with the
 aggregate and with firms of similar size rises with size, as in Compustat; a natural reading is that
 small firms are moved mostly by their own noise and large ones by their field, which they share with
-their neighbours, but we have no theory of it.  The shape of the curve, $\zeta_q$ and the ratios survive
+their neighbours, but we have no theory of it.  The monotone decline and the bend of the ratio curve below $q$ survive
 $N=8000$--$64000$, different seeds and the neighbourhood of the reference point in $\sigma$, $D$, $\alpha$
-and $C$; $\sigma$, $D$ and $C$ set the level of $\zeta_1$ (SM, Sec.~S5).
+and $C$, while $\sigma$, $D$ and $C$ set the level of $\zeta_1$, between $0.11$ and $0.26$ (SM, Sec.~S5 and Table~S7).
 
 \paragraph{What it does not.}
 \begin{itemize}
@@ -461,8 +473,8 @@ and $C$; $\sigma$, $D$ and $C$ set the level of $\zeta_1$ (SM, Sec.~S5).
   Laplace growth and no differences between firms gives $4.3$ (SM, Sec.~S6).
 \item \emph{Aggregate volatility} is several times too large and does not fall as $N^{-1/2}$ over the
   sizes we simulate.  Occasionally an economy enters a collective burst, with aggregate volatility
-  several times the typical one, in which volatility no longer depends on size (about $5$ of $90$
-  economies across all our runs; SM, Sec.~S5).
+  several times the typical one, in which volatility no longer depends on size ($5$ of the $80$
+  economies of our robustness runs; SM, Sec.~S5).
 \item \emph{Sizes and demography.}  The size distribution has no Pareto tail, newborns have extreme
   infant mortality, and small established firms shrink on average.
 \end{itemize}
@@ -479,7 +491,7 @@ plateau, and the plateau caps firms at a few times the mean.  The decline theref
 times the newborn size $D$, below which lives are too short to measure, to the plateau: about two
 decades at the reference point.
 
-\paragraph{The exponent and the range trade off.}  Replace the self-limitation and the interactions by
+\paragraph{Without noise the exponent and the range trade off.}  Replace the self-limitation and the interactions by
 powers, $(x_i/m)^\theta$ and $\sum_jJ_{ij}(x_j/m)^\theta$.  Without noise, $u_i=S_i^\theta$ obeys the
 $\theta=1$ model with time rescaled by $\theta$, and since $\ln S=\theta^{-1}\ln u$,
 \begin{equation}
@@ -488,9 +500,26 @@ $\theta=1$ model with time rescaled by $\theta$, and since $\ln S=\theta^{-1}\ln
 \end{equation}
 with $R$ the number of decades over which volatility declines.  A softer self-limitation widens the
 range by exactly the factor by which it flattens the decline, and the product $\beta R$ is fixed by the
-statistics of the field: about $0.3$--$0.4$ in the model against $0.8$ in Compustat \todo{check with the
-noise term, which breaks the exact mapping below the noise crossover}.  Keeping the interactions
+statistics of the field: $0.4$ in the model against $0.8$ in Compustat.  Keeping the interactions
 linear while softening only the self-limitation condenses the economy.
+
+\paragraph{With noise the range does not widen.}  The mapping ignores the noise, which does not
+transform with the sizes: $\sqrt{DS}\,dW$ in $S$ becomes $\theta\sqrt D\,u^{1-1/2\theta}dW$ in $u$, additive at
+$\theta=1/2$.  In simulations at the reference $\sigma$ and $D$ ($N=16000$, four economies per point; SM,
+Table~S8) a softer self-limitation slows the field down, the share of its variance that moves in
+time falling from $0.17$ at $\theta=1$ to $0.02$ at $\theta=1/2$, so volatility becomes demographic and the
+decline steepens instead of flattening: $\zeta_1=0.11$, $0.20$, $0.29$, $0.34$ for $\theta=1.5$, $1$, $0.75$,
+$0.5$, while the range stays at $1.7$--$2.0$ decades.  At $\theta=1/2$ the field moves as much as at the
+reference point for $\sigma=1.9$ (temporal share $0.18$), and there $\zeta_1=0.27$ over $2.1$ decades; at
+$\sigma=2.0$, where it moves more, $\zeta_1=0.19$ over $2.35$ decades.  Across these runs $\zeta_1R$ lies between $0.2$ and
+$0.58$ and the range never exceeds $2.4$ decades.  With noise the range is set by the newborn size:
+at $\theta=1$ it shrinks from $2.3$ to $1.7$ decades as $D$ grows from $0.05$ to $0.2$.  In every run the
+smallest lives have $v\simeq1.1$, the noise of newborns whatever $D$, and up to the curvature of the fit
+$\zeta_1R$ is $\log_{10}$ of the fall from there to the volatility of the largest firms, a factor $2.8$ at
+the reference point against $5.5$ in Compustat.  The exponent $\theta$ moves the floor of the largest
+firms, and with it the slope and the bend, but not the range.  A softer self-limitation also fattens the size
+distribution (Hill index of the top $1\%$ from $4.6$ at $\theta=1$ to $2.0$ at $\theta=1/2$, $\sigma=2.0$) but returns
+the ratios to $q$ ($2.02$, $3.01$, $3.94$), while $\theta=1.5$ bends them further ($1.75$, $2.21$, $2.41$).
 
 \paragraph{Other ways out.}  Without self-limitation, growth is Gibrat-like, the condition under which a
 lower barrier gives Zipf's law \cite{gabaix1999}, but the quenched part of the field is not removed and
@@ -509,8 +538,8 @@ particular model.
 An economy of firms that compete on a heterogeneous network and are subject to birth--death noise
 reproduces the shape of the size--volatility relation of firms: a monotone decline with effective
 exponent $0.2$ and a ratio curve $\zeta_q/\zeta_1$ that bends below $q$.  The theory is a one-firm problem:
-a logistic unit driven by a Gaussian field whose amplitude grows as the square root of its degree,
-plus its own noise.  The exponent is the effective slope of a crossover between a demographic regime
+a logistic unit driven by a field whose mean falls and whose amplitude grows as the square root of its
+degree, plus its own noise.  The exponent is the effective slope of a crossover between a demographic regime
 of slope $-1/2$ and a fitness floor of slope $0$, which is the two-regime shape of data that include
 small firms \cite{fontanelli2025}.  The multiscaling has a simple origin: a volatility law of the form
 floor plus size-dependent part gives $\zeta_q=(q/2)b\langle w\rangle_q$, and the curve bends below $q$ exactly
