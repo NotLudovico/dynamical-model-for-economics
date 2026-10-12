@@ -4,10 +4,9 @@ Everything that was tried and abandoned, with the reason. The story of what surv
 notebooks (`notebooks/`, index in the README). Entries give the idea, the result, the cause of death, and where the code or
 numbers are (when they were kept; some tests were scratch-only).
 
-The code of most entries was removed on 2026-10-11. Every path below still exists in the commit
-tagged `archive/pre-cleanup`: restore one with `git checkout archive/pre-cleanup -- <path>`. The
-scripts, tests, run logs (`data/logs/`) and LaTeX notes that the notebooks replaced on 2026-10-12 are
-in the commit tagged `archive/pre-notebooks`.
+The code of most entries was removed on 2026-10-11, and the scripts, tests, run logs and LaTeX notes
+that the notebooks replaced on 2026-10-12. Every path below is still in the history of `main`:
+`git log --all -- <path>` finds the last commit that has it.
 
 Two lessons recur:
 
@@ -157,7 +156,7 @@ relative to m: condenses. Saturating pressure Σ α x_j/(K_i + K_j): Zipf-like (
 - **Standalone notes** `beta_theory`, `lifecycle_theory`, `dmft_theory` and `zero_growth_theory`
   under `thesis/standalone/` were superseded by `theory/theory.tex`, itself replaced by notebooks
   02 and 03 (its survivor-panel appendices, the adiabatic law and the degree channel, were not
-  carried over; they are in `archive/pre-notebooks`).
+  carried over).
 - **Removed in the cleanup:** the `beta_*` and survivor-theory scripts behind `beta_theory.tex`; the
   spell scan and headline scripts (`scan_spells.py`, `headline_spells.py`, `plot_data_comparison.py`);
   the mean-degree cutoff and mechanism probes; the phase onset, attractor and divergence diagnostics;

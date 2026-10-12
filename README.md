@@ -42,9 +42,6 @@ CEMETERY.md     every model and protocol tried and abandoned, and why
 tesi.pdf        the submitted thesis (deterministic model)
 ```
 
-Code and notes removed along the way are in the tags `archive/pre-cleanup` and
-`archive/pre-notebooks`: `git checkout <tag> -- <path>` restores any of them.
-
 ## Install and run
 
 ```bash
