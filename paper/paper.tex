@@ -44,8 +44,9 @@ the floor grows with the degree; the floor's heterogeneity alone predicts ratios
 against $1.77$, $2.35$, $2.78$ measured and $2.0$, $2.6$, $2.9$ in Compustat, while a graph with equal
 degrees, where the floor stays small against the noise, gives ratios close to $q$.  The same self-limitation that produces the decline caps firm size, so the model
 has no Zipf law and the decline spans two decades rather than four.  Without noise a softer
-self-limitation would trade the exponent for the range; with noise the range stays set by the newborn
-size, and a softer self-limitation fattens the size distribution but removes the bend.
+self-limitation would trade the exponent for the range; with noise the range runs from the newborn
+size to the plateau, volatility falls by at most a factor $4$ across it, and a softer self-limitation
+fattens the size distribution but removes the bend.
 \end{abstract}
 
 \maketitle
@@ -307,16 +308,19 @@ and demographic parts, by deciles of life-mean size (lives with at least $20$ gr
 
 \paragraph{A crossover.}  The fitness part is nearly flat in size,
 $\sqrt{V_F}\simeq0.32$--$0.37$: competition moves established firms by about the same relative
-amount whatever their size.  The demographic part falls as $\Sb^{-1/2}$ for small firms and faster for
-large ones.  The size--volatility relation is therefore a crossover,
+amount whatever their size.  The demographic part falls as $\Sb^{-b/2}$, with $b=0.66$--$0.87$
+(Sec.~\ref{sec:multiscaling}; $b=1$ for $B\simeq D\Delta t/\Sb$).  The size--volatility relation is therefore a
+crossover,
 \begin{equation}
 v^2\simeq v_F^2+B(\Sb),
 \label{eq:crossover}
 \end{equation}
-from slope $-1/2$, where noise dominates, to slope $0$, where the floor does.  The two parts are equal at
-$\Sb\simeq1.5$.  The shape is the one
-reported for French firms \cite{fontanelli2025}, and $\zeta_1\simeq0.2$ is the effective slope over the
-range where the two parts are comparable.  The crossover scale grows with $D$, so the effective
+from a steep decline where noise dominates to slope $0$ where the floor does.  The two parts are equal
+at $\Sb\simeq1.5$.  The decomposition has the two-regime shape reported for French firms that include
+very small ones \cite{fontanelli2025}, but the measured life panel does not resolve the two regimes:
+its local slopes by fifth of size are $0.26$, $0.17$, $0.14$, $0.23$, $0.27$ (production run, $n_{\min}=5$),
+with neither a steep small-firm end nor a flat top.  $\zeta_1\simeq0.2$ is the effective slope of the whole
+range.  The crossover scale grows with $D$, so the effective
 exponent does too: at $\sigma=1.70$, $\zeta_1=0.20$, $0.23$ and $0.25$ for $D=0.1$, $0.15$ and $0.2$
 ($n_{\min}=5$; SM, Sec.~S5).
 
@@ -503,7 +507,7 @@ range by exactly the factor by which it flattens the decline, and the product $\
 statistics of the field: $0.4$ in the model against $0.8$ in Compustat.  Keeping the interactions
 linear while softening only the self-limitation condenses the economy.
 
-\paragraph{With noise the range does not widen.}  The mapping ignores the noise, which does not
+\paragraph{With noise the trade-off breaks.}  The mapping ignores the noise, which does not
 transform with the sizes: $\sqrt{DS}\,dW$ in $S$ becomes $\theta\sqrt D\,u^{1-1/2\theta}dW$ in $u$, additive at
 $\theta=1/2$.  In simulations at the reference $\sigma$ and $D$ ($N=16000$, four economies per point; SM,
 Table~S8) a softer self-limitation slows the field down, the share of its variance that moves in
@@ -512,12 +516,15 @@ decline steepens instead of flattening: $\zeta_1=0.11$, $0.20$, $0.29$, $0.34$ f
 $0.5$, while the range stays at $1.7$--$2.0$ decades.  At $\theta=1/2$ the field moves as much as at the
 reference point for $\sigma=1.9$ (temporal share $0.18$), and there $\zeta_1=0.27$ over $2.1$ decades; at
 $\sigma=2.0$, where it moves more, $\zeta_1=0.19$ over $2.35$ decades.  Across these runs $\zeta_1R$ lies between $0.2$ and
-$0.58$ and the range never exceeds $2.4$ decades.  With noise the range is set by the newborn size:
-at $\theta=1$ it shrinks from $2.3$ to $1.7$ decades as $D$ grows from $0.05$ to $0.2$.  In every run the
-smallest lives have $v\simeq1.1$, the noise of newborns whatever $D$, and up to the curvature of the fit
-$\zeta_1R$ is $\log_{10}$ of the fall from there to the volatility of the largest firms, a factor $2.8$ at
-the reference point against $5.5$ in Compustat.  The exponent $\theta$ moves the floor of the largest
-firms, and with it the slope and the bend, but not the range.  A softer self-limitation also fattens the size
+$0.58$ and the range never exceeds $2.4$ decades.  The lower end of the range is set by the
+newborn size: the smallest bin sits at $\Sb\simeq0.3D$ in every run, so at $\theta=1$ the range shrinks from
+$2.3$ to $1.7$ decades as $D$ grows from $0.05$ to $0.2$.  The upper end is the plateau, about $3$ at
+$\theta=1$ and between $1.6$ and $6.7$ in the $\theta$ runs.  The smallest lives have $v\simeq1.1$ whatever $D$,
+so up to the curvature of the fit $\zeta_1R$ is $\log_{10}$ of the fall from there to the volatility of the
+largest firms: a factor $2.8$ at the reference point against $5.5$ in Compustat.  Across $D$ at $\theta=1$,
+$\zeta_1R$ stays at $0.35$--$0.43$ while the range moves.  The exponent $\theta$ moves the floor and the
+plateau, and with them the slope, the range and the bend, but in none of our runs does volatility fall
+by more than a factor $3.8$.  A softer self-limitation also fattens the size
 distribution (Hill index of the top $1\%$ from $4.6$ at $\theta=1$ to $2.0$ at $\theta=1/2$, $\sigma=2.0$) but returns
 the ratios to $q$ ($2.02$, $3.01$, $3.94$), while $\theta=1.5$ bends them further ($1.75$, $2.21$, $2.41$).
 
@@ -539,9 +546,10 @@ An economy of firms that compete on a heterogeneous network and are subject to b
 reproduces the shape of the size--volatility relation of firms: a monotone decline with effective
 exponent $0.2$ and a ratio curve $\zeta_q/\zeta_1$ that bends below $q$.  The theory is a one-firm problem:
 a logistic unit driven by a field whose mean falls and whose amplitude grows as the square root of its
-degree, plus its own noise.  The exponent is the effective slope of a crossover between a demographic regime
-of slope $-1/2$ and a fitness floor of slope $0$, which is the two-regime shape of data that include
-small firms \cite{fontanelli2025}.  The multiscaling has a simple origin: a volatility law of the form
+degree, plus its own noise.  The exponent is the effective slope of a crossover between a demographic part
+that falls with size and a nearly flat fitness floor, the two-regime shape of data that include small
+firms \cite{fontanelli2025}; in the model the two regimes appear in the decomposition but are not
+resolved in the measured panel.  The multiscaling has a simple origin: a volatility law of the form
 floor plus size-dependent part gives $\zeta_q=(q/2)b\langle w\rangle_q$, and the curve bends below $q$ exactly
 when the floor differs between firms of equal size.  Granular models give a fixed shape and ratios
 $q$; heterogeneous interactions give a heterogeneous floor and the bend.
@@ -550,8 +558,7 @@ The identity~\eqref{eq:identity} does not depend on the network model, and sugge
 firm data.  First, the dispersion of volatilities among firms of equal size should grow with size,
 and a measure of a firm's exposure to others---its number of customers, suppliers or competitors---
 should explain a growing share of it.  Second, conditioning on that exposure should move the ratio
-curve towards $q$.  The model also predicts that the decline steepens towards slope $-1/2$ for the
-smallest firms, below the sizes covered by Compustat.
+curve towards $q$.
 
 The model fails where the self-limitation it relies on bites: the range of the decline is two decades
 rather than four, sizes have no Pareto tail, and large firms are too volatile.  Section~\ref{sec:limits}

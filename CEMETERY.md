@@ -144,11 +144,27 @@ competition: the giants dominate every firm's field, yearly volatility about 3, 
 relative to m: condenses. Saturating pressure Σ α x_j/(K_i + K_j): Zipf-like (Hill 0.8–1.0) but
 β ≈ 0. A firm-specific scale makes volatility depend only on x/K, hence no size dependence.
 
+**Softer self-limitation, θ < 1** (2026-10-12, jobs `th*` in notebook 06, kept: it is the evidence of
+Sec. VIII). Self-limitation and interactions through S^θ. Without noise u = S^θ maps onto θ = 1 and the
+range would grow as 1/θ; with noise the field freezes at fixed σ (temporal share 0.17 → 0.02 at
+θ = 0.5), ζ_1 rises to 0.34 and the range stays near 2 decades (2.35 at σ = 2.0). Sizes get a fatter
+tail (Hill 4.6 → 2.0) but the ratios return to q. Volatility never falls by more than a factor 3.8.
+
+**D as the scale of the small-firm kink** (2026-10-12, idea only). The noise/floor crossover of the
+decomposition sits at a size ∝ D, which could place the kink reported by Fontanelli et al. The
+measured panel does not show the two regimes (local slopes 0.26, 0.17, 0.14, 0.23, 0.27 by fifth; the
+smallest fifth is at ~0.26 for every D), so the claim was dropped from the paper. Not tested further:
+where their kink sits in units of the mean firm, and whether a smaller D or longer lives resolve it.
+
 ## F. Superseded drafts and claims
 
 - **"Multiscaling comes from degree heterogeneity"** (thesis, balanced panel): under the spell panel
   the deterministic model's bend came from life cycles instead. In the demographic model the bend
   does come from the degree, through the fitness floor (see notebook 05).
+- **"The exponent and the range trade off, β·R fixed"** (paper Sec. VIII until 2026-10-12): true
+  only without noise; see the θ entry above.
+- **"The shape is the one reported for French firms"**: holds for the decomposition, not for the
+  measured panel; see the D entry above.
 - **Deterministic model as the paper's main model**: replaced by the demographic model, which has no
   hump and twice the range.
 - **Old reference point σ = 1.75, D = 0.1**: β = 0.19 at N = 8000 was inflated by a saturated graph;
