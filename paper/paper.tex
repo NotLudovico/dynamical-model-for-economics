@@ -199,7 +199,9 @@ their degree \cite{aguirrelopez,patil2026}:
 \label{eq:hdmft}
 \end{equation}
 with $\bar B$ the degree-weighted mean size and $\xi$ a Gaussian process whose correlation is the
-degree-weighted correlation of sizes.  Without noise and with a vanishing floor, the stationary sizes
+degree-weighted correlation of sizes.  On the reference graph this rule would link pairs of hubs with
+probability above one, and the classes are coupled by the soft-configuration kernel instead
+\cite{patil2026} (SM, Sec.~S2).  Without noise and with a vanishing floor, the stationary sizes
 are clipped Gaussians, and the unique fixed point of the composition loses stability when the Perron
 root of $\sigma^2\varphi_pK_{pr}$ reaches one, with $\varphi_p$ the fraction of surviving firms in class $p$
 and $K_{pr}$ the class kernel.  On an uncorrelated graph the stability operator has rank one, and to
@@ -209,22 +211,24 @@ first order in the degree variance
 \label{eq:sigmac}
 \end{equation}
 (SM, Sec.~S2).  Degree heterogeneity lowers the threshold because hubs feel a field of amplitude
-$\propto\sqrt\kappa$; competition raises it because it removes the noisiest firms.  The line on which the
+$\propto\sqrt\kappa$.  A mean interaction of either sign raises it: it makes the mean field depend on the
+degree, which spreads the classes' distances from extinction, and this spread stabilises the fixed point;
+to this order only $\mu^2$ enters.  The line on which the
 economy stops growing hardly depends on the network: where it meets the instability line, at
 $\sigma\simeq\sqrt2$, its shift is about a quarter of that of $\sigma_c$.
 
 \paragraph{Renewal law.}  With noise and turnover, a node whose field is constant is a renewal
 process: its successive lives are independent and identically distributed.  Equation~\eqref{eq:onefirm}
-at constant $\Phi=h$ is a one-dimensional diffusion with scale density
-$s'(y)=\exp[-(2/D)(hy-y^2/2)]$ and speed density $m(y)=2/(Dy\,s'(y))$, and by the renewal--reward theorem
-the fraction of time the node spends at size $x$ is
+at constant $\Phi=h$ is a one-dimensional diffusion with scale function $s(y)=\int_0^ys'(u)\,du$, where
+$s'(u)=\exp[-(2/D)(hu-u^2/2)]$, and by the renewal--reward theorem the fraction of time the node spends
+at size $x$ is
 \begin{gather}
-p(x\mid h)=\frac{s(\min(x,D))\,m(x)}{T(D)},\nonumber\\
-T(D)=\int_0^\infty s(\min(x,D))\,m(x)\,dx,
+p(x\mid h)=\frac{2\,s(\min(x,D))}{D\,x\,s'(x)\,T(D)},\nonumber\\
+T(D)=\int_0^\infty\frac{2\,s(\min(x,D))}{D\,x\,s'(x)}\,dx,
 \label{eq:renewal}
 \end{gather}
-with turnover rate $1/T(D)$.  The law has two parts: a Gaussian plateau of variance $D/2$ around $h$,
-and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
+with turnover rate $1/T(D)$.  The law has two parts: a plateau $\propto x^{-1}e^{-(x-h)^2/D}$, Gaussian of
+variance $D/2$ around $h$ for $h\gg\sqrt D$, and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
 exit times follow from the same quadratures and agree with direct simulation to $3\%$ (SM,
 Sec.~S3).
 
@@ -233,17 +237,18 @@ static self-consistency gives the mean sizes $\langle S\rangle_h$ and the suscep
 $\chi=\partial\langle S\rangle_h/\partial h$; the static state is stable while the Perron root of
 $\sigma^2{\rm diag}(\E\chi^2)K$ is below one.  Noise smooths $\chi$ and raises the line almost linearly with
 $D$ (SM, Fig.~S1): from $1.460$ to $1.577$ at $\alpha=2.5$ and from $1.399$ to $1.551$ at
-$\alpha=6$ between $D=0.003$ and $0.3$; as $D\to0$ it tends to the deterministic line ($1.399$ against
-$1.400$ at $\alpha=6$, and $\sqrt2$ on the complete graph).  The same theory predicts the turnover rate
-to $1\%$ below $\sigma_c$ and to $2\%$ above it, where it is no longer controlled ($\alpha=6$; SM,
-Sec.~S3).  Turnover is set by
-the nodes with $h<0$, where a newborn's life does not depend on $D$, and is nearly independent of the
+$\alpha=6$ between $D=0.003$ and $0.3$; at $D=0.003$ it agrees with the deterministic line to $0.002$
+($1.399$ against $1.400$ at $\alpha=6$, $1.413$ against $\sqrt2$ on the complete graph).  The same theory
+predicts the turnover rate to $1\%$ below $\sigma_c$ and to about $2\%$ above it, where it is no longer
+controlled ($\alpha=6$; SM, Sec.~S3).  Turnover is set by
+the nodes with $h<0$, where a newborn's life hardly depends on $D$, and is nearly independent of the
 noise.  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
 disorder.  On the reference graph competition raises $\sigma_c$ strongly, from $0.83$ at $\mu=0$ to $1.68$ at
-$\mu=-2.5$, because it removes the hubs, which carry the strongest fields; on the complete graph the
-line does not depend on $\mu$, and at $\alpha=6$ it barely does.  The zero-growth line is almost the same
-on the three graphs.  The reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
-the static estimate of the zero-growth line ($1.71$ at $D=0.1$), which is not controlled there.
+$\mu=-2.5$, because its degrees are the most spread, and with them the mean field across classes; on the
+complete graph the line does not depend on $\mu$, and at $\alpha=6$ it barely does.  Under strong
+competition the zero-growth line is almost the same on the three graphs, within $0.05$ for $\mu\le-1.25$;
+under weak competition it is lower on the reference graph ($0.50$ against $0.63$ and $0.64$ at $\mu=0$).  The reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
+the static estimate of the zero-growth line ($1.72$ at $D=0.1$), which is not controlled there.
 
 \begin{figure}[t]
 \includegraphics[width=\linewidth]{fig_phase.pdf}

@@ -82,7 +82,7 @@ main text: the field's mean falls linearly in $\kappa$ under competition and its
 $\sqrt\kappa$.
 
 \paragraph{Stability line.}  Without noise and floor, a relaxed composition has $S_p^*=\sigma\sqrt{q_p^*}
-[\Delta_p+z]_+$ with $\Delta_p=(a+\mu B_p^*)/\sigma\sqrt{q_p^*}$, $a=1-f^*$ and $z$ standard Gaussian.  With the
+[\Delta_p+z]_+$ with $\Delta_p=(a+\mu B_p^*)/(\sigma\sqrt{q_p^*})$, $a=1-f^*$ and $z$ standard Gaussian.  With the
 truncated moments $w_n(\Delta)=\int_{-\Delta}^\infty(\Delta+z)^n\phi(z)\,dz$, the survival fraction is
 $\varphi_p=w_0(\Delta_p)$.  A persistent perturbation of variance $Y_r$ in class $r$ produces in class $p$ a
 field of variance $\sigma^2K_{pr}Y_r$, which the survivors convert into $Y_p=\sigma^2\varphi_p\sum_rK_{pr}Y_r$; the
@@ -95,12 +95,17 @@ the threshold is
 \big\langle\kappa^2\Delta_\kappa w_1(\Delta_\kappa)\big\rangle=0,\qquad M=\mu\big\langle\kappa^{3/2}w_1(\Delta_\kappa)\big\rangle .
 \label{eq:sigmac}
 \end{equation}
-Writing $\kappa=1+\epsilon$ and expanding to second order in $\epsilon$ gives Eq.~(6) of the main text.  Equation
+Writing $\kappa=1+\epsilon$ and expanding to second order in $\epsilon$ gives Eq.~(6) of the main text.  At this
+order $\mu$ enters only through $\mu^2$: the terms odd in $\mu$, which lower or raise the survival of the hubs,
+cancel against the shift of the mean of $\Delta_\kappa$, and what remains is the variance $\mu^2\Var\kappa/(2\pi)$ of
+$\Delta_\kappa$ across classes.  Since $\Delta w_1(\Delta)$ is convex at $\Delta=0$ while $w_0$ has no curvature there,
+this spread lowers the mean of $\Delta_\kappa$ and with it the Perron root.  Beyond first order the dependence is
+not even: at $\alpha=3.5$ the exact relation gives $\sigma_c=1.32$ at $\mu=1$ and $1.29$ at $\mu=-1$.  Equation
 \eqref{eq:sigmac} agrees with the 60-class HDMFT to $0.002$ at $\alpha=6$ and $0.03$ at $\alpha=3.5$.  The
 zero-growth line, obtained by imposing $a=1$, shifts in $\mu$ with the degree variance by $c(\sigma)\Var\kappa$, with
 $c$ running from $0$ as $\sigma\to0$ to $5/4-\pi/2\simeq-0.32$ as $\sigma\to\sqrt2$.  There the regular-graph lines meet, at
 $\mu=-1$, and the zero-growth line $\mu=\Delta/w_1(\Delta)-1$, $\sigma^2w_2(\Delta)=1$ has slope $d\mu/d\sigma=-\pi/\sqrt2$; converted to a
-shift in $\sigma$ its shift is $0.14\Var\kappa$, about a quarter of the shift $(1-1/2\pi)\Var\kappa/\sqrt2=0.59\Var\kappa$
+shift in $\sigma$ its shift is $0.14\Var\kappa$, about a quarter of the shift $(1-1/(2\pi))\Var\kappa/\sqrt2=0.59\Var\kappa$
 of $\sigma_c$ from Eq.~(6) of the main text.  The full
 derivation, the tables against the 60-class theory and the simulated phase diagram of the
 deterministic model are in \texttt{notebooks/02\_phase\_diagram.ipynb}.
@@ -110,8 +115,8 @@ deterministic model are in \texttt{notebooks/02\_phase\_diagram.ipynb}.
 \label{sec:constant}
 
 \paragraph{Quadratures.}  At constant $\Phi$, Eq.~(3) is a diffusion with drift $S(\Phi-S)$ and diffusion
-coefficient $DS$, absorbed at $0$.  Its scale density is $s'(y)=\exp[-(2/D)(\Phi y-y^2/2)]$ and its speed
-density $m(y)=2/(Dy\,s'(y))$ \cite{karlintaylor1981}.  A newborn reaches its plateau before exiting with
+coefficient $DS$, absorbed at $0$.  Its scale density is $s'(y)=\exp[-(2/D)(\Phi y-y^2/2)]$, its scale function
+$s(y)=\int_0^ys'(u)\,du$ and its speed density $m(y)=2/(Dy\,s'(y))$ \cite{karlintaylor1981}.  A newborn reaches its plateau before exiting with
 probability
 \begin{equation}
 P_{\rm est}=\frac{\int_0^Ds'(y)\,dy}{\int_0^\Phi s'(y)\,dy}\qquad(\Phi>D),
@@ -162,11 +167,12 @@ B_p=\sum_rK_{pr}\E\langle S\rangle_{h_r},\qquad q_p=\sum_rK_{pr}\E\langle S\rang
 \sum_p\rho_p\E\langle S\rangle_{h_p}=1,
 \end{equation}
 with $\E$ the Gaussian average over $z$.  Counting the temporal fluctuations of $S$ in $q$ as if
-quenched moves the lines by less than $0.015$.  Stability is the Perron condition with
-$\chi=\partial\langle S\rangle_h/\partial h$ in place of the survival step.  Table~\ref{tab:phase} tests the
+quenched moves the lines by less than $0.015$.  Stability is the Perron condition with $\E\chi^2$, where
+$\chi=\partial\langle S\rangle_h/\partial h$, in place of the survival fraction (without noise $\chi$ is the
+survival step and $\E\chi^2=\varphi$).  Table~\ref{tab:phase} tests the
 turnover against simulation.  The share of the field variance that moves in time grows from $0.025$
-at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it by a factor $2$--$3$ below
-$\sigma_c$, because it omits the collective amplification of slow field fluctuations, which needs the
+at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it below $\sigma_c$, by a factor
+of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field fluctuations, which needs the
 two-time theory.
 
 \begin{figure}[h]
@@ -178,7 +184,7 @@ $D=0.1$, $N=4000$, $C=100$).  Source: \texttt{notebooks/02\_phase\_diagram.ipynb
 \end{figure}
 
 \begin{table}[h]
-\caption{Static renewal theory against simulation at $\alpha=6$, $D=0.1$, $N=4000$, $C=100$ (two economies
+\caption{Static renewal theory against simulation at $\alpha=6$, $\mu=-1.76$, $D=0.1$, $N=4000$, $C=100$ (two economies
 per $\sigma$; theory $\sigma_c=1.451$).  Source: \texttt{notebooks/02\_phase\_diagram.ipynb}.}
 \label{tab:phase}
 \begin{ruledtabular}
