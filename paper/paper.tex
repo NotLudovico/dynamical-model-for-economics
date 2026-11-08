@@ -1,5 +1,5 @@
 % The article: main text, then derivations, checks and robustness as appendices.  Restructured on
-% 2026-11-08 around the model-free criterion for the bend; the previous version is paper_v1.tex.
+% 2026-11-08 around the model-free criterion for the bend (earlier drafts are in the git history).
 % Build: latexmk -pdf paper.tex   (from this directory)
 %
 % Open (2026-11-08): the one-off numbers now come from notebooks 05 (all lives) and 07 (field statistics,
@@ -327,7 +327,7 @@ these statistics, and its closure holds on the measured sizes to $4$--$6\%$.  So
 Gaussian field, it gets the mean but not the temporal amplitude, which comes out $20$--$30\%$ low, or its
 spread at equal degree; at $C=200$ both depend on the few neighbours that dominate a firm's field, close to a
 marginal amplification (Appendix~\ref{app:closure}).  We therefore take
-the field's statistics from simulation.
+the field's statistics from simulation (\texttt{notebooks/07\_floor\_theory.ipynb}).
 
 \paragraph{The volatility law.}  In logs, Eq.~\eqref{eq:onefirm} reads
 $d\ln S=[\Phi-S-D/(2S)]\,dt+\sqrt{D/S}\,dW$.  Write $\ln S=y_F+\delta$, where $y_F$ solves the noise-free
@@ -357,7 +357,8 @@ the noise-free firm along the life's own field, and a demographic part $B$ that 
 is the two-part law of Eq.~\eqref{eq:twopart} with $u=V_F$.  Here we ask what the floor is made of, why
 it differs between lives of equal size, and whether Eqs.~\eqref{eq:identity}--\eqref{eq:lognormal}
 account for the panel.  Throughout, the volatility is the growth standard deviation, and the lives are
-those with at least $20$ growth rates in the two reference economies, unless stated otherwise.
+those with at least $20$ growth rates in the two reference economies, unless stated otherwise
+(\texttt{notebooks/05\_multiscaling.ipynb} and \texttt{notebooks/07\_floor\_theory.ipynb}).
 
 \paragraph{The floor is mostly entry and exit.}  A life of this length usually begins as a newborn at
 $S\simeq D$ and ends at an exit, so its noise-free path climbs to a plateau, follows the field there,
@@ -552,7 +553,7 @@ the plateau.
 
 The criterion of Sec.~\ref{sec:criterion} holds for any panel; the mechanism of Sec.~\ref{sec:floor} is a
 claim about where the dispersion at fixed size comes from.  It leads to four tests.  The model's numbers
-below are for the two reference economies, with the panel's estimator.
+below are for the two reference economies, with the panel's estimator (\texttt{notebooks/07\_floor\_theory.ipynb}).
 
 \paragraph{1. The dispersion at fixed size grows with size.}  For lives with at least $20$ growth rates the
 within-bin variance of $\ln v$ grows from $0.048$ in the smallest fifth of sizes to $0.162$ in the largest.

@@ -1,46 +1,58 @@
 # A dynamical model for economics
 
-Can an economy of **interacting** firms explain how firm-growth volatility depends on size? A
-generalised Lotka–Volterra model of firms on a scale-free network, with interactions and
-self-limitation measured in units of the mean firm, birth–death noise and turnover:
+Companion code to the article on how the growth volatility of interacting firms depends on their size.
+
+Firm growth volatility falls with size as $E[v^q\mid\bar S]\sim\bar S^{-\zeta_q}$, with ratios $\zeta_q/\zeta_1$
+below $q$. Whenever a firm's growth variance is a floor plus a part that falls with size,
+$\zeta_q=(q/2)\,b\,\langle w\rangle_q$, and the ratios bend below $q$ only if the floors differ between firms of
+equal size. The model is an economy in which they do: a generalised Lotka–Volterra economy of firms on a
+scale-free network, with interactions and self-limitation in units of the mean firm, birth–death noise and
+turnover:
 
 $$dx_i = x_i\Big[1 - \frac{x_i}{m} + \sum_j J_{ij}\frac{x_j}{m}\Big]dt + \sqrt{D\,m\,x_i}\,dW_i,\qquad m = \langle x\rangle,$$
 
-with a newborn of size $Dm$ replacing every firm that reaches zero. For lives with at least 20 growth
-rates it gives a monotone size–volatility decline ($\zeta_q = 0.25, 0.44, 0.59, 0.69$ against Compustat's
-$0.20, 0.39, 0.51, 0.58$) and a ratio curve $\zeta_q/\zeta_1 = 1.78, 2.35, 2.76$ that bends below $q$ as in
-Compustat ($1.95, 2.55, 2.90$), with a derived mechanism: a firm's growth variance is a
-fitness floor plus a demographic part, $\zeta_q = (q/2)\,b\,\langle w\rangle_q$, and the curve bends only if the
-floor differs between firms of equal size — which on the network it does, through the degree. It does
-not give Zipf's law or a four-decade range, and the reason is structural.
+with a newborn of size $Dm$ replacing every firm that reaches zero. A firm's floor holds the climb after its
+entry and the collapse before its exit, spread over its life, so floors differ with the length of a life and
+with the degree of its node. At the minimum life length that matches the data (five growth rates), the
+model gives $\zeta_q = 0.209, 0.400, 0.561, 0.685$ against Compustat's $0.20, 0.39, 0.51, 0.58$, and ratios
+$1.92, 2.69, 3.28$ against $1.95, 2.55, 2.90$. It caps firm size, so it has no Zipf law and its decline
+spans two decades rather than four.
 
 ## Notebooks
 
-Theory, code and figures together. Run them in order; each loads cached results from `data/` and
-recomputes what is missing.
+Theory, code and figures together. Every number and figure in the paper is printed or written by one of them or by the scripts below.
+Each loads cached results from `data/` and recomputes what is missing.
 
-| notebook | content | runtime with cache |
+| notebook | content | in the paper |
 |---|---|---|
-| [`01_model`](notebooks/01_model.ipynb) | the facts, the model, relative sizes, a small economy, the MSB protocol | 40 s |
-| [`02_phase_diagram`](notebooks/02_phase_diagram.ipynb) | HDMFT, closed-form $\sigma_c$, zero growth, chaos vs trapping; renewal law and $\sigma_c(D)$ | 2.5 min |
-| [`03_life_cycles`](notebooks/03_life_cycles.ipynb) | deterministic limit: fitness law, one-firm surrogate, kill rule, lifetime law | 1 min |
-| [`04_volatility_law`](notebooks/04_volatility_law.ipynb) | one firm is enough; field law; $v^2\simeq V_F+B$ | 20 s |
-| [`05_multiscaling`](notebooks/05_multiscaling.ipynb) | the multiscaling identity and its test; regular-graph ablation | 1.5 min |
-| [`06_facts`](notebooks/06_facts.ipynb) | every MSB fact, collective bursts, robustness, the $b$ null, no Zipf | 2 min |
+| [`01_model`](notebooks/01_model.ipynb) | the facts, the model, relative sizes, a small economy, the panel protocol | background |
+| [`02_phase_diagram`](notebooks/02_phase_diagram.ipynb) | mean-field theory, $\sigma_c$, zero growth, renewal law, where the facts hold | Figs. strip and phase; mean-field and constant-field appendices |
+| [`04_volatility_law`](notebooks/04_volatility_law.ipynb) | one firm is enough; the field; $v^2\simeq V_F+B$ | Sec. one firm; reduction appendix |
+| [`05_multiscaling`](notebooks/05_multiscaling.ipynb) | the identity and its test; regular graph; all lives | Fig. mechanism, table of cases; identity appendix |
+| [`06_facts`](notebooks/06_facts.ipynb) | every MSB fact, bursts, robustness, the fits, rescaled growth | Sec. data, Figs. facts, fits and tails; robustness and protocol appendices |
+| [`07_floor_theory`](notebooks/07_floor_theory.ipynb) | what the floor is made of, lifetimes, the field's statistics, predictions | Secs. floors and predictions; field statistics |
 
-Without the cache, the reference economies (notebooks 04–05, about an hour each) and the robustness
-runs (notebook 06, 80 economies, hours on many cores) are simulated on first use.
+The reference economies (notebooks 04, 05, 07) take about an hour each to simulate without the cache, and the
+robustness runs of notebook 06 (80 economies) hours on many cores.
+
+## Scripts
+
+| script | what it does | in the paper |
+|---|---|---|
+| [`two_time_dmft.py`](scripts/two_time_dmft.py) | stationary two-time mean-field closure solved by sampling, with or without measured inputs | closure appendix |
+| [`phase_onset.py`](scripts/phase_onset.py) | replica test of the noisy instability line | constant-field appendix |
+| [`msb_curves.py`](scripts/msb_curves.py) | reads the Compustat rescaled-growth densities from the vector paths of the MSB figures | protocol appendix |
 
 ## Layout
 
 ```
-notebooks/      the six notebooks above, and economy.py: the code they share (graphs, the demographic
-                integrator, the MSB life-panel estimators, the stored reference economies); code
-                that only one notebook uses lives in that notebook
+notebooks/      the notebooks above, and economy.py: the code they share (graphs, the demographic integrator,
+                the panel estimators, the stored reference economies and their life table)
+scripts/        the three scripts above
 data/           cached results (small ones tracked; data/demographic/ is large and gitignored)
-paper/          PRE draft (paper.tex with appendices, bib.bib); figures/ is written by the notebooks
+paper/          the article (paper.tex with appendices, bib.bib); figures/ is written by the notebooks;
+                derivations.tex holds working notes written for an earlier draft
 CEMETERY.md     every model and protocol tried and abandoned, and why
-tesi.pdf        the submitted thesis (deterministic model)
 ```
 
 ## Install and run
@@ -48,6 +60,7 @@ tesi.pdf        the submitted thesis (deterministic model)
 ```bash
 uv sync                      # numpy, scipy, networkx, matplotlib, joblib, jupyter
 uv run jupyter lab           # open notebooks/
+cd paper && tectonic -X compile paper.tex
 ```
 
 ## License

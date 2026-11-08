@@ -159,8 +159,9 @@ where their kink sits in units of the mean firm, and whether a smaller D or long
 ## F. Superseded drafts and claims
 
 - **"Multiscaling comes from degree heterogeneity"** (thesis, balanced panel): under the spell panel
-  the deterministic model's bend came from life cycles instead. In the demographic model the bend
-  does come from the degree, through the fitness floor (see notebook 05).
+  the deterministic model's bend came from life cycles instead. In the demographic model it comes
+  from floors that differ between firms of equal size, mostly through the length of their lives
+  and partly through the degree (notebooks 05 and 07).
 - **"The exponent and the range trade off, β·R fixed"** (paper Sec. VIII until 2026-10-12): true
   only without noise; see the θ entry above.
 - **"The shape is the one reported for French firms"**: holds for the decomposition, not for the
@@ -180,3 +181,15 @@ where their kink sits in units of the mean firm, and whether a smaller D or long
   long windows, survivor checks); the first demographic batch and its draft figures (`batch.py`,
   `paper_figures.py`); four thesis-era notebooks (`graph_role`, `meandeg_scaling`, `own_vs_mean`,
   `scale_fix`).
+- **"The mean field at equal degree is fat-tailed (excess kurtosis 2.1)"** (paper until 2026-11-08): an
+  artifact of pooling degree classes whose top class spans κ from 2.6 to 98. Within classes the excess
+  kurtosis is 0.3, and a Gaussian spread gives the same panel. What the two-time closure misses is the
+  spread of field amplitudes at equal degree (notebook 07, spread tests).
+- **Removed before submission (2026-11-08):** notebook 03 (`03_life_cycles`, the deterministic limit:
+  fitness law, one-firm surrogate, kill rule, lifetime law; caches `data/lifecycle/fit_*.npz`), whose
+  theory is in the thesis and is redone for the demographic model in notebook 07, and which still
+  used the peak-started fit of section A; the noise-versus-interactions ablation (`fig_ablation.pdf`,
+  `data/lifecycle/ablation_*` and `law_*`, from a script never in the repo: noise alone gives the
+  decline with ratios q, interactions alone the bend without the decline); the superseded drafts
+  `paper/paper_v1.tex` and `paper/sm.tex`; and, from the tracked files, `tesi.pdf` and the
+  `.claude/memory/` notes.
