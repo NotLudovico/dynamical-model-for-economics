@@ -22,3 +22,10 @@ paper/*.log
 paper/*.out
 paper/*Notes.bib
 paper/*.synctex.gz
+paper/*.toc
+
+# Build output of the standalone thesis notes
+thesis/
+
+# Unreferenced spell caches (~110 MB)
+data/headline_spells/
