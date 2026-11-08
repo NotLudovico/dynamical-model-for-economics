@@ -51,10 +51,7 @@ predicts ratios $1.86$, $2.56$, $3.09$ against $1.77$, $2.35$, $2.78$ measured o
 $2.90$ in Compustat).  On a graph with equal degrees the floor of large firms stays small against their noise,
 and the ratios return close to $q$: the degree, which sets the amplitude of a firm's field, makes the
 differences of floor visible.  The same self-limitation that produces the decline caps firm size, so the model
-has no Zipf law and the decline spans about two decades rather than four.  Without noise a softer
-self-limitation would trade the exponent for the range; with noise the range runs from the newborn
-size to the plateau, volatility falls by at most a factor $4$ across it, and a softer self-limitation
-fattens the size distribution but removes the bend.
+has no Zipf law and the decline spans about two decades rather than four.
 \end{abstract}
 
 \maketitle
@@ -128,10 +125,9 @@ Our results are the following.
   dips of the field at a memoryless rate that we derive, so at fixed size the floor varies mainly with the
   life length.  Its heterogeneity predicts the measured ratio curve.  The degree keeps the floor of
   large firms large against their noise; on a graph with equal degrees the ratios return close to $q$.
-\item A comparison with every MSB fact (Sec.~\ref{sec:facts}) and a structural limit
-  (Sec.~\ref{sec:limits}): the self-limitation that makes volatility depend on size also caps firm
-  size, so the decline spans two decades, from the newborn size to the plateau, and the model has no
-  Zipf law; softening the self-limitation fattens the size distribution but removes the bend.
+\item A comparison with every MSB fact (Sec.~\ref{sec:facts}) and a structural limit: the
+  self-limitation that makes volatility depend on size also caps firm size, so the decline spans two
+  decades, from the newborn size to the plateau, and the model has no Zipf law.
 \end{enumerate}
 Derivations, numerical checks and robustness tests are in the appendices.  Every number and figure
 is printed or drawn by a notebook of the companion code \cite{code}; the appendix captions name it.
@@ -361,13 +357,10 @@ for slowly relaxing firms and to $D\langle S^{-2}\rangle$ for fast ones.
 \paragraph{Test.}  For every life with at least $20$ growth rates in the two reference economies we
 compute $V_F$ by integrating the noise-free equation along the life's measured field, and $B$ from
 its sizes.  Equation~\eqref{eq:law} reproduces the measured volatility to within $5\%$ above the lowest decile of $\Sb$, and $9\%$ in
-it (Fig.~\ref{fig:mechanism}a; Table~\ref{tab:law}).  A
-version without the filter, $\Var(\Delta\ln\Phi)+D\Delta t\langle S^{-1}\rangle$ over the steps where
-$\Phi>0$, overestimates the volatility by a factor $1.6$ in the lowest decile and $1.1$ in the highest,
-and nearly doubles the slope ($0.32$ against $0.17$).  The excess is all in the field term:
-$\sqrt{\Var\Delta\ln\Phi}$ falls from $0.92$ to $0.44$ with size while $\sqrt{V_F}$ stays at
-$0.32$--$0.37$.  A firm does not follow the fast part of its field, least of all a small firm,
-whose field is low and therefore fluctuates strongly in relative terms.
+it (Fig.~\ref{fig:mechanism}a; Table~\ref{tab:law}).  The field part $\sqrt{V_F}$ stays at
+$0.32$--$0.37$ across sizes, although $\sqrt{\Var\Delta\ln\Phi}$ falls from $0.92$ to $0.44$: a firm does
+not follow the fast part of its field, least of all a small firm, whose field is low and therefore
+fluctuates strongly in relative terms.
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_mechanism.pdf}
@@ -625,62 +618,6 @@ Compustat value.  Source: \texttt{notebooks/02\_phase\_diagram.ipynb}.}
 \end{itemize}
 
 %======================================================================
-\section{Why the range is short and there is no Zipf law}
-\label{sec:limits}
-
-The self-limitation $-x_i/m$ in Eq.~\eqref{eq:model} does two jobs.  It bounds a firm whose field stays
-favourable, which keeps the economy from condensing onto the best niche, and its restoring rate is
-what makes volatility depend on size: the demographic part of Eq.~\eqref{eq:law} is filtered at the
-rate $S$, and the floor is set by how a firm on its plateau $x=m\Phi$ follows its field.  Both rely on the
-plateau, and the plateau caps firms at a few times the mean.  The decline therefore runs from a few
-times the newborn size $D$, below which lives are too short to measure, to the plateau: about two
-decades at the reference point for lives with at least five growth rates, the sample we use in this
-section ($1.4$ for $n_{\min}=20$, whose lives do not reach the newborn sizes).
-
-\paragraph{Without noise the exponent and the range trade off.}  Replace the self-limitation and the interactions by
-powers, $(x_i/m)^\theta$ and $\sum_jJ_{ij}(x_j/m)^\theta$.  Without noise, $u_i=S_i^\theta$ obeys the
-$\theta=1$ model with time rescaled by $\theta$, and since $\ln S=\theta^{-1}\ln u$,
-\begin{equation}
-\zeta_1^{(S)}=\theta\,\zeta_1^{(u)},\qquad R_S=R_u/\theta,
-\label{eq:product}
-\end{equation}
-with $R$ the number of decades over which volatility declines (exactly if a life's size is its geometric
-mean, which commutes with the power).  A softer self-limitation widens the
-range by the factor by which it flattens the decline, and the product $\zeta_1R$ is fixed by the
-statistics of the field: $0.4$ in the model against $0.8$ in Compustat.  Keeping the interactions
-linear while softening only the self-limitation condenses the economy.
-
-\paragraph{With noise the trade-off breaks.}  The mapping ignores the noise, which does not
-transform with the sizes: $\sqrt{DS}\,dW$ in $S$ becomes $\theta\sqrt D\,u^{1-1/2\theta}dW$ in $u$, additive at
-$\theta=1/2$.  In simulations at the reference $\sigma$ and $D$ ($N=16000$, four economies per point; Table~\ref{tab:theta}) a softer self-limitation slows the field down, the share of its variance that moves in
-time falling from $0.17$ at $\theta=1$ to $0.02$ at $\theta=1/2$, so volatility becomes demographic and the
-decline steepens instead of flattening: $\zeta_1=0.11$, $0.20$, $0.29$, $0.34$ for $\theta=1.5$, $1$, $0.75$,
-$0.5$, while the range stays at $1.7$--$2.0$ decades.  At $\theta=1/2$ the field moves as much as at the
-reference point for $\sigma=1.9$ (temporal share $0.18$), and there $\zeta_1=0.27$ over $2.1$ decades; at
-$\sigma=2.0$, where it moves more, $\zeta_1=0.19$ over $2.35$ decades.  Across these runs $\zeta_1R$ lies between $0.2$ and
-$0.58$ and the range never exceeds $2.4$ decades.  The lower end of the range is set by the
-newborn size: the smallest bin sits at $\Sb\simeq0.3D$ in every run, so at $\theta=1$ the range shrinks from
-$2.3$ to $1.7$ decades as $D$ grows from $0.05$ to $0.2$.  The upper end is the plateau, about $3$ at
-$\theta=1$ and between $1.6$ and $6.7$ in the $\theta$ runs.  The smallest lives have $v\simeq1.1$ whatever $D$,
-so up to the curvature of the fit $\zeta_1R$ is $\log_{10}$ of the fall from there to the volatility of the
-largest firms: a factor $2.8$ at the reference point against $5.5$ in Compustat.  Across $D$ at $\theta=1$,
-$\zeta_1R$ stays at $0.35$--$0.43$ while the range moves.  The exponent $\theta$ moves the floor and the
-plateau, and with them the slope, the range and the bend, but in none of our runs does volatility fall
-by more than a factor $3.8$.  A softer self-limitation also fattens the size
-distribution (Hill index of the top $1\%$ from $4.6$ at $\theta=1$ to $2.0$ at $\theta=1/2$, $\sigma=2.0$) but returns
-the ratios to $q$ ($2.02$, $3.01$, $3.94$), while $\theta=1.5$ bends them further ($1.75$, $2.21$, $2.41$).
-
-\paragraph{Other ways out.}  Without self-limitation, growth is Gibrat-like, the condition under which a
-lower barrier gives Zipf's law \cite{gabaix1999}, but the quenched part of the field is not removed and
-the economy condenses onto the best niche.  Giving each firm its own scale, a capacity $K_i$ that
-moves in time, keeps the plateau but makes volatility depend only on $S_i/K_i$, so a Zipf law of
-capacities comes with $\zeta_1=0$; making competitors act through their absolute sizes lets the largest
-firms dominate every field.  A model with both a Zipf law and a volatility law over four decades
-needs a size dependence of the dynamics that is not tied to a plateau, which in a one-variable model
-means an explicit exponent.  We read this as a limit of self-limited growth rather than of the
-particular model.
-
-%======================================================================
 \section{Discussion}
 \label{sec:discussion}
 
@@ -709,8 +646,7 @@ $1.92$, $2.74$, $3.44$ and $\zeta_1$ from $0.25$ to $0.38$ (lives with at least 
 \texttt{notebooks/07\_floor\_theory.ipynb}).
 
 The model fails where the self-limitation it relies on bites: the range of the decline is two decades
-rather than four, sizes have no Pareto tail, and large firms are too volatile.  Section~\ref{sec:limits}
-shows that these failures are tied together.  Open problems are a two-time theory with noise and
+rather than four, sizes have no Pareto tail, and large firms are too volatile.  Open problems are a two-time theory with noise and
 turnover, which would give the field's correlation above $\sigma_c(D)$ and with it the floor $v_F$ and
 $\zeta_1(\sigma,D)$ without simulation; the rising co-movement with size, which involves the common mode
 of a finite economy; and a dynamics that decouples the volatility decline from the size cap.
@@ -861,8 +797,33 @@ $\chi=\partial\langle S\rangle_h/\partial h$, in place of the survival fraction 
 survival step and $\E\chi^2=\varphi$).  Table~\ref{tab:phase} tests the
 turnover against simulation.  The share of the field variance that moves in time grows from $0.025$
 at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it below $\sigma_c$, by a factor
-of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field fluctuations, which needs the
-two-time theory.
+of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field
+fluctuations.  The two-time closure includes it, but at $C=200$ only in part.
+
+\paragraph{Two-time closure.}  At the reference point we solve Eq.~\eqref{eq:app-closure} in the stationary
+state, $q_p(t,t')=q_p(t-t')$, by sampling the effective process \cite{eissfeller1992,roy2019}: draw $\eta_p$ from
+$q_p$, integrate Eq.~\eqref{eq:onefirm} with exit and re-entry, measure $\E[S_r(t)S_r(t+\tau)]$ and iterate
+(\texttt{scripts/two\_time\_dmft.py}).  We use $31$ classes, of equal population in the bulk and of equal degree
+mass in the tail; each sampled node carries its own degree, its field is scaled by $k/k_p$, and the
+neighbour averages are weighted by degree.  Evaluated with the measured sizes, Eq.~\eqref{eq:app-closure}
+gives the temporal and frozen parts of the measured field to within $4\%$ and $6\%$ from $\kappa\simeq0.4$ to
+$4.7$.  The self-consistent solution reproduces the mean field to within the difference between the two
+economies ($0.63$ against $0.59$ and $0.31$ at $\kappa\simeq0.4$), but its temporal amplitude is $0.71$--$0.81$ of
+the measured one in every class ($0.96$ against $1.34$ at $\kappa\simeq0.4$), and its correlation is gone by
+$\tau=16$, where the measured one is still $0.05$--$0.13$.  The life panel of the solution has $\zeta_1=0.34$
+and ratios $1.85$, $2.53$, $3.07$, against $0.25$ and $1.79$, $2.37$, $2.80$ for the full model.
+
+The loss comes from a spread the closure leaves out.  At $C=200$ a few strongly fluctuating neighbours
+dominate the temporal field of a node, so its amplitude varies between nodes of equal degree, with a
+coefficient of variation of $0.24$--$0.36$; the closure, exact for $C\to\infty$, replaces this spread by its
+mean.  Started from the measured state of one economy, one step of the iteration returns $0.955\pm0.01$ of
+the temporal field variance (three replicas).  Driving each node instead with the time-mean field and the
+temporal amplitude of a measured node of its class returns $1.02\pm0.03$.  A loss of $4.5\%$ per step
+that halves the self-consistent temporal variance means a loop gain of about $0.9$: the temporal field at
+the reference point is set close to marginal amplification, which is also why leaving the amplification
+out, as the static closure does, costs so much.  Predicting its amplitude needs a closure at finite $C$ that keeps the spread
+between nodes, such as the cavity method on a tree solved by population dynamics; in the main text we
+take it from simulation.
 
 \paragraph{Onset in simulation.}  Since the closure is least accurate near $\sigma_c$, we locate the onset
 directly.  For each $\sigma$ we run two replicas on each of two graphs ($\alpha=6$, $\mu=-1.76$, $D=0.1$,
@@ -1137,31 +1098,6 @@ $C=200$ is saturated: merging multi-edges removes $40\%$ of the edge ends.  At $
 $\sigma\in\{1.70,1.72\}$ and $D\in\{0.1,0.15,0.2\}$ gives $\zeta_1=0.17$--$0.25$ ($n_{\min}=5$), with $\zeta_1$ growing
 with $D$ and falling with $\sigma$; the reference point $\sigma=1.70$, $D=0.1$ gives $\zeta_q=0.198$, $0.382$, $0.537$,
 $0.657$.
-
-\paragraph{Softer and harder self-limitation.}  Table~\ref{tab:theta} replaces the self-limitation and
-the interactions by $(x_i/m)^\theta$ and $\sum_jJ_{ij}(x_j/m)^\theta$ (Sec.~\ref{sec:limits}) at $\alpha=2.5$, $D=0.1$, $C=200$,
-$N=16000$, four economies per row, none in a burst.  The temporal share of the field variance is measured on
-one economy with $N=8000$ over a window of $100$.
-
-\begin{table*}[t]
-\caption{Self-limitation exponent $\theta$ with noise ($n_{\min}=5$).  $R$: decades spanned by the $25$ bins;
-$\pm$: standard deviation of $\zeta_1R$ between economies; volatility of the smallest and largest bin;
-Hill index of the top $1\%$ of sizes.  The $\theta=1$ row is the retune economy at the reference point.
-Source: \texttt{notebooks/06\_facts.ipynb}.}
-\label{tab:theta}
-\begin{ruledtabular}
-\begin{tabular}{ccccccccc}
-$\theta$ & $\sigma$ & $\zeta_1$ & $R$ & $\zeta_1R$ & $\zeta_q/\zeta_1$ & volatility & size Hill & temporal share\\
-\hline
-1.5 & 1.70 & 0.105 & 1.89 & $0.20\pm0.04$ & 1.75, 2.21, 2.41 & 1.12, 0.62 & 6.7 & 0.204\\
-1 & 1.70 & 0.198 & 2.00 & $0.40\pm0.04$ & 1.93, 2.71, 3.32 & 1.11, 0.41 & 4.6 & 0.165\\
-0.75 & 1.70 & 0.289 & 1.98 & $0.57\pm0.03$ & 2.03, 3.05, 4.05 & 1.11, 0.30 & 3.8 & 0.125\\
-0.5 & 1.70 & 0.338 & 1.71 & $0.58\pm0.01$ & 2.08, 3.24, 4.45 & 1.11, 0.29 & 2.7 & 0.018\\
-0.5 & 1.90 & 0.266 & 2.13 & $0.57\pm0.03$ & 2.05, 3.12, 4.18 & 1.12, 0.33 & 2.2 & 0.176\\
-0.5 & 2.00 & 0.186 & 2.35 & $0.44\pm0.01$ & 2.02, 3.01, 3.94 & 1.12, 0.45 & 2.0 & 0.262\\
-\end{tabular}
-\end{ruledtabular}
-\end{table*}
 
 %======================================================================
 \section{Protocol}
