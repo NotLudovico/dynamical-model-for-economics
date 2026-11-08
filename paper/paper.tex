@@ -2,11 +2,12 @@
 % 2026-11-08 around the model-free criterion for the bend; the previous version is paper_v1.tex.
 % Build: latexmk -pdf paper.tex   (from this directory)
 %
-% Open: the within-class kurtosis of the mean field
-% (notebook 04 pools standardised classes); the fixed-year trimming, within-bin dispersion, life-length
-% shares, all-lives sd panel and the 2.66/2.16 sqrt(kappa) field fits come from one-off scripts and should
-% move into notebook 07; the all-lives curve in Fig. mechanism (c).  Every figure in figures/ is written by
-% a notebook in ../notebooks/.
+% Open (2026-11-08): the one-off numbers now come from notebooks 05 (all lives) and 07 (field statistics,
+% spread tests, predictions); the within-class kurtosis is 0.3, not 2.1 (notebook 04 pooled a top class
+% spanning kappa 2.6-98).  Those cells, and Fig. mechanism, must be run on the Mac's reference economies (the
+% Linux copies differ); the red \todo{} numbers come from the Linux copies and are to be replaced.
+% figS_moment_fits.pdf is a draft from the Linux copy of the production run; notebook 06 rewrites it.  Every
+% figure in figures/ is written by a notebook in ../notebooks/.
 \documentclass[pre,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{graphicx}
@@ -113,8 +114,8 @@ $\zeta_1\simeq0.2$ and a ratio curve below $q$, though less bent than Compustat'
 fails elsewhere (Sec.~\ref{sec:data}): the self-limitation that makes volatility depend on size also caps
 firm size, so the decline spans two decades rather than four and there is no Zipf law.  Its theory is a
 one-firm problem given three statistics of the field.  Heterogeneous mean-field theory gives their form,
-but not the amplitude of the field's motion or the tail of its spread at equal degree, which at finite
-connectivity are set close to marginal amplification; we take them from simulation
+but not the amplitude of the field's motion, which at finite connectivity is set close to marginal
+amplification, or how that amplitude differs between firms of equal degree; we take them from simulation
 (Appendix~\ref{app:closure}).
 
 The mechanism leads to tests on firm data (Sec.~\ref{sec:predictions}).  The dispersion of volatilities
@@ -274,7 +275,7 @@ v=\sqrt{\frac{\pi}{2}}\,\frac1n\sum_{t=1}^{n}\big|g_t-\bar g\big|,\qquad
 \label{eq:vol}
 \end{equation}
 the factor making $v$ the standard deviation for Gaussian growth.  Exponents are least-squares slopes of
-$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins.  We compare with data on lives with at
+$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:fits}).  We compare with data on lives with at
 least five growth rates, the cut that matches MSB's (Sec.~\ref{sec:data}), and test the theory on lives with
 at least $20$, long enough to estimate each life's floor.  The comparison with data uses seven
 economies with $N=32000$; the theory tests use two with $N=16000$.
@@ -312,18 +313,20 @@ statistics are a one-firm problem, given the statistics of the field.
 
 \paragraph{Three statistics of the field.}  A node's mean field falls with its degree, from $0.5$ at
 $\kappa\simeq0.4$ to $-2.3$ at $\kappa\simeq2$: hubs compete with more firms.  Among nodes of equal degree the
-mean field has a spread of $2.66\sqrt\kappa$ in standard deviation, with a fat tail (excess kurtosis $2.1$),
-and around its mean the field moves with amplitude $2.16\sqrt\kappa$ (as $\kappa^{0.54}$ in a fit over nodes)
-and decorrelates over about $4$ time units.  These three statistics are enough.  Driving each firm by a
-Gaussian field with its node's time mean, its temporal amplitude and one correlation function gives
-$\zeta_1=0.23$ and ratios $1.78$, $2.37$, $2.81$, against $0.25$ and $1.79$, $2.37$, $2.80$ for the full model.
-Reshuffling the means among nodes of similar degree changes little ($0.28$; $1.81$, $2.42$, $2.86$), but
-setting them to their mean in the degree class sends the ratios back towards $q$ ($1.93$, $2.79$, $3.56$).
-The essential input is the spread of the mean field among firms of equal degree.  HDMFT,
-Eq.~\eqref{eq:hdmft}, gives the form of these statistics, and its closure holds on the measured sizes to
-$4$--$6\%$.  Solved self-consistently with a Gaussian field, it gets the mean but not the temporal amplitude,
-which comes out $20$--$30\%$ low, or the tail of the spread; at $C=200$ both depend on the few neighbours that
-dominate a firm's field, close to a marginal amplification (Appendix~\ref{app:closure}).  We therefore take
+mean field has a spread of $2.66\sqrt\kappa$ in standard deviation, close to Gaussian (excess kurtosis
+$0.3$), and around its mean the field moves with amplitude $2.15\sqrt\kappa$ (as $\kappa^{0.54}$ across degree
+classes), which differs between nodes of equal degree by about $30\%$, and decorrelates over about $4$ time
+units.  These three statistics are enough.  Driving each firm by a Gaussian field with its node's time mean,
+its temporal amplitude and one correlation function gives $\zeta_1=0.23$ and ratios $1.78$, $2.37$, $2.81$,
+against $0.25$ and $1.79$, $2.37$, $2.80$ for the full model.  Two spreads among firms of equal degree carry
+the bend.  Setting the amplitudes to their value in the degree class raises $\zeta_1$ and weakens the bend
+(\todo{$0.28$; $1.84$, $2.51$, $3.03$}), and setting the means to their class value as well sends the ratios
+back towards $q$ ($1.93$, $2.79$, $3.56$); the shape of the spread of the means does not matter, since a
+Gaussian spread of the same variance gives the same panel.  HDMFT, Eq.~\eqref{eq:hdmft}, gives the form of
+these statistics, and its closure holds on the measured sizes to $4$--$6\%$.  Solved self-consistently with a
+Gaussian field, it gets the mean but not the temporal amplitude, which comes out $20$--$30\%$ low, or its
+spread at equal degree; at $C=200$ both depend on the few neighbours that dominate a firm's field, close to a
+marginal amplification (Appendix~\ref{app:closure}).  We therefore take
 the field's statistics from simulation.
 
 \paragraph{The volatility law.}  In logs, Eq.~\eqref{eq:onefirm} reads
@@ -453,10 +456,10 @@ with size.
 lives with at least $20$ growth rates).  (a) Measured growth volatility by decile of life-mean size, the law
 $\sqrt{V_F+B}$ of Eq.~\eqref{eq:law} and its two parts.  (b) Dispersion at fixed size, $s^2=\Var(\ln(V_F+B)\mid\Sb)$
 with $B$ at its bin mean, by fifth of size.  (c) Ratio curves, measured and from each life's own floor with
-$B$ at its bin mean, with the growth standard deviation as the volatility.}
+$B$ at its bin mean, with the growth standard deviation as the volatility; dotted: all lives with at least two
+growth rates (power-law graph, Table~\ref{tab:cases}).}
 \label{fig:mechanism}
 \end{figure*}
-% TODO: add the all-lives curve of Table~\ref{tab:cases} to panel (c).
 
 \section{Comparison with firm data}
 \label{sec:data}
@@ -606,8 +609,9 @@ spread them, entries and exits, and the co-movement of large firms all come from
 interacting firms.
 
 Two limits are clear.  The theory is a one-firm problem given three statistics of the field, but at finite
-connectivity a Gaussian closure predicts neither the amplitude of the field's motion nor the fat tail of
-its spread at equal degree, both set close to a marginal amplification; a closure that keeps the
+connectivity a Gaussian closure predicts neither the amplitude of the field's motion, set close to a
+marginal amplification, nor its spread between firms of equal degree, which carries part of the bend; a
+closure that keeps the
 differences between firms of equal degree, such as the cavity method solved by population dynamics, is
 open.  And the model spreads the whole distribution of volatilities at fixed size, while in Compustat only
 its upper tail spreads; the self-limitation that makes volatility depend on size also caps firm size, so
@@ -876,14 +880,17 @@ driving each node instead with the mean field and temporal amplitude of a measur
 returns $1.02\pm0.03$.  A loss of $4.5\%$ per step that halves the self-consistent temporal variance means a
 loop gain of about $0.9$: the temporal field is set close to marginal amplification.
 
-\paragraph{With measured inputs.}  Taking the temporal field from simulation, an amplitude $2.16\sqrt\kappa$
+\paragraph{With measured inputs.}  Taking the temporal field from simulation, an amplitude $2.15\sqrt\kappa$
 and an exponential correlation with the $1/e$ time of the class-weighted measured correlation, $4.5$, and
 solving for the rest, the panel has $\zeta_1=0.26$ and ratios $1.85$, $2.54$, $3.08$; the volatility of the
 smallest and largest bins is $0.71$ and $0.37$, against $0.70$ and $0.32$.  The frozen spread is then
 $12$--$15\%$ low.  Fixing it at its measured $2.66\sqrt\kappa$ leaves $\zeta_1$ at $0.26$ but moves the ratios
-only to $1.83$, $2.49$, $2.98$, against $1.81$, $2.42$, $2.86$ with the measured mean fields reshuffled within
-degree and $1.78$, $2.37$, $2.81$ with each node's own (Sec.~\ref{sec:onefirm}).  The bend depends on the shape
-of the spread of mean fields at equal degree, whose fat tail a Gaussian closure cannot produce.
+only to $1.83$, $2.49$, $2.98$, against $1.78$, $2.37$, $2.81$ with each node's own mean field and amplitude
+(Sec.~\ref{sec:onefirm}).  The difference is the spread of amplitudes at equal degree, which the closure
+replaces by its mean: with each node's own mean field and the amplitude of its class, the one-firm panel
+has \todo{$\zeta_1=0.28$ and ratios $1.84$, $2.51$, $3.03$}, as the closure has.  The shape of the spread of
+mean fields plays no role: about a trend in the node's own degree it is close to Gaussian, with excess
+kurtosis $0.3$ in every class, and a Gaussian spread of the same variance gives the same panel.
 
 %======================================================================
 \section{One-firm reduction and volatility law}
@@ -1158,6 +1165,20 @@ $2.67$) for $n_{\min}=10$ and $0.254$, $0.452$, $0.598$, $0.701$ ($1.78$, $2.35$
 $2.0$, $1.8$ and $1.4$ decades: the ratios lie above $q$ for $n_{\min}=2$ and below from $n_{\min}=5$, as the
 estimation noise of short lives requires (Sec.~\ref{sec:criterion}), and the range shrinks because long lives
 do not occur at the newborn sizes.
+
+\paragraph{The fits.}  Figure~\ref{fig:fits} shows the lines behind the exponents of Table~\ref{tab:facts}.  For
+$q\le2$ the residuals stay within $0.1$ in log units; for $q=3$ and $4$ the end bins lie above the lines.
+
+\begin{figure*}[t]
+\centering
+\includegraphics{figS_moment_fits.pdf}
+\caption{Fits of the volatility moments behind Table~\ref{tab:facts} (production run, seven economies, $N=32000$).
+Top: $\E[v^q\mid\Sb]$ in the $25$ equal-count bins of $\Sb$ (markers) and the least-squares lines whose slopes are
+the exponents $\zeta_q$, each scaled to one at the middle of the range.  Bottom: residuals about the lines, in log
+units.  (a) Lives with at least five growth rates, the cut compared with Compustat; (b) at least $20$, the cut of
+the theory tests.  Source: \texttt{notebooks/06\_facts.ipynb}.}
+\label{fig:fits}
+\end{figure*}
 
 \paragraph{The tail index $b$.}  For lives with at least two growth rates the model gives
 $b=4.39$--$4.44$ at every parameter point, close to the Compustat value $4.6$.  A null with iid Laplace

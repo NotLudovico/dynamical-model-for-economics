@@ -30,3 +30,4 @@
 - [Decline-beta peak instability](reference-decline-beta-peak-instability.md) — argmax-peak fit start makes beta jump ~0.09 on spells
 - [Bouchaud-Mezard test](project-bouchaud-mezard-test.md) — mean-field BM fails all MSB facts but Zipf; vol rises with size
 - [Region in (mu, sigma, D)](project-region-mu-sigma-d.md) — slab above sigma_c(mu,D); D enters via sigma_c, dsc/dD 0.30-0.49; width empirical
+- [Field spread shape](project-field-spread-shape.md) — mean-field kurtosis 2.1 was a top-class artifact (true +0.33); the amplitude spread at equal degree carries the closure gap

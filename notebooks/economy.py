@@ -3,7 +3,7 @@
 graphs        powerlaw_coupling (networkx, the thesis-era phase grid), configuration_coupling (numpy, large N)
 dynamics      integrate_demographic: the model with birth-death noise and turnover, in relative sizes
 measurement   lives, zeta_bins, hill: the Moran-Secchi-Bouchaud (MSB) life panel and its exponents
-reference     the paper's reference point, its two stored economies and the per-life volatility law
+reference     the paper's reference point, its two stored economies, the per-life volatility law and life table
 plotting      tidy; paper_style, panel, save_paper and the colours PAL, FIFTHS for the paper figures
 
 Sign convention: mu > 0 is mean competition (the notebooks' text uses mu < 0).
@@ -226,6 +226,27 @@ def decomposition(kind="powerlaw"):
     if not f.exists():
         np.savez(f, rows=np.concatenate([life_rows(s, kind) for s in SEEDS]))
     return np.load(f)["rows"]
+
+
+LIFE_COLS = ("Sbar", "v", "n", "varg", "deg", "born", "exits")
+
+
+def life_table(kind="powerlaw"):
+    """Every life with >= 2 growth rates of both reference economies, as columns: Sbar, v (the panel's estimator, as
+    in `lives`), n, var g (the growth variance, for the standard deviation as the volatility), the node's degree,
+    born (the life starts with a birth inside the window) and exits (it ends with an exit inside the window).
+    Cached in TRAJ/life_table_<kind>.npz."""
+    f = TRAJ / f"life_table_{kind}.npz"
+    if not f.exists():
+        rows = []
+        for s in SEEDS:
+            d = np.load(simulate_reference(s, kind))
+            S, L, deg = d["S"].astype(float), d["L"], d["deg"]
+            T = S.shape[1]
+            rows += [(x[0], x[1], x[2], np.mean(x[3] ** 2), deg[x[5]], x[6] > 0, x[6] + x[2] < T - 1) for x in lives(S, L)]
+        np.savez(f, rows=np.array(rows, float))
+    rows = np.load(f)["rows"]
+    return {k: rows[:, j] for j, k in enumerate(LIFE_COLS)}
 
 
 # ---------------------------------------------------------------------------------------------- plotting
