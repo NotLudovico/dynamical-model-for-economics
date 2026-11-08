@@ -20,3 +20,5 @@
 - [n_min=5 switch done](project-nmin5-switch.md) — data comparison at n_min=5 (MSB like-for-like), theory tests at 20; prod re-run locally 2026-11-08
 - [V_F floor theory](project-vf-floor-theory.md) — floor = plateau core + entry/exit transients; bend from life-length heterogeneity
 - [Depth collapse](project-depth-collapse.md) — zeta_1 and bend set by sigma - sigma_c; zero-growth line crosses the working band for mu -1.25..-2.25
+- [Bouchaud-Mezard test](project-bouchaud-mezard-test.md) — mean-field BM fails all MSB facts but Zipf; vol rises with size
+- [Region in (mu, sigma, D)](project-region-mu-sigma-d.md) — slab above sigma_c(mu,D); D enters via sigma_c, dsc/dD 0.30-0.49; width empirical
