@@ -17,6 +17,6 @@
 - [Write models in x](feedback-write-models-in-x.md) — state models as x_i' = x_i[...] with m=<x>, not in S or shares
 - [Parallel screening](feedback-parallel-screening.md) — propose many variants, screen in parallel via scripts/screen with a fixed scorecard; CPU 12 cores, GPU Polaris unusable as is
 - [Model complexity](feedback-model-complexity.md) — three-layer market model rejected as too complicated; one layer, few params
-- [n_min=5 switch pending](project-nmin5-switch.md) — MSB rolling-quarter growth: their 20 = our 5; TODO in paper.tex, user runs it
+- [n_min=5 switch done](project-nmin5-switch.md) — data comparison at n_min=5 (MSB like-for-like), theory tests at 20; prod re-run locally 2026-11-08
 - [V_F floor theory](project-vf-floor-theory.md) — floor = plateau core + entry/exit transients; bend from life-length heterogeneity
 - [Depth collapse](project-depth-collapse.md) — zeta_1 and bend set by sigma - sigma_c; zero-growth line crosses the working band for mu -1.25..-2.25
