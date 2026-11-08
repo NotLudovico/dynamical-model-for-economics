@@ -1,16 +1,16 @@
-% The article on the demographic-noise model: main text, then derivations, checks and robustness as
-% appendices (formerly the Supplemental Material, sm.tex).
-% Build: tectonic -X compile paper.tex   (from this directory)
+% The article: main text, then derivations, checks and robustness as appendices.  Restructured on
+% 2026-11-08 around the model-free criterion for the bend; the previous version is paper_v1.tex.
+% Build: latexmk -pdf paper.tex   (from this directory)
 %
-% Draft status (2026-10-12): rewritten around the demographic model, with the multiscaling
-% mechanism as the main result.  Reference point alpha 2.5, sigma 1.70, D 0.1, C 200.  No \todo{}
-% is open.  Every figure in
-% figures/ is written by a notebook in ../notebooks/.
+% Open: the within-class kurtosis of the mean field
+% (notebook 04 pools standardised classes); the fixed-year trimming, within-bin dispersion, life-length
+% shares, all-lives sd panel and the 2.66/2.16 sqrt(kappa) field fits come from one-off scripts and should
+% move into notebook 07; the all-lives curve in Fig. mechanism (c).  Every figure in figures/ is written by
+% a notebook in ../notebooks/.
 \documentclass[pre,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{graphicx}
 \usepackage{xcolor}
-\graphicspath{{figures/}}
 \usepackage[hidelinks]{hyperref}
 
 \newcommand{\E}{\mathbb E}
@@ -18,6 +18,7 @@
 \newcommand{\Sb}{\bar S}
 \newcommand{\PhiN}{\Phi_{\mathcal N}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\graphicspath{{figures/}}
 
 \begin{document}
 
@@ -26,35 +27,22 @@
 \date{\today}
 
 \begin{abstract}
-The growth volatility of firms falls with their size as $\E[v^q\mid\Sb]\sim\Sb^{-\zeta_q}$ with
-$\zeta_1\simeq0.2$, and the ratios $\zeta_q/\zeta_1$ fall below $q$: the shape of the volatility
-distribution changes with size.  Granular models, in which a firm is a sum of independent parts,
-give a volatility law of fixed shape and therefore $\zeta_q=q\zeta_1$.  We study instead an economy of
-interacting firms: a generalised Lotka--Volterra model on a scale-free network, with interactions
-and self-limitation measured in units of the mean firm, birth--death noise, and replacement of
-exiting firms by newborns.  Heterogeneous mean-field theory gives the line above which the economy
-keeps fluctuating, and a renewal law, exact for a node at constant field, predicts its turnover.  In the
-fluctuating phase each firm behaves as a logistic unit driven by its own field, whose amplitude
-grows as the square root of its degree.  A firm's growth variance is then the sum of a fitness floor,
-nearly independent of size, and a demographic part that falls with size, so the model's exponent,
-$\zeta_1=0.20$--$0.25$ depending on the shortest lives kept, is the effective slope of a crossover from a
-slope near $-0.4$ to slope $0$.  It is set by a single variable, the depth of the economy in the fluctuating phase,
-and economies that compete moderately and whose mean firm grows slowly lie in the band of depths where it matches
-the data.  We show that for any such two-part law
-$\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $w$ the demographic share of the variance, and that the ratio
-curve bends below $q$ only if the floor differs between firms of equal size, and always does when the law
-of the floor does not change with size.  The floor contains the climb
-from the newborn size and the final collapse, spread over the life, and lives end in dips of the field at
-a memoryless rate given by Rice's formula and the exact extinction probability of a branching process, so
-at fixed size the floor differs mainly because lives differ in length.  The floor's heterogeneity alone
-predicts ratios $1.86$, $2.56$, $3.09$ against $1.77$, $2.35$, $2.78$ measured on the same lives ($1.95$, $2.55$,
-$2.90$ in Compustat).  On a graph with equal degrees the floor of large firms stays small against their noise,
-and the ratios return close to $q$: the degree, which sets the amplitude of a firm's field, makes the
-differences of floor visible.  The same self-limitation that produces the decline caps firm size, so the model
-has no Zipf law and the decline spans about two decades rather than four.  Without noise a softer
-self-limitation would trade the exponent for the range; with noise the range runs from the newborn
-size to the plateau, volatility falls by at most a factor $4$ across it, and a softer self-limitation
-fattens the size distribution but removes the bend.
+The growth volatility of firms falls with their size as $\E[v^q\mid\Sb]\sim\Sb^{-\zeta_q}$, and the ratios
+$\zeta_q/\zeta_1$ lie below $q$: the dispersion of volatilities among firms of equal size grows with size.
+Granular models, in which a firm is a sum of independent parts, give ratios equal to $q$ when
+well-diversified firms dominate the moments and close to $1$ when firms made of a few parts do; the data
+lie between.  We show that
+whenever a firm's growth variance is a floor plus a part that falls with size,
+$\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $w$ the share of the falling part, and the ratios bend below $q$
+only if floors differ between firms of equal size.  We then build a dynamical economy in which they do: firms
+interact on a scale-free network through generalised Lotka--Volterra dynamics, with birth--death noise
+and turnover.  Each firm reduces to a logistic unit driven by its own field.  Its floor contains the
+climb after entry and the collapse before exit, and lives end in dips of the field at a rate we derive,
+so floors differ with the length of a life and with the degree of its node.  With equal degrees the
+floors barely differ and the ratios return to $q$, as the criterion requires.  Sizes, entries, exits and the co-movement of firms, which grows with size as
+in the data, are outputs of the dynamics, not inputs.  The model gives
+$\zeta_1\simeq0.2$, as in firm data, and a ratio curve below $q$, though less bent than in the data; it
+caps firm size and has no Zipf law.  We derive tests of the mechanism on firm data.
 \end{abstract}
 
 \maketitle
@@ -63,530 +51,243 @@ fattens the size distribution but removes the bend.
 \section{Introduction}
 \label{sec:intro}
 
-Large firms grow less erratically than small ones, but much more erratically than a sum of
-independent parts would.  If $v$ is the volatility of a firm's growth rate and $\Sb$ its mean size
-over its life, the conditional moments in Compustat scale as
+Large firms grow less erratically than small ones, but much more erratically than a sum of independent
+parts would.  If $v$ is the volatility of a firm's growth rate and $\Sb$ its mean size over its life,
+the conditional moments in Compustat scale as
 \begin{equation}
 \E[v^q\mid\Sb]\sim\Sb^{-\zeta_q},
 \label{eq:zeta}
 \end{equation}
-with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$,
-over four decades of size \cite{stanley1996,amaral1997,sutton2002,moran2024}.  The ratios
-$\zeta_q/\zeta_1=1.95$, $2.55$, $2.90$ lie below $q$ \cite{moran2024}.  If a firm's volatility were a
-function of its size times a random factor with a size-independent law, the ratios would be exactly
-$q$; the bend means that the dispersion of volatilities among firms of equal size grows with size.
-Moran, Secchi and Bouchaud \cite{moran2024} (MSB) add further facts: the volatility divided by its
-size-conditional mean has a universal distribution with a power-law tail of index $b\simeq4.6$,
-rescaled growth rates stay fat-tailed at every size, multi-year growth is persistent, and a firm's
-co-movement with the aggregate rises with its size.  Firm sizes follow Zipf's law \cite{axtell2001}.
+with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$ over four decades of size
+\cite{stanley1996,amaral1997,sutton2002,moran2024}.  The ratios $\zeta_q/\zeta_1=1.95$, $2.55$, $2.90$ lie
+below $q$ \cite{moran2024}.  If a firm's volatility were a function of its size times a random factor
+whose law does not depend on size, the ratios would be exactly $q$.  The bend therefore says that firms of
+equal size differ more in volatility the larger they are.  Firm sizes themselves follow Zipf's law
+\cite{axtell2001}.
 
 Granular models, in which a firm is a sum of subunits with independent shocks
-\cite{wyartbouchaud2003,gabaix2011}, give $\zeta_1<1/2$ when the subunit sizes are broad, but in
-their scaling regime the law of the rescaled volatility does not depend on size, so
-$\zeta_q=q\zeta_1$; MSB show that they also fail the universality of the volatility distribution and
-the absence of Gaussianisation \cite{moran2024}.  Data that include very small firms show a steep
-decline, close to slope $-1/2$, for small firms and a nearly flat relation for large ones
-\cite{fontanelli2025}, which suggests a crossover rather than a single power law.
+\cite{wyartbouchaud2003,gabaix2011}, give $\zeta_1<1/2$ when the subunit sizes are broad.  Moran, Secchi
+and Bouchaud (MSB) derive their higher moments \cite{moran2024}.  Well-diversified firms give
+$\zeta_q=q\zeta_1$, but large firms made of a few subunits, whose volatility does not fall with size,
+dominate every moment of order two and above, which then all fall with the same exponent, about $0.2$:
+the ratios would be close to $1$.  The data lie between the two limits.  MSB attribute their departure
+from $q$ to subdominant corrections from the tail of the volatility distribution, and show that granular
+models also miss the shape of that distribution and the fat tails of growth rates at every size.  They
+conclude that granular mechanisms alone cannot account for the data, and point to the co-movement of
+firms, which grows with size, as the missing ingredient \cite{moran2024,herskovic2020}: firms made of
+independent parts do not co-move.  What
+makes the dispersion of volatilities grow with size, and by as much as it does, has not been explained.
 
-Here we ask whether interactions between firms can produce these facts.  Our starting point is the
-disordered generalised Lotka--Volterra (GLV) model, whose strongly interacting phase keeps
-fluctuating: species exchange the roles of rare and abundant, and each behaves as a logistic unit
-driven by a coloured Gaussian field \cite{roy2020,mallmin2024,arnouxbunin2024}.  We make three
-changes to adapt it to firms.  Interactions and self-limitation are measured in units of the mean
-firm, so that the economy has no preferred size and grows at a rate the dynamics selects.  Firms
-sit on a scale-free network, as production and competition networks do
-\cite{acemoglu2012,carvalho2019}.  And the immigration that keeps species from extinction is
-replaced by birth--death noise with turnover: a firm that reaches zero exits and a newborn takes its
-place.  The model has five parameters: the mean $\mu$ and spread $\sigma$ of the interactions, the
-degree tail $\alpha$ and mean degree $C$, and the noise $D$.  Anomalous moment scaling has been derived
-for GLV communities before: with multiplicative environmental noise and migration, abundances are
-power-law distributed and obey Taylor's law, $\langle N^{1+p}\rangle\propto\langle N\rangle^{1+D/T}$ with
-a single exponent for every $p$ \cite{alhiyasat2026}; the mean-field equation there is the
-Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000} with GLV interactions.  That law concerns
-the moments of an abundance, with an exponent independent of the order; ours concerns the moments of
-the growth volatility conditioned on size, whose exponents grow with $q$ and bend below $q\zeta_1$.
-Neither network structure nor turnover enters there.
+We answer in two steps.  The first does not depend on a model (Sec.~\ref{sec:criterion}).  The ratio
+curve lies below $q$ exactly where the dispersion of the rescaled volatility grows with size.  If a
+firm's growth variance is a floor plus a part that falls with size, as when a firm's own noise is
+averaged out by its size, the exponents obey $\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $b$ the slope of the
+falling part and $w$ its share, and the dispersion grows only if the floors differ between firms of
+equal size.  The noise of estimating a volatility from a short life acts the other way, because short
+lives are concentrated among small firms; this is why the measured bend depends on the shortest lives
+kept.
 
-Our results are the following.
-\begin{enumerate}
-\item The phase diagram (Sec.~\ref{sec:phase}): heterogeneous mean-field theory gives the line
-  $\sigma_c$ above which the composition of the economy keeps changing, in closed form to first
-  order in the degree variance, and its shift with the noise, $\sigma_c(D)$, from a static closure
-  built on the renewal law of a single node at constant field, which also predicts the turnover rate;
-  simulations place the onset within $0.05$ of the line.
-\item One firm is enough (Sec.~\ref{sec:onefirm}): a firm driven by its own measured field and its own
-  noise reproduces the size--volatility statistics of the full economy, and the field follows
-  the degree-resolved mean-field law: its mean falls and its temporal amplitude grows as $\sqrt\kappa$ with
-  the relative degree $\kappa$.
-\item A volatility law (Sec.~\ref{sec:law}): a firm's growth variance is a fitness floor, nearly
-  independent of size, plus demographic noise filtered by the firm's relaxation.  The exponent
-  $\zeta_1$ is the effective slope of the crossover between them.
-\item The multiscaling mechanism (Sec.~\ref{sec:multiscaling}), our main result: for any law of the
-  form floor plus size-dependent part, $\zeta_q=(q/2)\,b\,\langle w\rangle_q$ up to a composition term, and the ratio curve
-  bends below $q$ only if the floor differs between firms of equal size.  The floor is a plateau
-  part plus the climb from the newborn size and the final collapse spread over the life; lives end in
-  dips of the field at a memoryless rate that we derive, so at fixed size the floor varies mainly with the
-  life length.  Its heterogeneity predicts the measured ratio curve.  The degree keeps the floor of
-  large firms large against their noise; on a graph with equal degrees the ratios return close to $q$.
-\item A comparison with every MSB fact (Sec.~\ref{sec:facts}) and a structural limit
-  (Sec.~\ref{sec:limits}): the self-limitation that makes volatility depend on size also caps firm
-  size, so the decline spans two decades, from the newborn size to the plateau, and the model has no
-  Zipf law; softening the self-limitation fattens the size distribution but removes the bend.
-\end{enumerate}
-Derivations, numerical checks and robustness tests are in the appendices.  Every number and figure
-is printed or drawn by a notebook of the companion code \cite{code}; the appendix captions name it.
+The second step is a dynamical economy of interacting firms in which floors differ
+(Secs.~\ref{sec:economy}--\ref{sec:floor}).  A granular model takes the structure of each firm as given and
+its shocks as independent.  Here nothing about a firm is put in: its size, its entry and exit, the length
+of its life and its co-movement with other firms all follow from one dynamics with a few parameters.  We start
+from the disordered generalised Lotka--Volterra (GLV) model, whose strongly interacting phase keeps
+fluctuating, each species behaving as a logistic unit driven by a coloured Gaussian field
+\cite{roy2020,mallmin2024,arnouxbunin2024}.  We measure interactions and self-limitation in units of the
+mean firm, so that the economy has no preferred size, place firms on a scale-free network
+\cite{acemoglu2012,carvalho2019}, and replace immigration by birth--death noise with turnover: a firm
+that reaches zero exits and a newborn takes its node.  Each firm then reduces to a logistic unit in its
+own field, and its growth variance to a floor and a demographic part.  The floor contains the climb
+after entry and the collapse before exit, spread over the life, and lives end in dips of the field at a
+rate given by Rice's formula and the extinction probability of a branching process.  Floors therefore
+differ with the length of a life and with the degree of its node, which sets the amplitude of its field.
+On a graph with equal degrees they barely differ, and the ratios return close to $q$.  Anomalous moment
+scaling has been derived for GLV communities before: with multiplicative environmental noise and migration,
+abundances obey Taylor's law with a single exponent for every order \cite{alhiyasat2026}, through the
+Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000}.  That law concerns the moments of an abundance;
+ours concerns the moments of the growth volatility conditioned on size, whose exponents bend below
+$q\zeta_1$, and depends on the network and on turnover.
+
+At the minimum life length that matches the data, the model gives a monotone decline with
+$\zeta_1\simeq0.2$ and a ratio curve below $q$, though less bent than Compustat's, and
+fails elsewhere (Sec.~\ref{sec:data}): the self-limitation that makes volatility depend on size also caps
+firm size, so the decline spans two decades rather than four and there is no Zipf law.  Its theory is a
+one-firm problem given three statistics of the field.  Heterogeneous mean-field theory gives their form,
+but not the amplitude of the field's motion or the tail of its spread at equal degree, which at finite
+connectivity are set close to marginal amplification; we take them from simulation
+(Appendix~\ref{app:closure}).
+
+The mechanism leads to tests on firm data (Sec.~\ref{sec:predictions}).  The dispersion of volatilities
+among firms of equal size should grow with size; the length of a firm's observed life should explain a
+growing share of it; trimming the years after entry and before exit should move the ratio curve towards
+$q$ and steepen the decline; and adding short lives should push the curve towards or above $q$.
+Derivations, checks and robustness tests are in the appendices, and every number is printed by a
+notebook of the companion code \cite{code}.
 
 %======================================================================
-\section{Model}
-\label{sec:model}
+\section{When the ratio curve bends}
+\label{sec:criterion}
 
-We consider $N$ firms with sizes $x_i$, $i=1,\dots,N$, and call $m=N^{-1}\sum_jx_j$ the mean firm.
-The firms sit on the nodes of a configuration-model graph with degree law $p(k)\propto k^{-\alpha}$ and
-mean degree $C$, and their sizes evolve as
+\paragraph{Dispersion at fixed size.}  Write a firm's volatility as its conditional mean times a rescaled
+volatility, $v=m(\Sb)\,X$ with $\E[X\mid\Sb]=1$, and let $K_q(\Sb)=\ln\E[X^q\mid\Sb]$.  Then
+$\ln\E[v^q\mid\Sb]=q\ln m+K_q$, and since $K_1=0$,
+\begin{equation}
+\zeta_q=q\,\zeta_1-\frac{dK_q}{d\ln\Sb}.
+\label{eq:general}
+\end{equation}
+$K_q$ is convex in $q$ and vanishes at $q=0$ and $q=1$, so for $q>1$ it measures the dispersion of $X$,
+weighted more towards its upper tail as $q$ grows.  The ratio curve lies below $q$ where this dispersion
+grows with size, on $q$ where it does not change, and above $q$ where it shrinks.  For a lognormal $X$,
+with $\sigma^2(\Sb)$ the variance of $\ln X$, $K_q=q(q-1)\sigma^2/2$ and
+\begin{equation}
+\zeta_q=q\,\zeta_1-\frac{q(q-1)}{2}\,\frac{d\sigma^2}{d\ln\Sb}.
+\label{eq:general-lognormal}
+\end{equation}
+Granular models show both limits \cite{moran2024}.  When well-diversified firms set the moments, the law
+of $X$ does not depend on size and $\zeta_q=q\zeta_1$.  When firms made of a few subunits, whose volatility
+does not fall with size, set them, the upper tail of $X$ stretches with size so fast that $\zeta_q$ no longer
+depends on $q$ for $q\ge2$.  A model of the bend has to say why the dispersion grows, and by how much.
+
+In Compustat, $\zeta_2-2\zeta_1=-0.01$, within the uncertainties of the exponents, while
+$\zeta_3-3\zeta_1=-0.09$ and $\zeta_4-4\zeta_1=-0.22$ \cite{moran2024}.  The second moment of $X$ hardly
+changes with size; the third and fourth grow.  The dispersion that grows with size is therefore in the
+upper tail of the rescaled volatility, and the collapse of its distribution that MSB report can only be
+approximate there.
+
+\paragraph{A floor and a falling part.}  Suppose that a firm's squared volatility is a floor $u_i$ plus a
+part $B(\Sb)$ common to all firms of the same size, up to an estimation factor $\epsilon_i$:
+\begin{equation}
+v_i^2=\big(u_i+B(\Sb_i)\big)\,\epsilon_i^2 .
+\label{eq:twopart}
+\end{equation}
+Let $b=-d\ln B/d\ln\Sb$ be the local slope of the falling part and $w=B/(u+B)$ its share of the variance.
+If $\epsilon$ is independent of $u$ and of size, differentiating $\ln\E[v^q\mid\Sb]$ gives
+\begin{equation}
+\zeta_q=\frac q2\,b\,\langle w\rangle_q-c_q,\qquad
+\langle w\rangle_q=\frac{\E\big[(u+B)^{q/2}\,w\mid\Sb\big]}{\E\big[(u+B)^{q/2}\mid\Sb\big]},
+\label{eq:identity}
+\end{equation}
+where the composition term $c_q$ vanishes when the law of the floor at fixed size does not change with
+size (Appendix~\ref{app:multiscaling}).  The exponent is the slope of the falling part times its share of
+the variance, weighted by $v^q$: largest where the falling part dominates and zero where the floor does.
+
+\paragraph{The criterion.}  With $Y=u+B$, $\langle w\rangle_q=B\,\E[Y^{q/2-1}]/\E[Y^{q/2}]$.  Since
+$\ln\E[Y^{q/2}]$ is convex in $q$, $\langle w\rangle_q$ does not increase with $q$, and it is constant only if
+$Y$ is the same for all firms of equal size.  When $c_q=0$,
+\begin{equation}
+\frac{\zeta_q}{\zeta_1}=q\,\frac{\langle w\rangle_q}{\langle w\rangle_1}\le q,
+\label{eq:bend}
+\end{equation}
+with equality if and only if the floor does not vary between firms of equal size.  When $c_q\neq0$ one
+direction survives: a floor that is the same for every firm of a given size, however it depends on size,
+gives $\zeta_q=q\zeta_1$, like a granular model of well-diversified firms.  If $\ln Y$ is Gaussian at fixed size with variance $s^2$,
+\begin{gather}
+\frac{\zeta_q}{\zeta_1}\simeq q\,e^{-(q-1)s^2/2},\nonumber\\
+s^2=\Var\big(\ln(u+B)\mid\Sb\big)\simeq(1-w)^2\Var(\ln u\mid\Sb),
+\label{eq:lognormal}
+\end{gather}
+the last form for a narrow floor.  This is Eq.~\eqref{eq:general} at work: as the falling part
+shrinks with size the floors show through, $w$ falls and $s^2$ grows.  A heterogeneous floor bends the
+curve only where it is not small against the falling part, which is among the large firms.
+
+\paragraph{Estimation noise.}  The factor $\epsilon$ cancels in the ratios only if its law does not depend
+on size.  A volatility estimated from $n$ growth rates by their mean absolute deviation has
+$\Var\ln\epsilon\simeq(\pi/2-1)/n$ for Gaussian growth, and by their standard deviation about $1/(2n)$;
+fat tails raise both.  Wherever small firms live shorter, $\Var\ln\epsilon$ falls with size and, by
+Eq.~\eqref{eq:general-lognormal}, pushes the ratio curve above $q$.  Short lives can therefore hide a bend
+or reverse it.  In the model, all lives with at least two growth rates give ratios $2.83$, $5.00$, $7.30$
+with the standard deviation as the volatility, and the bend appears as the shortest lives are dropped (Sec.~\ref{sec:floor}).  In firm data the same
+effect makes the ratio curve depend on the minimum life length, which should be reported with it.
+
+\paragraph{Three cases.}  Equations~\eqref{eq:general}--\eqref{eq:lognormal} account for the three panels of
+the model: on a scale-free network the dispersion at fixed size grows from $s^2=0.02$ in the smallest
+fifth of sizes to $0.26$ in the largest and the ratios bend; on a graph with equal degrees it stays below
+$0.05$ and the ratios are close to $q$; with all lives the estimation noise dominates and the ratios lie
+above $q$ (Sec.~\ref{sec:floor}).
+
+%======================================================================
+\section{An economy of interacting firms}
+\label{sec:economy}
+
+\paragraph{Model.}  We consider $N$ firms with sizes $x_i$ and call $m=N^{-1}\sum_jx_j$ the mean firm.  The
+firms sit on the nodes of a configuration-model graph with degree law $p(k)\propto k^{-\alpha}$ and mean
+degree $C$, and their sizes evolve as
 \begin{equation}
 dx_i=x_i\Big[1-\frac{x_i}{m}+\sum_jJ_{ij}\frac{x_j}{m}\Big]dt+\sqrt{D\,m\,x_i}\;dW_i ,
 \label{eq:model}
 \end{equation}
-where the $W_i$ are independent Wiener processes.  The couplings are $J_{ij}=A_{ij}(\mu/C+\sigma z_{ij}/\sqrt C)$,
-with $A$ the adjacency matrix and $z_{ij}$ independent standard Gaussians ($z_{ij}$ and $z_{ji}$ are
-uncorrelated); $\mu<0$ means that competition dominates on average.
+with independent Wiener processes $W_i$.  The couplings are $J_{ij}=A_{ij}(\mu/C+\sigma z_{ij}/\sqrt C)$, with
+$A$ the adjacency matrix and $z_{ij}$ independent standard Gaussians, $z_{ij}$ and $z_{ji}$ uncorrelated;
+$\mu<0$ means that competition dominates on average.  A firm that reaches zero is replaced by a newborn of
+size $Dm$ on the same node, the size at which the noise $\sqrt{Dmx_i}$ equals $x_i$, so entries occur where
+and when the dynamics makes firms exit.  Every term is homogeneous of degree one in the sizes: the economy
+has no preferred scale, and the mean firm grows at a rate the dynamics selects.  The noise unit grows
+with the economy, and can be read as an indivisible piece of business, such as a contract or a customer.
 
-Since $x_i=0$ is absorbing and Eq.~\eqref{eq:model} has no source, firms would only disappear, so to
-keep the economy stationary we replace a firm that reaches zero by a newborn of size $Dm$ with the same
-node and couplings.  The number of firms then stays $N$, entries occur at the rate of exits set by the
-dynamics, and $Dm$ is the size at which the noise $\sqrt{D\,m\,x_i}$ equals $x_i$.  In
-ecological models extinct species come back through a constant immigration \cite{altieri2021,bunin2017};
-here a firm enters only when and where another one has left.
-
-Apart from the normalisation, Eq.~\eqref{eq:model} is the standard GLV: the carrying capacity and the
-unit of interaction are both the mean firm, and the noise is the birth--death noise of stochastic
-population models \cite{altieri2021}, with unit $Dm$.  Since every term is homogeneous of degree one
-in the sizes, the economy has no preferred scale.  The mean firm grows at a rate that the dynamics
-selects, and a firm is large or small only compared with the others.  The noise unit grows along with
-the economy, and one can read it as an indivisible piece of business, such as a contract or a
-customer, whose size scales with the mean firm.
-
-In terms of the relative sizes $S_i=x_i/m$, Eq.~\eqref{eq:model} becomes
+\paragraph{A logistic unit in a moving field.}  In relative sizes $S_i=x_i/m$,
 \begin{equation}
 dS_i=S_i\big[\Phi_i(t)-S_i\big]dt+\sqrt{DS_i}\,dW_i+O(N^{-1/2}),
 \label{eq:onefirm}
 \end{equation}
 with the field
 \begin{equation}
-\Phi_i(t)=1+\sum_jJ_{ij}S_j(t)-\bar f(t).
+\Phi_i(t)=1+\sum_jJ_{ij}S_j(t)-\bar f(t),
 \label{eq:field}
 \end{equation}
-Here $\bar f$ is the growth rate of the mean firm,
-\begin{equation}
-\dot m=m\,\bar f,\qquad \bar f=\frac1N\sum_iS_i\Big(1-S_i+\sum_jJ_{ij}S_j\Big)+D\nu(t),
-\label{eq:mean}
-\end{equation}
-up to noise of order $N^{-1/2}$, and
-\begin{equation}
-\nu(t)=\frac1N\sum_i\sum_k\delta\big(t-t_{i,k}\big)
-\label{eq:nu}
-\end{equation}
-is the number of entries per node and per unit time, where $t_{i,k}$ are the times at which the firm on
-node $i$ exits and is replaced.  The $O(N^{-1/2})$ term in Eq.~\eqref{eq:onefirm}
-keeps $\sum_iS_i=N$; in relative units firms exit at $S_i=0$ and enter at $S_i=D$.
+where $\bar f$ is the growth rate of the mean firm, including the dilution by entries
+(Appendix~\ref{app:relative}).  Equation~\eqref{eq:onefirm} is a logistic equation whose carrying capacity
+moves in time.  If the field on a firm stays at $\Phi>0$, the firm relaxes at rate $\Phi$ to the plateau
+$x_i=m\Phi$; if $\Phi<0$, it shrinks until it exits.  For $C\to\infty$ the relative sizes map onto the
+standard GLV with demographic noise \cite{altieri2021}, and on the complete graph, with immigration in place
+of the noise, onto the chaotic-turnover model of Refs.~\cite{bunin2017,mallmin2024}.
 
-Equation~\eqref{eq:onefirm} is a logistic equation whose carrying capacity moves in time.  If the
-field on a firm stays at a value $\Phi>0$, the firm relaxes at rate $\Phi$ to the plateau $x_i=m\Phi$;
-if $\Phi<0$, it shrinks until it exits.  For $C\to\infty$, and if the growth rate self-averages, a
-rescaling of size and time maps the relative sizes onto the standard GLV with demographic noise
-\cite{altieri2021}, with renormalised parameters (Appendix~\ref{app:relative}).  On the complete graph,
-and with an immigration floor in place of the noise, it reduces to the chaotic-turnover model of
-Refs.~\cite{bunin2017,mallmin2024}.  What the normalisation adds is a growth rate that comes out of the
-model, and observables that are measured relative to the mean firm, as they are in firm data.
+\paragraph{Phase diagram.}  For $C\to\infty$ heterogeneous dynamical mean-field theory (HDMFT) replaces the
+network by one process per degree class, closed by averages over neighbours drawn in proportion to their
+degree \cite{aguirrelopez,patil2026}.  A node of relative degree $\kappa=k/C$ feels
+\begin{equation}
+\Phi(t)=1-\bar f+\mu\kappa\bar B+\sigma\sqrt\kappa\,\xi(t),
+\label{eq:hdmft}
+\end{equation}
+with $\bar B$ the degree-weighted mean size and $\xi$ a Gaussian process whose correlation is the
+degree-weighted correlation of sizes.  The static solution loses stability at a line $\sigma_c(\mu)$, which
+on an uncorrelated graph is, to first order in the degree variance,
+\begin{equation}
+\sigma_c\simeq\sqrt2\Big[1-\frac{\Var\kappa}{2}\Big(1-\frac{\mu^2}{2\pi}\Big)\Big]
+\label{eq:sigmac}
+\end{equation}
+(Appendix~\ref{app:hdmft}): hubs feel a field of amplitude $\propto\sqrt\kappa$ and lower the threshold, while a mean
+interaction of either sign spreads the classes' distances from extinction and raises it.  With noise the line
+follows from the renewal law of a node at constant field, which also predicts the turnover to $1$--$2\%$
+(Appendix~\ref{app:constant}).  Above it
+the composition of the economy keeps changing.  Our reference point, $\alpha=2.5$, $\sigma=1.70$, $D=0.1$,
+$C=200$, $\mu=-1.76$, lies in this fluctuating phase ($\sigma_c=1.497$ at $D=0.1$), close to the line on which
+the mean firm stops growing.
 
-% TODO (n_min = 5 switch, to run on a bigger machine).  MSB's growth rates are annual differences rolled
-% over quarters, g_t = ln S_{t+4} - ln S_t, so their 46 growth rates on average are ~12 years and their
-% robustness cut "at least 20" is 24 quarters = 6 years = 5 non-overlapping annual growth rates.  Our
-% n_min = 20 is therefore stricter than anything MSB use; n_min = 5 is the like-for-like choice.
-%  1. Re-run notebooks/06_facts.ipynb analyse() on the robustness economies with the n_min = 5 life
-%     sample for zeta_q, the sigma/sigmabar collapse and inverse-gamma fit (facts_summary.npz only stores
-%     the n >= 20 sample).  Kurtosis (n >= 10) and persistence (n >= 20, k-year sums) can stay.
-%  2. Keep the theory tests (volatility law, floor, Appendix tables) at 20: they need long lives to
-%     estimate each life's floor; say so in the text.
-%  3. Rewrite the n_min justification here and in the appendix "Minimum life length" with the quarter
-%     counting above; update the headline numbers (abstract, results list, Sec. facts, figure/table
-%     captions, conclusions).  Current production-run values at n_min = 5: zeta = 0.205, 0.394, 0.554,
-%     0.679, ratios 1.92, 2.70, 3.31, over 2.0 decades.
-\paragraph{Numerics and protocol.}  We integrate Eq.~\eqref{eq:model} in relative form by
-Euler--Maruyama with step $0.01$, discard $t<100$, and record sizes every $\Delta t=0.5$, which we take
-as one year (Appendix~\ref{app:protocol}), over a window of length $480$.  As MSB do, we use an
-unbalanced panel.  A \emph{life} runs from a birth to the next exit at the same node, and lives cut by
-the window are kept.  A life recorded at $n+1$ times has growth rates $g_t=\ln S_{t+1}-\ln S_t$, and we define its
-volatility and size as
+\paragraph{Protocol.}  We integrate Eq.~\eqref{eq:model} in relative form by Euler--Maruyama with step
+$0.01$, discard $t<100$, and record sizes every $\Delta t=0.5$, which we take as one year, over a window of
+length $480$.  A \emph{life} runs from a birth to the next exit at the same node; lives cut by the window
+are kept, as in MSB's unbalanced panel.  A life recorded at $n+1$ times has growth rates
+$g_t=\ln S_{t+1}-\ln S_t$, and its volatility and size are
 \begin{equation}
 v=\sqrt{\frac{\pi}{2}}\,\frac1n\sum_{t=1}^{n}\big|g_t-\bar g\big|,\qquad
 \Sb=\frac1{n+1}\sum_{t=1}^{n+1}S_t,
 \label{eq:vol}
 \end{equation}
-with $\bar g$ the mean of the $g_t$; the factor $\sqrt{\pi/2}$ makes $v$ the standard deviation for
-Gaussian $g$.  We keep
-only lives with at least $n_{\min}$ growth rates, with $n_{\min}=20$ unless stated otherwise.  Compustat
-firms have $46$ growth rates on average, and MSB find the same results when they keep only firms with at
-least $20$ \cite{moran2024}; in the model, lives with few growth rates are mostly newborns
-(Sec.~\ref{sec:facts}).  Exponents are least-squares slopes of $\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over
-$25$ equal-count bins, with all bins included.  The reference point is $\alpha=2.5$, $\sigma=1.70$,
-$D=0.1$, $C=200$, $\mu=-1.76$.  The facts of Sec.~\ref{sec:facts} come from eight economies with
-$N=32000$; one of them goes through a collective burst and is excluded (Appendix~\ref{app:robust}).  The
-theory tests use two economies with $N=16000$.
+the factor making $v$ the standard deviation for Gaussian growth.  Exponents are least-squares slopes of
+$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins.  We compare with data on lives with at
+least five growth rates, the cut that matches MSB's (Sec.~\ref{sec:data}), and test the theory on lives with
+at least $20$, long enough to estimate each life's floor.  The comparison with data uses seven
+economies with $N=32000$; the theory tests use two with $N=16000$.
 
-%======================================================================
-\section{Phase diagram}
-\label{sec:phase}
-
-\paragraph{Deterministic limit.}  For $C\to\infty$ the field on a firm of relative degree
-$\kappa=k/C$ is Gaussian.  Heterogeneous dynamical mean-field theory (HDMFT) replaces the network by
-one process per degree class, closed by averages over neighbours, which are drawn in proportion to
-their degree \cite{aguirrelopez,patil2026}:
-\begin{equation}
-\Phi(t)=1-\bar f(t)+\mu\kappa\bar B+\sigma\sqrt\kappa\,\xi(t),
-\label{eq:hdmft}
-\end{equation}
-with $\bar B$ the degree-weighted mean size and $\xi$ a Gaussian process whose correlation is the
-degree-weighted correlation of sizes.  On the reference graph this rule would link pairs of hubs with
-probability above one, and the classes are coupled by the soft-configuration kernel instead
-\cite{patil2026} (Appendix~\ref{app:hdmft}).  Without noise, the stationary sizes
-are clipped Gaussians, and the unique fixed point of the composition loses stability when the Perron
-root of $\sigma^2\varphi_pK_{pr}$ reaches one, with $\varphi_p$ the fraction of surviving firms in class $p$
-and $K_{pr}$ the class kernel.  On an uncorrelated graph the stability operator has rank one, and to
-first order in the degree variance
-\begin{equation}
-\sigma_c\simeq\sqrt2\Big[1-\frac{\Var\kappa}{2}\Big(1-\frac{\mu^2}{2\pi}\Big)\Big]
-\label{eq:sigmac}
-\end{equation}
-(Appendix~\ref{app:hdmft}).  Degree heterogeneity lowers the threshold because hubs feel a field of amplitude
-$\propto\sqrt\kappa$.  A mean interaction of either sign raises it: it makes the mean field depend on the
-degree, which spreads the classes' distances from extinction, and this spread stabilises the fixed point;
-to this order only $\mu^2$ enters.  To the same order the line on which the
-economy stops growing moves less: where it meets the instability line, at
-$\sigma\simeq\sqrt2$, its shift is about a quarter of that of $\sigma_c$.
-
-\paragraph{Renewal law.}  With noise and turnover, a node whose field is constant is a renewal
-process: its successive lives are independent and identically distributed.  Equation~\eqref{eq:onefirm}
-at constant $\Phi=h$ is a one-dimensional diffusion with scale function $s(y)=\int_0^ys'(u)\,du$, where
-$s'(u)=\exp[-(2/D)(hu-u^2/2)]$, and by the renewal--reward theorem the fraction of time the node spends
-at size $x$ is
-\begin{gather}
-p(x\mid h)=\frac{2\,s(\min(x,D))}{D\,x\,s'(x)\,T(D)},\nonumber\\
-T(D)=\int_0^\infty\frac{2\,s(\min(x,D))}{D\,x\,s'(x)}\,dx,
-\label{eq:renewal}
-\end{gather}
-with turnover rate $1/T(D)$.  The law has two parts: a plateau $\propto x^{-1}e^{-(x-h)^2/D}$, Gaussian of
-variance $D/2$ around $h$ for $h\gg\sqrt D$, and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
-exit times follow from the same quadratures and agree with direct simulation to $3\%$ (Appendix~\ref{app:constant}).
-
-\paragraph{Instability line with noise.}  Replacing the clipped Gaussian by the renewal law in the
-static self-consistency gives the mean sizes $\langle S\rangle_h$ and the susceptibility
-$\chi=\partial\langle S\rangle_h/\partial h$; the static state is stable while the Perron root of
-$\sigma^2{\rm diag}(\E\chi^2)K$ is below one.  Noise smooths $\chi$ and raises the line almost linearly with
-$D$ (Fig.~\ref{fig:phaselines}): from $1.460$ to $1.577$ at $\alpha=2.5$ and from $1.399$ to $1.551$ at
-$\alpha=6$ between $D=0.003$ and $0.3$; at $D=0.003$ it agrees with the deterministic line to $0.002$
-($1.399$ against $1.400$ at $\alpha=6$, $1.413$ against $\sqrt2$ on the complete graph).  The closure
-treats each node's field as frozen, so it is controlled only below the line; in simulations at $\alpha=6$ and
-$D=0.1$, slow collective fluctuations of the composition set in between $\sigma=1.40$ and $1.50$, around the
-predicted $1.451$, as a smooth crossover rather than a sharp transition (Appendix~\ref{app:constant}).  The same theory
-predicts the turnover rate to $1\%$ below $\sigma_c$ and to about $2\%$ above it, where it is no longer
-controlled ($\alpha=6$; Appendix~\ref{app:constant}).  Turnover is set by
-the nodes with $h<0$, where a newborn's life hardly depends on $D$, and is nearly independent of the
-noise.  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
-disorder.  On the reference graph competition raises $\sigma_c$ strongly, from $0.83$ at $\mu=0$ to $1.68$ at
-$\mu=-2.5$, because its degrees are the most spread, and with them the mean field across classes; on the
-complete graph the line does not depend on $\mu$, and at $\alpha=6$ it barely does.  Under strong
-competition the zero-growth line is almost the same on the three graphs, within $0.05$ for $\mu\le-1.25$;
-under weak competition it is lower on the reference graph ($0.50$ against $0.63$ and $0.64$ at $\mu=0$).  The reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
-the static estimate of the zero-growth line ($1.72$ at $D=0.1$), which is not controlled there.  In
-simulation the zero-growth line nevertheless lies within $0.04$ of the static estimate for $\mu$ from $-0.5$ to $-2.5$, and
-the region where the facts of Sec.~\ref{sec:facts} hold is a band along it (Fig.~\ref{fig:strip}).
-
-\begin{figure}[t]
-\includegraphics[width=\linewidth]{fig_phase.pdf}
-\caption{Phase diagram at $D=0.1$ from the renewal theory.  Above the instability line $\sigma_c(\mu)$ the
-composition keeps fluctuating (shaded for the reference graph, $\alpha=2.5$); the lines for $\alpha=6$ and the
-complete graph are shown for comparison.  The zero-growth line separates economies whose mean firm
-grows from those where it shrinks; above $\sigma_c$ it is the continuation of the static solution and is
-not controlled.  The star is the reference point.}
-\label{fig:phase}
-\end{figure}
-
-%======================================================================
-\section{One firm is enough}
-\label{sec:onefirm}
-
-Equation~\eqref{eq:onefirm} is exact; its content is that the field can be treated as given, i.e.\
-that a firm's own noise does not feed back on its field through the network.  We test this
-directly.  We store the fields $\Phi_i(t)$ of two reference economies, integrate
-Eq.~\eqref{eq:onefirm} for every node with its measured field and fresh noise, and compare the life
-panels.  The exponents agree to $0.01$ and the ratios to $0.05$ for every minimum life length, and the
-exit rates agree exactly (Table~\ref{tab:reduction} and Fig.~\ref{fig:reduction}).  The theory of the
-size--volatility statistics is therefore a one-firm problem, given the statistics of the field.
-
-
-The field follows the degree-resolved law of Eq.~\eqref{eq:hdmft}.  Over the window, a node's mean field
-falls with its degree, from $0.5$ at $\kappa\simeq0.4$ to $-2.4$ at $\kappa\simeq2$: hubs compete with more
-firms.  Its temporal amplitude grows as $\kappa^{0.54}$, against $\kappa^{1/2}$ in Eq.~\eqref{eq:hdmft},
-and decorrelates over about $4.5$ time units.  Within a degree class the mean field is nearly
-symmetric (skewness $-0.3$) but fatter-tailed than a Gaussian (excess kurtosis $2.0$).  The degree therefore sets both how long a firm lives and how strongly it
-is shaken while alive; both enter the multiscaling (Sec.~\ref{sec:multiscaling}).
-
-Three statistics of the field are enough.  Driving each firm instead by a Gaussian field with its node's
-time mean and temporal amplitude and one correlation function for all nodes gives, for lives with at least
-$20$ growth rates, $\zeta_1=0.23$ and ratios $1.78$, $2.37$, $2.81$, against $0.25$ and $1.79$, $2.37$, $2.80$ for
-the full model on the same economies.  With the amplitude at $c\sqrt\kappa$ and the means reshuffled among
-nodes of similar degree the panel changes little ($0.28$; $1.81$, $2.42$, $2.86$), but with the means at their
-mean in the degree class the ratios return towards $q$ ($1.93$, $2.79$, $3.56$;
-\texttt{notebooks/07\_floor\_theory.ipynb}).  The essential input is the spread of the mean field among firms
-of equal degree, which sets how high a firm's plateau is and how long it lives.
-
-%======================================================================
-\section{The volatility law}
-\label{sec:law}
-
-\paragraph{Decomposition.}  In logs, Eq.~\eqref{eq:onefirm} reads
-$d\ln S=[\Phi-S-D/(2S)]\,dt+\sqrt{D/S}\,dW$.  Write $\ln S=y_F+\delta$, where $y_F$ solves the noise-free
-equation $\dot y_F=\Phi-e^{y_F}$ from the same initial size.  To linear order $\delta$ is an
-Ornstein--Uhlenbeck process that relaxes at the local rate $S$ and is driven by noise of variance
-$D/S$.  Treating the two parts as independent, the variance of a firm's yearly growth over its life
-is
-\begin{equation}
-\Var g\simeq V_F+B,\qquad B=\Big\langle\frac{D}{S^2}\big(1-e^{-S\Delta t}\big)\Big\rangle_{\rm life},
-\label{eq:law}
-\end{equation}
-where $V_F$ is the growth variance of $y_F$.  The demographic part $B$ tends to $D\Delta t\langle S^{-1}\rangle$
-for slowly relaxing firms and to $D\langle S^{-2}\rangle$ for fast ones.
-
-\paragraph{Test.}  For every life with at least $20$ growth rates in the two reference economies we
-compute $V_F$ by integrating the noise-free equation along the life's measured field, and $B$ from
-its sizes.  Equation~\eqref{eq:law} reproduces the measured volatility to within $5\%$ above the lowest decile of $\Sb$, and $9\%$ in
-it (Fig.~\ref{fig:mechanism}a; Table~\ref{tab:law}).  A
-version without the filter, $\Var(\Delta\ln\Phi)+D\Delta t\langle S^{-1}\rangle$ over the steps where
-$\Phi>0$, overestimates the volatility by a factor $1.6$ in the lowest decile and $1.1$ in the highest,
-and nearly doubles the slope ($0.32$ against $0.17$).  The excess is all in the field term:
-$\sqrt{\Var\Delta\ln\Phi}$ falls from $0.92$ to $0.44$ with size while $\sqrt{V_F}$ stays at
-$0.32$--$0.37$.  A firm does not follow the fast part of its field, least of all a small firm,
-whose field is low and therefore fluctuates strongly in relative terms.
-
-\begin{figure*}[t]
-\includegraphics[width=\linewidth]{fig_mechanism.pdf}
-\caption{Volatility law and multiscaling mechanism (reference point, $N=16000$, two economies per graph, lives
-with at least $20$ growth rates).  (a) Measured growth volatility by decile of life-mean size, the law
-$\sqrt{V_F+B}$ of Eq.~\eqref{eq:law} and its two parts.  (b) Dispersion of the total variance among lives of
-equal size, $s^2=\Var(\ln(V_F+B)\mid\Sb)$ with $B$ at its bin mean, by fifth of size.  (c) Ratio curves,
-measured and predicted from each life's own floor plus the bin-mean demographic part, with the growth
-standard deviation as the volatility.}
-\label{fig:mechanism}
-\end{figure*}
-
-\paragraph{A crossover.}  The fitness part is nearly flat in size,
-$\sqrt{V_F}\simeq0.32$--$0.37$, as the sum of a plateau part that falls with size and an entry and exit
-part that rises (Sec.~\ref{sec:multiscaling}).  The demographic part $\sqrt B$ falls as $\Sb^{-b/2}$, with $b=0.66$--$0.87$
-(Sec.~\ref{sec:multiscaling}; $b=1$ for $B\simeq D\Delta t/\Sb$).  The size--volatility relation is therefore a
-crossover,
-\begin{equation}
-v^2\simeq v_F^2+B(\Sb),
-\label{eq:crossover}
-\end{equation}
-from a steep decline where noise dominates to slope $0$ where the floor does.  The two parts are equal
-at $\Sb\simeq1.6$.  The decomposition has the two-regime shape reported for French firms that include
-very small ones \cite{fontanelli2025}, but the measured life panel does not resolve the two regimes:
-its local slopes by fifth of size are $0.26$, $0.17$, $0.14$, $0.23$, $0.27$ (production run, $n_{\min}=5$),
-with neither a steep small-firm end nor a flat top.  $\zeta_1\simeq0.2$ is the effective slope of the whole
-range.  The crossover scale grows with $D$, so the effective
-exponent does too: at $\sigma=1.70$, $\zeta_1=0.20$, $0.23$ and $0.25$ for $D=0.1$, $0.15$ and $0.2$
-($n_{\min}=5$; Appendix~\ref{app:robust}).
-
-%======================================================================
-\section{The multiscaling mechanism}
-\label{sec:multiscaling}
-
-\paragraph{An identity.}  Let a firm's squared volatility be the sum of a floor $u_i$ and a part
-$B(\Sb)$ common to all firms of the same size, up to an estimation factor $\epsilon_i$ independent of
-both: $v_i^2=(u_i+B(\Sb_i))\,\epsilon_i^2$.  Let $b=-d\ln B/d\ln\Sb$ be the local slope of the size-dependent part
-and $w=B/(u+B)$ its share of the variance.  Differentiating $\ln\E[v^q\mid\Sb]$ gives
-\begin{equation}
-\zeta_q=\frac q2\,b\,\langle w\rangle_q,\qquad
-\langle w\rangle_q=\frac{\E\big[(u+B)^{q/2}\,w\mid\Sb\big]}{\E\big[(u+B)^{q/2}\mid\Sb\big]},
-\label{eq:identity}
-\end{equation}
-provided the law of $u$ at fixed size does not change with size (the general case adds a composition
-term $c_q$; Appendix~\ref{app:multiscaling}).  For the demographic part of Eq.~\eqref{eq:crossover} the measured slope is
-$b=0.66$--$0.87$ across the range, below the value $1$ of $B\simeq D\Delta t/\Sb$ because $B$ is dominated by
-the low excursions of a life.  The exponent is thus about $0.4$ times the noise share, weighted by
-$v^q$: largest where noise dominates ($w\to1$) and zero where the floor does ($w\to0$).
-
-\paragraph{When the curve bends.}  Since $\langle w\rangle_q=B\,\E[Y^{q/2-1}]/\E[Y^{q/2}]$ with $Y=u+B$, and
-$\ln\E[Y^{q/2}]$ is convex in $q$, $\langle w\rangle_q$ is non-increasing in $q$, and constant only if $Y$ is
-the same for all firms of the given size.  Hence
-\begin{equation}
-\frac{\zeta_q}{\zeta_1}=q\,\frac{\langle w\rangle_q}{\langle w\rangle_1}\le q,
-\label{eq:bend}
-\end{equation}
-with equality, when the law of the floor does not change with size, if and only if the floor does not
-vary between firms of equal size.  With the composition term only one direction survives: a floor
-that is the same for every firm of a given size, however it depends on size, gives a volatility law
-of fixed shape and $\zeta_q=q\zeta_1$, like a granular model, while the converse needs control of $c_q$,
-which on the network adds to the bend (Appendix~\ref{app:multiscaling}).  The bend requires heterogeneity of the floor, and it is
-strongest where the floor dominates, at large sizes, because there the volatilities of firms with
-different floors differ most.  The estimation factor $\epsilon$ cancels in the ratios.  If $\ln Y$ is
-Gaussian at fixed size with variance $s^2$, the bend is explicit,
-\begin{gather}
-\frac{\zeta_q}{\zeta_1}\simeq q\,e^{-(q-1)s^2/2},\nonumber\\
-s^2=\Var\big(\ln(u+B)\mid\Sb\big)\simeq(1-w)^2\Var(\ln u\mid\Sb),
-\label{eq:lognormal}
-\end{gather}
-the last form for a narrow floor.  A heterogeneous floor bends the curve only where it is not small
-against the demographic part.
-
-\paragraph{What the floor is made of.}  The volatility law gives every life its own floor $V_F$, the
-growth variance of the noise-free firm along the life's measured field (Sec.~\ref{sec:law}).  A life
-with at least $20$ growth rates usually begins as a newborn at $S\simeq D$ and ends at an exit, so its
-noise-free path climbs to a plateau, follows the field there and collapses in the final dip.  Splitting
-the path where the noise-free size first and last reaches half its median,
-\begin{equation}
-V_F\simeq V_{\rm core}+\frac{E_{\rm in}+E_{\rm out}}{n},
-\label{eq:floor}
-\end{equation}
-with $V_{\rm core}$ the growth variance on the plateau and $E_{\rm in}$, $E_{\rm out}$ the sums of squared growth rates
-over the climb and the collapse.  For a logistic climb from $S_0$ to a plateau $h$,
-$E_{\rm in}\simeq\Delta t\,h[\ln(h/S_0)-1]$, and for a collapse in a field that has fallen to $-\varphi$,
-$E_{\rm out}\simeq\Delta t\,[\varphi\ln(h/S_{\rm end})+h]$: both grow with the plateau (Appendix~\ref{app:multiscaling}).
-The two parts of the floor move in opposite directions.  The core falls from $0.084$ in the smallest fifth
-of sizes to $0.052$ in the largest, while the entry and exit part grows from a quarter of $V_F$ to $62\%$:
-large firms climb further from the newborn size and collapse from higher.  The flat floor of
-Sec.~\ref{sec:law} is their sum.
-
-\paragraph{Why floors differ at fixed size.}  Within a size bin the floor is broad, $\Var(\ln V_F\mid\Sb)$
-from $0.5$ in the smallest fifth to $0.9$ in the largest, and Eq.~\eqref{eq:floor} says why: the same climb
-and collapse are spread over lives of very different lengths.  Within size bins the life length explains
-$26$--$62\%$ of $\Var\ln V_F$ in the four upper fifths, more than the degree ($19$--$41\%$; $8\%$ against
-$14\%$ in the smallest fifth), and $\Var(\ln n\mid\Sb)$ grows from $0.08$ to $0.91$ with size.  The spread of
-life lengths follows from how lives end.  An established firm dies in a dip of its field.  Inside the dip
-the firm is small, the logistic term is negligible, and the firm is a Feller branching process, whose
-extinction probability is exact:
-\begin{equation}
-P_{\rm kill}=\exp\Big(-\frac{2}{D\,J}\Big),\qquad J=\int\frac{dt}{S_{\rm det}(t)},
-\label{eq:kill}
-\end{equation}
-with $S_{\rm det}$ the noise-free path through the dip.  Over the $446\,554$ dips of established firms in the
-two economies, Eq.~\eqref{eq:kill} predicts a kill fraction of $0.725$ against $0.722$ observed, with no
-fitted parameter.  Dips begin at the downcrossings of zero, which occur at Rice's rate
-$\sqrt{-\rho''(0)}\,e^{-u^2/2}/2\pi$, with $u=m/f$ the node's mean field over its temporal amplitude.  Lives
-are therefore memoryless, with a mean that grows steeply with $u$, from about $23$ to $220$ growth rates
-across deciles of $u$ (Appendix~\ref{app:multiscaling}).  Small firms sit on nodes whose lives barely exceed the
-cut $n\ge20$; large firms on nodes with long exponential lives, whose lengths spread over a decade.
-
-\paragraph{The noise share.}  It falls from $\langle w\rangle_1=0.79$ in the smallest fifth to $0.43$ in the largest, and its fall
-with $q$ grows with size: within size bins $\langle w\rangle_4/\langle w\rangle_1=0.96$, $0.92$, $0.86$, $0.79$, $0.62$
-(Table~\ref{tab:fifths}).  In the four lower fifths the local exponents of the law agree with
-$(q/2)\,b\,\langle w\rangle_q$ to about $10\%$; in the largest the composition term dominates, because the
-largest lives also have the largest degrees (mean $\kappa$ $1.01$ in the fourth fifth, $1.51$ in the fifth).
-
-\paragraph{Test.}  We compute the exponents of the same lives under three laws, with the growth
-standard deviation as the volatility (Fig.~\ref{fig:mechanism}c).  Measured, $\zeta_q/\zeta_1=1.77$, $2.35$,
-$2.78$ ($1.80$, $2.42$, $2.88$ with the estimator of Sec.~\ref{sec:model}, and $1.78$, $2.35$, $2.76$ in the
-production run of Sec.~\ref{sec:facts}).  With each life's own floor and the demographic part replaced by its mean in the life's size
-bin, so that the floor is the only source of dispersion, the law predicts $1.86$, $2.56$, $3.09$.  With
-the floor replaced instead by its bin mean, the ratios are $2.08$, $3.65$, $6.58$: without the spread of
-the floor the curve lies above $q$, because the per-life estimate of the demographic part has its own
-dispersion.  The bend of the ratio curve is therefore carried by the heterogeneity of the floor, through
-both its spread at fixed size and the shift of its law with size, which this test does not separate.
-Splitting the floor as in Eq.~\eqref{eq:floor} and keeping one part at a time at its own value, the other at
-its bin mean, the ratios are $1.98$, $2.94$, $3.85$ with only the core heterogeneous and $1.90$, $2.69$, $3.33$
-with only the entry and exit part, against $1.85$, $2.55$, $3.07$ with both (same lives, current economies;
-\texttt{notebooks/07\_floor\_theory.ipynb}).  The bend is carried mostly by the climb and the collapse,
-through the spread of life lengths.
-
-\paragraph{Ablation.}  On a random regular graph every firm has degree $C$.  The floor has the same
-make-up, its entry and exit part growing from a quarter to half of it, and the life length explains up
-to half of its spread at fixed size.  But the floor is small, and it falls with size, from $0.07$ to
-$0.03$ in mean, so that even the largest lives remain dominated by their own noise
-($\langle w\rangle_1=0.86$ to $0.68$).  The dispersion of their total variance stays small, $s^2=0.008$ to
-$0.05$ from the smallest to the largest fifth, against $0.02$ to $0.25$ on the power-law graph
-(Fig.~\ref{fig:mechanism}b), and the
-ratio curve is close to $q$: $1.93$, $2.78$, $3.54$ measured, $1.98$, $2.95$, $3.88$ from the floor alone,
-with $\zeta_1=0.40$.  Equation~\eqref{eq:lognormal} with the measured $s^2$ gives $\langle w\rangle_4/\langle w\rangle_1$ to
-within $0.06$ in every fifth of both graphs.  In $s^2\simeq(1-w)^2\Var(\ln V_F\mid\Sb)$ the two graphs differ in
-both factors: in the largest fifth, within size bins, $(1-w)^2$ is about three times larger on the power-law
-graph and $\Var(\ln V_F\mid\Sb)$ about twice.  The degree acts on both.  A better connected firm feels a field
-of larger amplitude, which keeps its core up, and more frequent killing dips, which shorten its life (the
-correlation of $\ln n$ with $\ln\kappa$ within size bins falls from $-0.16$ in the smallest fifth to $-0.49$ in the
-largest) and raise its entry
-and exit part.  This keeps the floor of the larger firms at $V_F\simeq0.13$ while their noise falls.  The life
-length makes the floor differ between firms of equal size; the degree makes the difference large against
-the noise.
-
-
-%======================================================================
-\section{Comparison with the firm-growth facts}
-\label{sec:facts}
-
-Table~\ref{tab:facts} and Fig.~\ref{fig:facts} compare the reference point with every fact of MSB.
-
-\begin{figure*}[t]
-\includegraphics[width=\linewidth]{fig_facts.pdf}
-\caption{The size--volatility facts at the reference point against Compustat \cite{moran2024} (lives with
-at least $20$ growth rates; $N=32000$, seven economies pooled, one in a collective burst excluded).
-(a) Mean volatility against life-mean size, with the Compustat slope.  (b) Ratio curve; the band is the
-range over the seven economies.  (c) Distribution of $v/\E[v\mid\Sb]$ by fifth of size, from the smallest
-(light) to the largest (dark), with the Compustat tail.  The other facts are in Table~\ref{tab:facts}.}
-\label{fig:facts}
-\end{figure*}
-
-\begin{table*}[t]
-\caption{The MSB facts at the reference point (lives with $n_{\min}=20$; $N=32000$, seven
-economies) and in Compustat \cite{moran2024}, with MSB's uncertainties in brackets; the Compustat ratios
-are computed from their exponents.  Fifths are fifths of
-life-mean size; kurtosis from lives with at least $10$ growth rates.}
-\label{tab:facts}
-\begin{ruledtabular}
-\begin{tabular}{lll}
-Fact & Model & Compustat\\
-\hline
-$\zeta_q$ & $0.25$, $0.44$, $0.59$, $0.69$ & $0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$\\
-$\zeta_1$, spread between economies & $\pm0.03$ & \\
-$\zeta_q/\zeta_1$ & $1.78$, $2.35$, $2.76$ & $1.95$, $2.55$, $2.90$\\
-range of the decline & $1.4$ decades & $4$ decades\\
-volatility, smallest $\to$ largest bin & $0.70\to0.32$ & $1.22\to0.22$\\
-hump at small sizes & none & none\\
-tail $b$ of $v/\E[v\mid\Sb]$ & $6.8$ & $4.6$\\
-excess kurtosis of rescaled growth & $1.4\to22$ by fifth & roughly constant\\
-3-year persistence (kurtosis/iid) & $0.73\to1.32$ by fifth & $>1$ at all sizes\\
-correlation with the aggregate & $0.10\to0.27$ by fifth & rises with size\\
-pairwise correlation, same fifth & $0.02\to0.09$ & rises with size\\
-size distribution & Hill index $4.5$ & Zipf, $\simeq1$\\
-\end{tabular}
-\end{ruledtabular}
-\end{table*}
-
-\paragraph{What the model explains.}  At the reference point $\zeta_1\simeq0.2$ for lives with at least five growth
-rates; for the lives with at least $20$ the decline is somewhat steeper, $\zeta_1=0.25$ against $0.20\pm0.01$, and
-$\zeta_3$ and $\zeta_4$ exceed the Compustat values by about $0.1$.  The life panel declines monotonically, with no hump at small sizes, and the ratio curve bends
-below $q$ by about the empirical amount: $1.78$, $2.35$, $2.76$ against $1.95$, $2.55$, $2.90$.
-The bend comes from the mechanism of Sec.~\ref{sec:multiscaling}, whose tests use the same lives.  The co-movement of a firm with the
-aggregate and with firms of similar size rises with size, as in Compustat; a natural reading is that
-small firms are moved mostly by their own noise and large ones by their field, which they share with
-their neighbours, but we have no theory of it.  The monotone decline and the bend of the ratio curve below $q$ survive
-$N=8000$--$64000$, different seeds and the neighbourhood of the reference point in $\sigma$, $D$, $\alpha$
-and $C$, while $\sigma$, $D$ and $C$ set the level of $\zeta_1$, between $0.11$ and $0.26$ for lives with at least
-five growth rates (Appendix~\ref{app:robust} and Table~\ref{tab:robust}).
-
-\paragraph{Where the facts hold.}  The reference point is not a tuned point.  Across the phase plane near the
-zero-growth line (Fig.~\ref{fig:strip}; $N=16000$, two economies per point), $\zeta_1$ and the ratio curve depend on a
-single variable, the depth $\sigma-\sigma_c(\mu)$ of the economy in the fluctuating phase.  For $\mu\le-1$ and lives with at
-least five growth rates, $\zeta_1=0.49-1.34\,(\sigma-\sigma_c)$, with a scatter of $0.014$ over $27$ points spanning
-$\zeta_1=0.05$--$0.35$; at fixed depth $\mu$ adds nothing.  The deeper the economy, the more its field moves, the larger
-the floor of large firms and the flatter the decline.  Depths from $0.18$ to $0.25$ give $\zeta_1=0.15$--$0.25$.  The
-zero-growth line, on which the mean firm neither grows nor shrinks, lies in simulation within $0.04$ of the static
-estimate of Sec.~\ref{sec:phase}, and for $\mu$ from $-1.25$ to $-2.25$ the band contains economies whose mean firm grows
-by between $-0.08$ and $+0.16$ per unit time.  An economy that competes moderately and grows slowly therefore sits
-where the facts hold.  Slow growth alone does not select them: along the zero-growth line $\zeta_1$ falls from $0.40$
-under weak competition, where the ratios are close to $q$, to $0.13$ under strong competition.  The band is thin
-across $\sigma$, about $0.07$, the direction in which the growth rate of the mean firm also changes fastest.  In it the
-ratio curve of the lives with at least $20$ growth rates stays at $1.75$--$1.83$, $2.27$--$2.49$, $2.61$--$3.00$; for the
-lives with at least five, $\zeta_4/\zeta_1=3.0$--$3.75$ against $2.90$.
+\paragraph{Where the facts hold.}  The reference point is one point of a band (Fig.~\ref{fig:strip}).  Near
+the zero-growth line, $\zeta_1$ and the ratio curve depend on a single variable, the depth $\sigma-\sigma_c(\mu)$
+of the economy in the fluctuating phase: for $\mu\le-1$ and lives with at least five growth rates,
+$\zeta_1=0.49-1.34\,(\sigma-\sigma_c)$, with a scatter of $0.014$ over $27$ points.  The deeper the economy, the
+more its field moves, the larger the floor of large firms and the flatter the decline.  Depths from $0.18$
+to $0.25$ give $\zeta_1=0.15$--$0.25$.  For $\mu$ from $-1.25$ to $-2.25$ this band contains economies whose
+mean firm grows by between $-0.08$ and $+0.16$ per unit time, so an economy that competes moderately and
+grows slowly sits in it; slow growth alone does not, since along the zero-growth line $\zeta_1$ falls from
+$0.40$ under weak competition to $0.13$ under strong competition.  The band is about $0.07$ wide in $\sigma$.
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_strip.pdf}
@@ -595,129 +296,328 @@ plane: instability line $\sigma_c$ and zero-growth line from the renewal theory,
 (dots), and the band of depths where $0.15\le\zeta_1\le0.25$ for lives with at least five growth rates; the star is the
 reference point.  (b) $\zeta_1$ against the depth $\sigma-\sigma_c(\mu)$, coloured by $\mu$, with the linear fit for $\mu\le-1$
 and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least $5$ (filled) and $20$ (open) growth rates, with the
-Compustat value.  Source: \texttt{notebooks/02\_phase\_diagram.ipynb}.}
+Compustat value.}
 \label{fig:strip}
 \end{figure*}
 
-\paragraph{What it does not.}
-\begin{itemize}
-\item \emph{Short lives.}  The results differ for very short lives.  With all lives of at least two
-  growth rates, MSB's baseline sample, in which Compustat firms still have $46$ on average, the
-  ratios lie above $q$ ($2.42$, $3.96$, $5.43$): very short lives are newborns dominated by their own
-  noise, whose volatility estimates are dispersed most among the smallest firms.  The bend appears
-  from $n_{\min}\simeq5$ (Appendix~\ref{app:protocol}).
-\item \emph{Large firms are too volatile and too fat-tailed.}  Volatility falls by a factor $2.2$
-  over $1.4$ decades ($2.8$ over two decades for lives with at least five growth rates, which reach
-  smaller sizes) against $5.5$ over four in Compustat.  The rescaled growth rates of small firms
-  are nearly Gaussian and those of large firms strongly fat-tailed, and multi-year persistence is
-  confined to the largest firms.  Small firms are moved by near-Gaussian, mean-reverting birth--death
-  noise, large firms by rare and persistent dips of their field.
-\item \emph{The tail of the volatility distribution} is too thin: $b\simeq6.8$ against $4.6$, which MSB
-  find for all firms and for those with at least $20$ growth rates.  With all lives the model gives
-  $b=4.4$, but that is an artefact of short lives: a null with iid Laplace growth and no differences
-  between firms gives $4.3$ (Appendix~\ref{app:protocol}).
-\item \emph{Aggregate volatility} is several times too large and does not fall as $N^{-1/2}$ over the
-  sizes we simulate.  Occasionally an economy enters a collective burst, with aggregate volatility
-  several times the typical one, in which volatility no longer depends on size ($5$ of the $80$
-  economies of our robustness runs; Appendix~\ref{app:robust}).
-\item \emph{Sizes and demography.}  The size distribution has no Pareto tail, newborns have extreme
-  infant mortality, and small established firms shrink on average.
-\end{itemize}
+\section{One firm in its field}
+\label{sec:onefirm}
 
-%======================================================================
-\section{Why the range is short and there is no Zipf law}
-\label{sec:limits}
+\paragraph{The field can be taken as given.}  Equation~\eqref{eq:onefirm} is exact; its content is that a
+firm's own noise does not feed back on its field through the network.  We store the fields of the two
+reference economies, integrate Eq.~\eqref{eq:onefirm} for every node with its measured field and fresh
+noise, and compare the life panels: the exponents agree to $0.01$ and the ratios to $0.06$ for every
+minimum life length, and the exit rates agree exactly (Appendix~\ref{app:reduction}).  The size--volatility
+statistics are a one-firm problem, given the statistics of the field.
 
-The self-limitation $-x_i/m$ in Eq.~\eqref{eq:model} does two jobs.  It bounds a firm whose field stays
-favourable, which keeps the economy from condensing onto the best niche, and its restoring rate is
-what makes volatility depend on size: the demographic part of Eq.~\eqref{eq:law} is filtered at the
-rate $S$, and the floor is set by how a firm on its plateau $x=m\Phi$ follows its field.  Both rely on the
-plateau, and the plateau caps firms at a few times the mean.  The decline therefore runs from a few
-times the newborn size $D$, below which lives are too short to measure, to the plateau: about two
-decades at the reference point for lives with at least five growth rates, the sample we use in this
-section ($1.4$ for $n_{\min}=20$, whose lives do not reach the newborn sizes).
+\paragraph{Three statistics of the field.}  A node's mean field falls with its degree, from $0.5$ at
+$\kappa\simeq0.4$ to $-2.3$ at $\kappa\simeq2$: hubs compete with more firms.  Among nodes of equal degree the
+mean field has a spread of $2.66\sqrt\kappa$ in standard deviation, with a fat tail (excess kurtosis $2.1$),
+and around its mean the field moves with amplitude $2.16\sqrt\kappa$ (as $\kappa^{0.54}$ in a fit over nodes)
+and decorrelates over about $4$ time units.  These three statistics are enough.  Driving each firm by a
+Gaussian field with its node's time mean, its temporal amplitude and one correlation function gives
+$\zeta_1=0.23$ and ratios $1.78$, $2.37$, $2.81$, against $0.25$ and $1.79$, $2.37$, $2.80$ for the full model.
+Reshuffling the means among nodes of similar degree changes little ($0.28$; $1.81$, $2.42$, $2.86$), but
+setting them to their mean in the degree class sends the ratios back towards $q$ ($1.93$, $2.79$, $3.56$).
+The essential input is the spread of the mean field among firms of equal degree.  HDMFT,
+Eq.~\eqref{eq:hdmft}, gives the form of these statistics, and its closure holds on the measured sizes to
+$4$--$6\%$.  Solved self-consistently with a Gaussian field, it gets the mean but not the temporal amplitude,
+which comes out $20$--$30\%$ low, or the tail of the spread; at $C=200$ both depend on the few neighbours that
+dominate a firm's field, close to a marginal amplification (Appendix~\ref{app:closure}).  We therefore take
+the field's statistics from simulation.
 
-\paragraph{Without noise the exponent and the range trade off.}  Replace the self-limitation and the interactions by
-powers, $(x_i/m)^\theta$ and $\sum_jJ_{ij}(x_j/m)^\theta$.  Without noise, $u_i=S_i^\theta$ obeys the
-$\theta=1$ model with time rescaled by $\theta$, and since $\ln S=\theta^{-1}\ln u$,
+\paragraph{The volatility law.}  In logs, Eq.~\eqref{eq:onefirm} reads
+$d\ln S=[\Phi-S-D/(2S)]\,dt+\sqrt{D/S}\,dW$.  Write $\ln S=y_F+\delta$, where $y_F$ solves the noise-free
+equation $\dot y_F=\Phi-e^{y_F}$ from the same initial size.  To linear order $\delta$ is an
+Ornstein--Uhlenbeck process that relaxes at the local rate $S$ and is driven by noise of variance $D/S$.
+Treating the two parts as independent, the variance of a firm's yearly growth over its life is
 \begin{equation}
-\zeta_1^{(S)}=\theta\,\zeta_1^{(u)},\qquad R_S=R_u/\theta,
-\label{eq:product}
+\Var g\simeq V_F+B,\qquad B=\Big\langle\frac{D}{S^2}\big(1-e^{-S\Delta t}\big)\Big\rangle_{\rm life},
+\label{eq:law}
 \end{equation}
-with $R$ the number of decades over which volatility declines (exactly if a life's size is its geometric
-mean, which commutes with the power).  A softer self-limitation widens the
-range by the factor by which it flattens the decline, and the product $\zeta_1R$ is fixed by the
-statistics of the field: $0.4$ in the model against $0.8$ in Compustat.  Keeping the interactions
-linear while softening only the self-limitation condenses the economy.
+where $V_F$, the floor, is the growth variance of $y_F$.  For every life with at least $20$ growth rates,
+Eq.~\eqref{eq:law} reproduces the measured volatility to within $5\%$ above the lowest decile of size and
+$9\%$ in it (Fig.~\ref{fig:mechanism}a), where the linearisation is worst: it needs $S\gg\sqrt{D/2}\simeq0.22$.
+The floor is nearly flat, $\sqrt{V_F}=0.32$--$0.38$, although $\sqrt{\Var\Delta\ln\Phi}$ falls from $0.92$ to
+$0.44$ with size: a firm does not follow the fast part of its field.  The demographic part falls as
+$\Sb^{-b}$ with $b=0.65$--$0.79$, below the value $1$ of $B\simeq D\Delta t/\Sb$ because $B$ is dominated by the
+low excursions of a life, and the two parts are equal at $\Sb\simeq1.6$.  Equation~\eqref{eq:law} is
+therefore the two-part law of Sec.~\ref{sec:criterion}, with $u=V_F$.  The decomposition has the two-regime
+shape reported for data that include very small firms \cite{fontanelli2025}, but the measured panel does not
+resolve the two regimes, and $\zeta_1$ is the effective slope of the whole range.
 
-\paragraph{With noise the trade-off breaks.}  The mapping ignores the noise, which does not
-transform with the sizes: $\sqrt{DS}\,dW$ in $S$ becomes $\theta\sqrt D\,u^{1-1/2\theta}dW$ in $u$, additive at
-$\theta=1/2$.  In simulations at the reference $\sigma$ and $D$ ($N=16000$, four economies per point; Table~\ref{tab:theta}) a softer self-limitation slows the field down, the share of its variance that moves in
-time falling from $0.17$ at $\theta=1$ to $0.02$ at $\theta=1/2$, so volatility becomes demographic and the
-decline steepens instead of flattening: $\zeta_1=0.11$, $0.20$, $0.29$, $0.34$ for $\theta=1.5$, $1$, $0.75$,
-$0.5$, while the range stays at $1.7$--$2.0$ decades.  At $\theta=1/2$ the field moves as much as at the
-reference point for $\sigma=1.9$ (temporal share $0.18$), and there $\zeta_1=0.27$ over $2.1$ decades; at
-$\sigma=2.0$, where it moves more, $\zeta_1=0.19$ over $2.35$ decades.  Across these runs $\zeta_1R$ lies between $0.2$ and
-$0.58$ and the range never exceeds $2.4$ decades.  The lower end of the range is set by the
-newborn size: the smallest bin sits at $\Sb\simeq0.3D$ in every run, so at $\theta=1$ the range shrinks from
-$2.3$ to $1.7$ decades as $D$ grows from $0.05$ to $0.2$.  The upper end is the plateau, about $3$ at
-$\theta=1$ and between $1.6$ and $6.7$ in the $\theta$ runs.  The smallest lives have $v\simeq1.1$ whatever $D$,
-so up to the curvature of the fit $\zeta_1R$ is $\log_{10}$ of the fall from there to the volatility of the
-largest firms: a factor $2.8$ at the reference point against $5.5$ in Compustat.  Across $D$ at $\theta=1$,
-$\zeta_1R$ stays at $0.35$--$0.43$ while the range moves.  The exponent $\theta$ moves the floor and the
-plateau, and with them the slope, the range and the bend, but in none of our runs does volatility fall
-by more than a factor $3.8$.  A softer self-limitation also fattens the size
-distribution (Hill index of the top $1\%$ from $4.6$ at $\theta=1$ to $2.0$ at $\theta=1/2$, $\sigma=2.0$) but returns
-the ratios to $q$ ($2.02$, $3.01$, $3.94$), while $\theta=1.5$ bends them further ($1.75$, $2.21$, $2.41$).
+\section{Where the floors differ}
+\label{sec:floor}
 
-\paragraph{Other ways out.}  Without self-limitation, growth is Gibrat-like, the condition under which a
-lower barrier gives Zipf's law \cite{gabaix1999}, but the quenched part of the field is not removed and
-the economy condenses onto the best niche.  Giving each firm its own scale, a capacity $K_i$ that
-moves in time, keeps the plateau but makes volatility depend only on $S_i/K_i$, so a Zipf law of
-capacities comes with $\zeta_1=0$; making competitors act through their absolute sizes lets the largest
-firms dominate every field.  A model with both a Zipf law and a volatility law over four decades
-needs a size dependence of the dynamics that is not tied to a plateau, which in a one-variable model
-means an explicit exponent.  We read this as a limit of self-limited growth rather than of the
-particular model.
+Section~\ref{sec:onefirm} gives every life a growth variance $V_F+B$: a floor $V_F$, the growth variance of
+the noise-free firm along the life's own field, and a demographic part $B$ that falls with size.  This
+is the two-part law of Eq.~\eqref{eq:twopart} with $u=V_F$.  Here we ask what the floor is made of, why
+it differs between lives of equal size, and whether Eqs.~\eqref{eq:identity}--\eqref{eq:lognormal}
+account for the panel.  Throughout, the volatility is the growth standard deviation, and the lives are
+those with at least $20$ growth rates in the two reference economies, unless stated otherwise.
 
-%======================================================================
+\paragraph{The floor is mostly entry and exit.}  A life of this length usually begins as a newborn at
+$S\simeq D$ and ends at an exit, so its noise-free path climbs to a plateau, follows the field there,
+and collapses in the final dip.  Splitting the path where the noise-free size first and last reaches
+half its median,
+\begin{equation}
+V_F\simeq V_{\rm core}+\frac{E_{\rm in}+E_{\rm out}}{n},
+\label{eq:floor}
+\end{equation}
+with $V_{\rm core}$ the growth variance on the plateau and $E_{\rm in}$, $E_{\rm out}$ the sums of squared
+growth rates over the climb and the collapse.  For a logistic climb from $S_0$ to a plateau $h$,
+$E_{\rm in}\simeq\Delta t\,h[\ln(h/S_0)-1]$, and for a collapse in a field that has fallen to $-\varphi$,
+$E_{\rm out}\simeq\Delta t\,[\varphi\ln(h/S_{\rm end})+h]$: both grow with the plateau
+(Appendix~\ref{app:multiscaling}).  The two parts move in opposite directions.  The core falls from
+$0.084$ in the smallest fifth of sizes to $0.052$ in the largest, while the share of entry and exit grows
+from a quarter of $V_F$ to $62\%$: large firms climb further from the newborn size and collapse from
+higher.  Their sum is the nearly flat floor of Sec.~\ref{sec:onefirm}.
+
+\paragraph{Lives end in dips of the field.}  An established firm dies when its field dips.  Inside the
+dip the firm is small, the logistic term is negligible, and the firm is a Feller branching process,
+whose extinction probability is exact:
+\begin{equation}
+P_{\rm kill}=\exp\Big(-\frac{2}{D\,J}\Big),\qquad J=\int\frac{dt}{S_{\rm det}(t)},
+\label{eq:kill}
+\end{equation}
+with $S_{\rm det}$ the noise-free path through the dip.  Over the $446\,554$ dips of established firms,
+Eq.~\eqref{eq:kill} predicts a kill fraction of $0.725$ against $0.722$ observed, with no fitted
+parameter.  Dips begin at the downcrossings of zero, which occur at Rice's rate
+$\sqrt{-\rho''(0)}\,e^{-u^2/2}/2\pi$, with $u$ the node's mean field over its temporal amplitude.  Lives
+are therefore memoryless, with a mean that grows steeply with $u$, from about $23$ to $220$ growth rates
+across deciles of $u$.
+
+\paragraph{Floors differ with life length and degree.}  By Eq.~\eqref{eq:floor} the same climb and
+collapse are spread over lives of very different lengths, and the lengths are broad because lives end
+at memoryless dips.  Within size bins, $\Var(\ln V_F\mid\Sb)$ grows from $0.5$ in the smallest fifth to
+$0.9$ in the largest, and the spread of life lengths, $\Var(\ln n\mid\Sb)$, from $0.08$ to $0.91$.  In
+the four upper fifths the life length explains $26$--$62\%$ of $\Var\ln V_F$ within bins, more than the
+degree ($19$--$41\%$; $8\%$ against $14\%$ in the smallest fifth).  The degree acts through both parts
+of the floor.  A better connected firm feels a field of larger amplitude, which keeps its core up, and
+more frequent killing dips, which shorten its life (the correlation of $\ln n$ with $\ln\kappa$ within
+size bins falls from $-0.16$ in the smallest fifth to $-0.49$ in the largest) and raise its entry and
+exit part.  This keeps the floor of the larger firms at $V_F\simeq0.13$ while their demographic part
+falls.
+
+\paragraph{The criterion on the panel.}  The noise share falls from $\langle w\rangle_1=0.80$ in the
+smallest fifth to $0.44$ in the largest, and the dispersion at fixed size, with $B$ at its bin mean,
+grows from $s^2=0.021$ to $0.264$.  Within size bins $\langle w\rangle_4/\langle w\rangle_1=0.96$, $0.92$,
+$0.87$, $0.79$, $0.61$ by fifth, against $0.97$, $0.93$, $0.89$, $0.83$, $0.67$ from
+Eq.~\eqref{eq:lognormal}.  In the four lower fifths the local exponents agree with
+$(q/2)\,b\,\langle w\rangle_q$ to within $13\%$; in the largest the composition term dominates, because the
+largest lives also have the largest degrees (mean $\kappa$ from $1.00$ to $1.53$), and the local
+exponents are $0.13$, $0.16$, $0.10$, $-0.03$ against $0.17$, $0.29$, $0.37$, $0.41$.  Keeping each life's
+own floor and replacing $B$ by its bin mean, so that the floor is the only source of dispersion, gives
+ratios $1.85$, $2.55$, $3.07$ against $1.75$, $2.30$, $2.70$ measured.  Replacing instead the floor by its
+bin mean and keeping each life's own estimate of $B$ gives $2.08$, $3.68$, $6.61$, above $q$: without the
+spread of the floor only estimation noise is left, as in Sec.~\ref{sec:criterion}.  Keeping one part of
+Eq.~\eqref{eq:floor} at its own value and the other at its bin mean gives $1.98$, $2.94$, $3.85$ with
+only the core heterogeneous and $1.90$, $2.69$, $3.33$ with only the entry and exit part.  The bend is
+carried mostly by the climb and the collapse, through the spread of life lengths.
+
+\begin{table*}[t]
+\caption{Three panels of the model against the criterion of Sec.~\ref{sec:criterion}.  Volatility as the
+growth standard deviation; reference point, two economies per graph.  $s^2$: within-bin variance of
+$\ln(V_F+B)$ with $B$ at its bin mean, smallest and largest fifth of sizes.  ``Floor alone'': each life's
+own floor with $B$ at its bin mean.  For all lives the floor is not computed; the estimation variance
+of a standard deviation from $n$ Gaussian growth rates, about $1/(2n)$, is given instead.}
+\label{tab:cases}
+\begin{ruledtabular}
+\begin{tabular}{lcccccc}
+panel & lives & dispersion at fixed size & $\langle w\rangle_1$ & $\zeta_1$ & $\zeta_q/\zeta_1$ measured & floor alone\\
+\hline
+power-law graph, $n\ge20$ & $198\,840$ & $s^2$: $0.021\to0.264$ & $0.80\to0.44$ & $0.190$ & $1.75$, $2.30$, $2.70$ & $1.85$, $2.55$, $3.07$\\
+regular graph, $n\ge20$ & $124\,498$ & $s^2$: $0.007\to0.052$ & $0.86\to0.69$ & $0.397$ & $1.93$, $2.78$, $3.53$ & $1.98$, $2.95$, $3.88$\\
+power-law graph, $n\ge2$ & $1\,823\,939$ & $1/(2n)$: $0.21\to0.03$ & & $0.094$ & $2.83$, $5.00$, $7.30$ & \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+\paragraph{Three panels.}  Table~\ref{tab:cases} sets three panels of the model against the criterion.
+On a random regular graph every firm has degree $C$.  Its floor has the same make-up, the share of entry
+and exit growing from a quarter to half, and the life length explains up to half of its spread at fixed
+size.  But the floor is small and falls with size, from $0.07$ to $0.03$ in mean, so that even the largest
+lives remain dominated by their own noise.  Within size bins in the largest fifth, $(1-w)^2$ is about three
+times smaller than on the power-law graph and $\Var\ln V_F$ about half, so $s^2$ stays below $0.05$ and the
+ratio curve is close to $q$, as Eq.~\eqref{eq:lognormal} requires.  When all lives are kept, the mean
+number of growth rates grows from $2.6$ in the smallest fifth of sizes to $44.5$ in the largest, and the
+estimation variance falls steeply with size.  The ratios lie above $q$, so by Eq.~\eqref{eq:general} the
+total dispersion at fixed size shrinks with size: the estimation noise outweighs the floors.  Dropping the shortest lives restores the bend: $1.98$, $2.90$, $3.75$ for lives with at least five
+growth rates and $1.75$, $2.30$, $2.70$ for those with at least $20$.  One criterion accounts for a bend, its
+absence and its reversal; what differs between the panels is how the dispersion at fixed size changes
+with size.
+
+\begin{figure*}[t]
+\includegraphics[width=\linewidth]{fig_mechanism.pdf}
+\caption{Volatility law and the criterion on the panel (reference point, $N=16000$, two economies per graph,
+lives with at least $20$ growth rates).  (a) Measured growth volatility by decile of life-mean size, the law
+$\sqrt{V_F+B}$ of Eq.~\eqref{eq:law} and its two parts.  (b) Dispersion at fixed size, $s^2=\Var(\ln(V_F+B)\mid\Sb)$
+with $B$ at its bin mean, by fifth of size.  (c) Ratio curves, measured and from each life's own floor with
+$B$ at its bin mean, with the growth standard deviation as the volatility.}
+\label{fig:mechanism}
+\end{figure*}
+% TODO: add the all-lives curve of Table~\ref{tab:cases} to panel (c).
+
+\section{Comparison with firm data}
+\label{sec:data}
+
+We compare seven economies at the reference point ($N=32000$; an eighth, in a collective burst, is
+excluded) with the facts of MSB, using their estimator, the mean absolute deviation of a life's growth
+rates.  Which minimum life length matches theirs needs care.  MSB's growth rates are annual differences
+rolled over quarters, so their robustness cut of $20$ growth rates spans about six years, or five
+non-overlapping annual growth rates; their full sample has $46$ per firm on average.  Our $n_{\min}=5$ is
+the like-for-like cut, and we compare at it (Fig.~\ref{fig:facts}).  Table~\ref{tab:facts} also gives
+$n_{\min}=20$, the cut of the theory tests of Secs.~\ref{sec:onefirm} and \ref{sec:floor}.
+
+\begin{figure*}[t]
+\includegraphics[width=\linewidth]{fig_facts.pdf}
+\caption{The size--volatility facts at the reference point against Compustat \cite{moran2024} (lives with
+at least $5$ growth rates; $N=32000$, seven economies pooled, one in a collective burst excluded).
+(a) Mean volatility against life-mean size, with the Compustat slope.  (b) Ratio curve; the band is the
+range over the seven economies.  (c) Distribution of $v/\E[v\mid\Sb]$ by fifth of size, from the smallest
+(light) to the largest (dark), with the Compustat tail.  The other facts are in Table~\ref{tab:facts}.}
+\label{fig:facts}
+\end{figure*}
+
+\begin{table*}[t]
+\caption{The facts of MSB at the reference point ($N=32000$, seven economies) and in Compustat
+\cite{moran2024}, with MSB's uncertainties in brackets; the Compustat ratios are computed from their
+exponents.  Fifths are fifths of life-mean size.  Rows spanning both model columns use the minimum life
+length given in the row.  Rescaled growth is rescaled as by MSB, with the leave-one-out mean and volatility,
+in the two reference economies, and its kurtosis is taken on $|z|\le8$, the range of the Compustat curves, for
+both (Appendix~\ref{app:protocol}).}
+\label{tab:facts}
+\begin{ruledtabular}
+\begin{tabular}{llll}
+fact & model, $n_{\min}=5$ & model, $n_{\min}=20$ & Compustat\\
+\hline
+$\zeta_q$ & $0.209$, $0.400$, $0.561$, $0.685$ & $0.254$, $0.452$, $0.598$, $0.701$ & $0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$\\
+spread of $\zeta_1$ between economies & $\pm0.024$ & $\pm0.028$ & \\
+$\zeta_q/\zeta_1$ & $1.92$, $2.69$, $3.28$ & $1.78$, $2.35$, $2.75$ & $1.95$, $2.55$, $2.90$\\
+$\zeta_q-q\zeta_1$ & $-0.02$, $-0.07$, $-0.15$ & $-0.06$, $-0.16$, $-0.32$ & $-0.01$, $-0.09$, $-0.22$\\
+range of the decline & $2.0$ decades & $1.4$ decades & $4$ decades\\
+volatility, smallest $\to$ largest bin & $1.11\to0.39$ & $0.70\to0.32$ & $1.22\to0.22$\\
+tail $b$ of $v/\E[v\mid\Sb]$ & $5.2$ & $6.6$ & $4.6$\\
+excess kurtosis of rescaled growth & \multicolumn{2}{l}{$3.0\to5.7$ by fifth ($n_{\min}=5$; Gaussian null $2.5\to0.1$)} & $4.2\to5.7$\\
+3-year persistence (kurtosis/iid) & \multicolumn{2}{l}{$0.72\to1.30$ by fifth ($n_{\min}=20$)} & $>1$ at all sizes\\
+correlation with the aggregate & \multicolumn{2}{l}{$0.11\to0.29$ by fifth} & rises with size\\
+pairwise correlation, same fifth & \multicolumn{2}{l}{$0.03\to0.11$} & rises with size\\
+size distribution & \multicolumn{2}{l}{Hill index $4.5$} & Zipf, $\simeq1$\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+\paragraph{What the model gets.}  At the like-for-like cut, $\zeta_1=0.209\pm0.024$ against $0.20(1)$.  The
+decline is monotone, with no hump at small sizes, and the ratio curve lies below $q$ at both cuts.  Rescaled
+growth rates are fat-tailed at every size, and among the largest firms as fat as in Compustat
+(Fig.~\ref{fig:tails}).  The
+co-movement of a firm with the aggregate and with firms of similar size rises with size, as in
+Compustat.  This is the feature MSB single out as the missing ingredient of granular models, whose firms
+do not co-move \cite{moran2024}; here it comes from the interactions.  A natural reading is that small
+firms are moved mostly by their own noise and large ones by their field, which they share with their
+neighbours, but we have no quantitative theory of it.
+
+\paragraph{The shape of the bend.}  Equation~\eqref{eq:general} reads the row $\zeta_q-q\zeta_1$ of
+Table~\ref{tab:facts} as the growth with size of the moments of the rescaled volatility.  In Compustat the
+second moment hardly grows and the fourth does: the upper tail spreads.  At the like-for-like cut the
+model gets the second moment but its upper tail spreads too little ($-0.15$ against $-0.22$).  At
+$n_{\min}=20$ its dispersion grows already in the bulk ($-0.06$ against $-0.01$) and its tail at least as
+much as in Compustat.  The difference between the two cuts is the estimation noise of short lives, which
+shrinks with size and offsets part of the floors' spread (Sec.~\ref{sec:criterion}).  Neither cut gives
+Compustat's shape: the floors of the model spread the whole distribution of volatilities at fixed size,
+while in Compustat the spread is concentrated in the upper tail.
+
+\paragraph{What it misses.}  The decline spans two decades rather than four, and volatility falls by a
+factor $2.8$ against $5.5$.  The tail of the volatility distribution is too thin, $b=5.2$ against $4.6$, and thinner for longer
+lives; with all lives the model gives $b=4.4$, but a null with iid Laplace growth and no differences
+between firms gives $4.3$, so that value is an artefact of short lives.  The rescaled growth rates of small
+firms have tails that are too thin: their excess kurtosis is $3.0$ against $4.2$, and a Gaussian null with
+the same lives gives $2.5$ from the rescaling of short lives alone.  The model's tails are also asymmetric, the
+negative one fatter, and multi-year persistence is confined to the largest firms: small firms are moved by
+near-Gaussian, mean-reverting birth--death noise, large firms by rare and persistent dips of their field,
+which make their fat tails and the collapses before exit.  Aggregate volatility is several times too large
+and does not fall as $N^{-1/2}$ over the sizes we simulate, and $5$ of $80$ economies in our robustness runs
+enter a collective burst in which volatility no longer depends on size.  The size distribution has no
+Pareto tail, newborns have extreme infant mortality, and small established firms shrink on average.  The
+missing tail and the short range come from the self-limitation: a firm whose field stays at $\Phi>0$
+relaxes to the plateau $x=m\Phi$, a few times the mean firm, so sizes are capped near the highest plateaus,
+and the decline runs from a few times the newborn size $D$, below which lives are too short to measure, to
+the plateau.
+
+\section{Predictions for firm data}
+\label{sec:predictions}
+
+The criterion of Sec.~\ref{sec:criterion} holds for any panel; the mechanism of Sec.~\ref{sec:floor} is a
+claim about where the dispersion at fixed size comes from.  It leads to four tests.  The model's numbers
+below are for the two reference economies, with the panel's estimator.
+
+\paragraph{1. The dispersion at fixed size grows with size.}  For lives with at least $20$ growth rates the
+within-bin variance of $\ln v$ grows from $0.048$ in the smallest fifth of sizes to $0.162$ in the largest.
+Compustat's exponents imply that its dispersion grows mainly in the upper tail (Sec.~\ref{sec:data});
+measuring $K_q(\Sb)$ by size directly would show where, and whether the growth is concentrated among the
+largest firms, as the criterion requires when it comes from floors.
+
+\paragraph{2. Life length and exposure explain a growing share of it.}  Within size bins, the length of a
+life explains $5\%$ of $\Var\ln v$ in the smallest fifth and $61\%$ in the largest, and the degree $4\%$ and
+$40\%$.  In firm data the life is the observed span from listing to delisting, and the degree a measure
+of exposure to other firms, such as the number of major customers or suppliers a firm discloses.  The
+prediction is not that either matters, but that their share of the dispersion grows with size.
+
+\paragraph{3. Trimming entry and exit years moves the curve towards $q$.}  Dropping the first $k$ years
+after a birth and the last $k$ before an exit, and keeping lives that still have at least $20$ growth
+rates, steepens the decline and weakens the bend: for $k=0$, $1$, $2$, $3$, $5$, $\zeta_1=0.253$, $0.255$,
+$0.272$, $0.291$, $0.320$ and $\zeta_4/\zeta_1=2.80$, $2.96$, $3.08$, $3.17$, $3.23$.  Keeping only the
+plateau of each life, which data cannot locate, goes further in the same direction, to $\zeta_1=0.38$ and
+$\zeta_4/\zeta_1=3.44$.  Compustat firms enter at listing, already large, so the climb from the newborn size has no
+counterpart there and the years before delisting should carry the effect.  With shorter lives the test is
+not clean: at $n_{\min}=5$ trimming also shortens lives and adds estimation noise, and the sequence is not
+monotone.
+
+\paragraph{4. Short lives push the curve towards or above $q$.}  With all lives the model's ratios are
+$2.42$, $4.01$, $5.64$, and the bend appears from $n_{\min}\simeq5$ ($1.94$, $2.75$, $3.41$).  When short lives are kept, the
+dispersion at fixed size is not monotone in size: for $n_{\min}=5$ the within-bin variance of $\ln v$ falls
+from $0.18$ in the smallest fifth to $0.10$ and rises again to $0.17$ in the largest, estimation noise
+dominating among small firms and floors among large ones.  Panels that include very small firms, as in
+Ref.~\cite{fontanelli2025}, should therefore show ratios close to or above $q$ unless short lives
+are dropped, and ratios that fall below $q$ as the minimum life length grows.
+
 \section{Discussion}
 \label{sec:discussion}
 
-An economy of firms that compete on a heterogeneous network and are subject to birth--death noise
-reproduces the shape of the size--volatility relation of firms: a monotone decline with effective
-exponent $0.20$--$0.25$ and a ratio curve $\zeta_q/\zeta_1$ that bends below $q$.  The theory is a one-firm problem:
-a logistic unit driven by a field whose mean falls and whose amplitude grows as the square root of its
-degree, plus its own noise.  The exponent is the effective slope of a crossover between a demographic part
-that falls with size and a nearly flat fitness floor, the two-regime shape of data that include small
-firms \cite{fontanelli2025}; in the model the two regimes appear in the decomposition but are not
-resolved in the measured panel.  The multiscaling has a simple origin: a volatility law of the form
-floor plus size-dependent part gives $\zeta_q=(q/2)b\langle w\rangle_q$, and the curve bends below $q$ only
-when the floor differs between firms of equal size.  Granular models give a fixed shape and ratios
-$q$.  In the model the floor differs because lives differ in length: it contains the climb after entry and
-the collapse before exit, and lives end at memoryless dips of the field.  The heterogeneity of the network
-keeps the floor of the larger, better connected firms large against their noise, which makes these
-differences visible.
+The ratio curve of firm volatility bends below $q$ exactly when the dispersion of volatilities among firms
+of equal size grows with size.  When a firm's growth variance is a floor plus a part that falls with size,
+this happens only if floors differ between firms of equal size; the noise of estimating a volatility from
+a short life works the other way.  The criterion does not depend on a model.  Granular models sit at its
+two ends: well-diversified firms give a rescaled volatility whose law does not depend on size, on the
+boundary, and firms made of a few subunits stretch its upper tail so much that the ratios fall towards
+$1$.  Firm data lie between, and so does the economy we build.  The corrections that MSB invoke to bring
+a granular model between the limits would act through the same growth of $K_q$ with size, but they give
+the length of a life, and the years after entry and before exit, no role beyond estimation noise, which
+separates them from our mechanism (Sec.~\ref{sec:predictions}).
 
-The identity~\eqref{eq:identity} does not depend on the network model, and the mechanism suggests two
-tests on firm data.  First, the dispersion of volatilities among firms of equal size should grow with
-size, and the length of a firm's observed life should explain a growing share of it, together with a
-measure of its exposure to others, such as its number of customers, suppliers or competitors.  Second,
-trimming the years after entry and before exit should move the ratio curve towards $q$ and steepen the
-decline: in the model, keeping only the plateau of each life moves the ratios from $1.79$, $2.37$, $2.80$ to
-$1.92$, $2.74$, $3.44$ and $\zeta_1$ from $0.25$ to $0.38$ (lives with at least $20$ growth rates;
-\texttt{notebooks/07\_floor\_theory.ipynb}).
+In an economy of interacting firms the floors differ for two reasons.  A firm's floor contains the climb
+after its entry and the collapse before its exit, spread over its life, and lives end at memoryless dips
+of the field, so their lengths are broad.  And the degree of a firm's node sets the amplitude of its field,
+which keeps the floors of the larger, better connected firms large against their noise and makes their
+differences visible.  Removing the degree heterogeneity removes the bend, and keeping short lives reverses
+it; one criterion accounts for the three.  None of this is put in by hand.  A granular model takes the
+structure of firms and the independence of their shocks as given; here the floors, the life lengths that
+spread them, entries and exits, and the co-movement of large firms all come from one dynamics of
+interacting firms.
 
-The model fails where the self-limitation it relies on bites: the range of the decline is two decades
-rather than four, sizes have no Pareto tail, and large firms are too volatile.  Section~\ref{sec:limits}
-shows that these failures are tied together.  Open problems are a two-time theory with noise and
-turnover, which would give the field's correlation above $\sigma_c(D)$ and with it the floor $v_F$ and
-$\zeta_1(\sigma,D)$ without simulation; the rising co-movement with size, which involves the common mode
-of a finite economy; and a dynamics that decouples the volatility decline from the size cap.
+Two limits are clear.  The theory is a one-firm problem given three statistics of the field, but at finite
+connectivity a Gaussian closure predicts neither the amplitude of the field's motion nor the fat tail of
+its spread at equal degree, both set close to a marginal amplification; a closure that keeps the
+differences between firms of equal degree, such as the cavity method solved by population dynamics, is
+open.  And the model spreads the whole distribution of volatilities at fixed size, while in Compustat only
+its upper tail spreads; the self-limitation that makes volatility depend on size also caps firm size, so
+the range is two decades rather than four and there is no Zipf law.  A dynamics that decouples the decline
+of volatility from the size cap, and a theory of the co-movement of large firms, are the next steps.  The
+tests of Sec.~\ref{sec:predictions} do not depend on these limits: they ask whether firm data show the
+dispersion, the role of life length and the response to trimming that the mechanism implies.
 
 \appendix
 
-%======================================================================
 \section{Relative sizes and the standard model}
 \label{app:relative}
 
@@ -803,6 +703,53 @@ deterministic model are in \texttt{notebooks/02\_phase\_diagram.ipynb}.
 \section{Demographic noise at constant field}
 \label{app:constant}
 
+\paragraph{Renewal law.}  With noise and turnover, a node whose field is constant is a renewal
+process: its successive lives are independent and identically distributed.  Equation~\eqref{eq:onefirm}
+at constant $\Phi=h$ is a one-dimensional diffusion with scale function $s(y)=\int_0^ys'(u)\,du$, where
+$s'(u)=\exp[-(2/D)(hu-u^2/2)]$, and by the renewal--reward theorem the fraction of time the node spends
+at size $x$ is
+\begin{gather}
+p(x\mid h)=\frac{2\,s(\min(x,D))}{D\,x\,s'(x)\,T(D)},\nonumber\\
+T(D)=\int_0^\infty\frac{2\,s(\min(x,D))}{D\,x\,s'(x)}\,dx,
+\label{eq:renewal}
+\end{gather}
+with turnover rate $1/T(D)$.  The law has two parts: a plateau $\propto x^{-1}e^{-(x-h)^2/D}$, Gaussian of
+variance $D/2$ around $h$ for $h\gg\sqrt D$, and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
+exit times follow from the same quadratures and agree with direct simulation to $3\%$ (Appendix~\ref{app:constant}).
+
+\paragraph{Instability line with noise.}  Replacing the clipped Gaussian by the renewal law in the
+static self-consistency gives the mean sizes $\langle S\rangle_h$ and the susceptibility
+$\chi=\partial\langle S\rangle_h/\partial h$; the static state is stable while the Perron root of
+$\sigma^2{\rm diag}(\E\chi^2)K$ is below one.  Noise smooths $\chi$ and raises the line almost linearly with
+$D$ (Fig.~\ref{fig:phaselines}): from $1.460$ to $1.577$ at $\alpha=2.5$ and from $1.399$ to $1.551$ at
+$\alpha=6$ between $D=0.003$ and $0.3$; at $D=0.003$ it agrees with the deterministic line to $0.002$
+($1.399$ against $1.400$ at $\alpha=6$, $1.413$ against $\sqrt2$ on the complete graph).  The closure
+treats each node's field as frozen, so it is controlled only below the line; in simulations at $\alpha=6$ and
+$D=0.1$, slow collective fluctuations of the composition set in between $\sigma=1.40$ and $1.50$, around the
+predicted $1.451$, as a smooth crossover rather than a sharp transition (Appendix~\ref{app:constant}).  The same theory
+predicts the turnover rate to $1\%$ below $\sigma_c$ and to about $2\%$ above it, where it is no longer
+controlled ($\alpha=6$; Appendix~\ref{app:constant}).  Turnover is set by
+the nodes with $h<0$, where a newborn's life hardly depends on $D$, and is nearly independent of the
+noise.  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
+disorder.  On the reference graph competition raises $\sigma_c$ strongly, from $0.83$ at $\mu=0$ to $1.68$ at
+$\mu=-2.5$, because its degrees are the most spread, and with them the mean field across classes; on the
+complete graph the line does not depend on $\mu$, and at $\alpha=6$ it barely does.  Under strong
+competition the zero-growth line is almost the same on the three graphs, within $0.05$ for $\mu\le-1.25$;
+under weak competition it is lower on the reference graph ($0.50$ against $0.63$ and $0.64$ at $\mu=0$).  The reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
+the static estimate of the zero-growth line ($1.72$ at $D=0.1$), which is not controlled there.  In
+simulation the zero-growth line nevertheless lies within $0.04$ of the static estimate for $\mu$ from $-0.5$ to $-2.5$, and
+the region where the facts of Sec.~\ref{sec:data} hold is a band along it (Fig.~\ref{fig:strip}).
+
+\begin{figure}[t]
+\includegraphics[width=\linewidth]{fig_phase.pdf}
+\caption{Phase diagram at $D=0.1$ from the renewal theory.  Above the instability line $\sigma_c(\mu)$ the
+composition keeps fluctuating (shaded for the reference graph, $\alpha=2.5$); the lines for $\alpha=6$ and the
+complete graph are shown for comparison.  The zero-growth line separates economies whose mean firm
+grows from those where it shrinks; above $\sigma_c$ it is the continuation of the static solution and is
+not controlled.  The star is the reference point.}
+\label{fig:phase}
+\end{figure}
+
 \paragraph{Quadratures.}  At constant $\Phi$, Eq.~\eqref{eq:onefirm} is a diffusion with drift $S(\Phi-S)$ and diffusion
 coefficient $DS$, absorbed at $0$.  Its scale density is $s'(y)=\exp[-(2/D)(\Phi y-y^2/2)]$, its scale function
 $s(y)=\int_0^ys'(u)\,du$ and its speed density $m(y)=2/(Dy\,s'(y))$ \cite{karlintaylor1981}.  A newborn reaches its plateau before exiting with
@@ -842,7 +789,7 @@ $T$, $\Phi=0.5$, $S_0=\Phi$ & 38.75 & 38.01 & \\
 \end{ruledtabular}
 \end{table}
 
-\paragraph{Renewal law.}  With turnover the lives at a node of constant field are independent and
+\paragraph{Derivation of the renewal law.}  With turnover the lives at a node of constant field are independent and
 identically distributed.  By the renewal--reward theorem the fraction of time spent near $x$ is the
 expected time one life spends there, the Green's function $G(D,x)=s(\min(x,D))\,m(x)$, divided by the
 mean life $T(D)=\int_0^\infty G(D,x)\,dx$; this is Eq.~\eqref{eq:renewal}.  Against direct
@@ -861,8 +808,8 @@ $\chi=\partial\langle S\rangle_h/\partial h$, in place of the survival fraction 
 survival step and $\E\chi^2=\varphi$).  Table~\ref{tab:phase} tests the
 turnover against simulation.  The share of the field variance that moves in time grows from $0.025$
 at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it below $\sigma_c$, by a factor
-of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field fluctuations, which needs the
-two-time theory.
+of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field
+fluctuations.  The two-time closure includes it, but at $C=200$ only in part.
 
 \paragraph{Onset in simulation.}  Since the closure is least accurate near $\sigma_c$, we locate the onset
 directly.  For each $\sigma$ we run two replicas on each of two graphs ($\alpha=6$, $\mu=-1.76$, $D=0.1$,
@@ -905,8 +852,42 @@ $\sigma$ & turnover (sim) & turnover (theory) & temporal share of field variance
 \end{table*}
 
 %======================================================================
-\section{One-firm reduction, volatility law and multiscaling}
-\label{app:multiscaling}
+\section{Two-time closure}
+\label{app:closure}
+
+\paragraph{Effective process.}  Each degree class obeys Eq.~\eqref{eq:onefirm} with a Gaussian field
+closed by Eq.~\eqref{eq:app-closure} (Appendix~\ref{app:hdmft}); at zero reciprocity there is no reaction term.
+
+\paragraph{Solution.}  At the reference point we solve Eq.~\eqref{eq:app-closure} in the stationary state by
+sampling the effective process \cite{eissfeller1992,roy2019} (\texttt{scripts/two\_time\_dmft.py}), with $31$
+classes, of equal population in the bulk and of equal degree mass in the tail; each sampled node carries
+its own degree, its field is scaled by $k/k_p$, and neighbour averages are weighted by degree.  Evaluated
+with the measured sizes, Eq.~\eqref{eq:app-closure} gives the temporal and frozen parts of the measured
+field to within $4\%$ and $6\%$.  The self-consistent solution reproduces the mean field to within the
+difference between the two economies, but its temporal amplitude is $0.71$--$0.81$ of the measured one in
+every class, and its correlation is gone by $\tau=16$, where the measured one is still $0.05$--$0.13$.  Its
+life panel has $\zeta_1=0.34$ and ratios $1.85$, $2.53$, $3.07$, against $0.25$ and $1.79$, $2.37$, $2.80$.
+
+\paragraph{Why it falls short.}  At $C=200$ a few strongly fluctuating neighbours dominate the temporal
+field of a node, so its amplitude varies between nodes of equal degree, with a coefficient of variation of
+$0.24$--$0.36$; the closure replaces this spread by its mean.  Started from the measured state of one
+economy, one step of the iteration returns $0.955\pm0.01$ of the temporal field variance (three replicas);
+driving each node instead with the mean field and temporal amplitude of a measured node of its class
+returns $1.02\pm0.03$.  A loss of $4.5\%$ per step that halves the self-consistent temporal variance means a
+loop gain of about $0.9$: the temporal field is set close to marginal amplification.
+
+\paragraph{With measured inputs.}  Taking the temporal field from simulation, an amplitude $2.16\sqrt\kappa$
+and an exponential correlation with the $1/e$ time of the class-weighted measured correlation, $4.5$, and
+solving for the rest, the panel has $\zeta_1=0.26$ and ratios $1.85$, $2.54$, $3.08$; the volatility of the
+smallest and largest bins is $0.71$ and $0.37$, against $0.70$ and $0.32$.  The frozen spread is then
+$12$--$15\%$ low.  Fixing it at its measured $2.66\sqrt\kappa$ leaves $\zeta_1$ at $0.26$ but moves the ratios
+only to $1.83$, $2.49$, $2.98$, against $1.81$, $2.42$, $2.86$ with the measured mean fields reshuffled within
+degree and $1.78$, $2.37$, $2.81$ with each node's own (Sec.~\ref{sec:onefirm}).  The bend depends on the shape
+of the spread of mean fields at equal degree, whose fat tail a Gaussian closure cannot produce.
+
+%======================================================================
+\section{One-firm reduction and volatility law}
+\label{app:reduction}
 
 \paragraph{Reduction.}  Table~\ref{tab:reduction} compares the full model with independent firms driven
 by their measured fields and fresh noise, on the two reference economies.
@@ -922,18 +903,18 @@ their measured fields and their own noise (two reference economies, $N=16000$). 
 
 \begin{table*}[t]
 \caption{Full model against one firm in its measured field: $\zeta_1$ and $\zeta_q/\zeta_1$ ($q=2,3,4$) of the
-life panel, volatility from the mean absolute deviation, as in Sec.~\ref{sec:model} (Table~\ref{tab:mslaw} uses the
-standard deviation).  Reference point, $N=16000$, two economies; exit rates $0.621$ (full) and
-$0.621$ (one firm) per node per unit time.  Source: \texttt{notebooks/04\_volatility\_law.ipynb}.}
+life panel, volatility from the mean absolute deviation, as in Sec.~\ref{sec:economy} (Table~\ref{tab:mslaw} uses the
+standard deviation).  Reference point, $N=16000$, two economies; exit rates $0.612$ (full) and
+$0.612$ (one firm) per node per unit time.  Source: \texttt{notebooks/04\_volatility\_law.ipynb}.}
 \label{tab:reduction}
 \begin{ruledtabular}
 \begin{tabular}{lcccc}
 $n_{\min}$ & $\zeta_1$ full & $\zeta_1$ one firm & $\zeta_q/\zeta_1$ full & $\zeta_q/\zeta_1$ one firm\\
 \hline
-2  & 0.179 & 0.185 & 2.42, 3.97, 5.51 & 2.41, 3.97, 5.55\\
-5  & 0.209 & 0.216 & 1.94, 2.74, 3.36 & 1.94, 2.76, 3.41\\
-10 & 0.222 & 0.228 & 1.82, 2.42, 2.82 & 1.81, 2.42, 2.81\\
-20 & 0.254 & 0.263 & 1.80, 2.42, 2.88 & 1.81, 2.44, 2.90\\
+2  & 0.179 & 0.184 & 2.42, 4.01, 5.64 & 2.42, 3.98, 5.58\\
+5  & 0.208 & 0.213 & 1.94, 2.75, 3.41 & 1.94, 2.76, 3.43\\
+10 & 0.218 & 0.224 & 1.80, 2.37, 2.75 & 1.80, 2.39, 2.78\\
+20 & 0.253 & 0.261 & 1.79, 2.37, 2.80 & 1.79, 2.39, 2.83\\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -941,59 +922,79 @@ $n_{\min}$ & $\zeta_1$ full & $\zeta_1$ one firm & $\zeta_q/\zeta_1$ full & $\ze
 \paragraph{Volatility law.}  Table~\ref{tab:law} gives the decomposition of Eq.~\eqref{eq:law} by
 deciles of life-mean size.  The prediction is within $5\%$ above the lowest decile and $9\%$ in it,
 where the linearisation of the noise around the noise-free path is worst.  The fitness part is flat,
-$\sqrt{V_F}=0.32$--$0.37$; the two parts are equal at $\Sb\simeq1.6$.  Over the range of the table the
+$\sqrt{V_F}=0.32$--$0.38$; the two parts are equal at $\Sb\simeq1.6$.  Over the range of the table the
 measured slope of $\mathrm{sd}(g)$ against $\Sb$ is $0.17$ and the prediction's $0.22$.  The field used here
 includes the entry dilution of Sec.~\ref{app:relative}; without it the one-firm exit rate is $2\%$ low.
 
 \begin{table}[t]
 \caption{Volatility law, lives with at least $20$ growth rates of the two reference economies
-($197\,636$ lives), by deciles of $\Sb$.  Source: \texttt{notebooks/04\_volatility\_law.ipynb}.}
+($198\,840$ lives), by deciles of $\Sb$.  Source: \texttt{notebooks/04\_volatility\_law.ipynb}.}
 \label{tab:law}
 \begin{ruledtabular}
 \begin{tabular}{cccccc}
 $\Sb$ & sd$(g)$ & $\sqrt{V_F+B}$ & ratio & $\sqrt{V_F}$ & $\sqrt B$\\
 \hline
-0.26 & 0.726 & 0.793 & 1.09 & 0.323 & 0.724\\
-0.46 & 0.668 & 0.683 & 1.02 & 0.353 & 0.585\\
-0.64 & 0.636 & 0.639 & 1.01 & 0.364 & 0.526\\
-0.81 & 0.613 & 0.604 & 0.98 & 0.367 & 0.479\\
-0.99 & 0.589 & 0.578 & 0.98 & 0.370 & 0.445\\
-1.19 & 0.568 & 0.551 & 0.97 & 0.368 & 0.411\\
-1.43 & 0.547 & 0.529 & 0.97 & 0.366 & 0.381\\
-1.73 & 0.525 & 0.506 & 0.96 & 0.365 & 0.350\\
-2.20 & 0.500 & 0.479 & 0.96 & 0.364 & 0.312\\
-3.53 & 0.478 & 0.456 & 0.95 & 0.374 & 0.260\\
+0.25 & 0.729 & 0.796 & 1.09 & 0.321 & 0.728\\
+0.46 & 0.665 & 0.681 & 1.02 & 0.350 & 0.585\\
+0.63 & 0.636 & 0.644 & 1.01 & 0.364 & 0.532\\
+0.80 & 0.612 & 0.608 & 0.99 & 0.366 & 0.486\\
+0.97 & 0.593 & 0.584 & 0.98 & 0.370 & 0.451\\
+1.17 & 0.571 & 0.563 & 0.99 & 0.371 & 0.423\\
+1.40 & 0.547 & 0.529 & 0.97 & 0.367 & 0.381\\
+1.71 & 0.524 & 0.509 & 0.97 & 0.365 & 0.355\\
+2.17 & 0.502 & 0.481 & 0.96 & 0.365 & 0.314\\
+3.50 & 0.480 & 0.461 & 0.96 & 0.377 & 0.265\\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
-\paragraph{The identity with a composition term.}  Let $p(u\mid\Sb)$ be the law of the floor at fixed
-size and $E_q(\Sb)=\int p(u\mid\Sb)\,(u+B(\Sb))^{q/2}\,du$, so that $\E[v^q\mid\Sb]=E_q\,\E[\epsilon^q]$.  Then
+%======================================================================
+\section{The identity and the floor}
+\label{app:multiscaling}
+
+\paragraph{The identity with a composition term.}  Let $p(u\mid\Sb)$ be the law of the floor at fixed size
+and $E_q(\Sb)=\int p(u\mid\Sb)\,(u+B(\Sb))^{q/2}\,du$, so that $\E[v^q\mid\Sb]=E_q\,\E[\epsilon^q]$.  Then
 \begin{gather}
 \zeta_q=-\frac{d\ln E_q}{d\ln\Sb}=\frac q2\,b\,\langle w\rangle_q-c_q,\nonumber\\
-c_q=\frac{1}{E_q}\int\frac{\partial p(u\mid\Sb)}{\partial\ln\Sb}\,(u+B)^{q/2}\,du ,
+c_q=\frac{1}{E_q}\int\frac{\partial p(u\mid\Sb)}{\partial\ln\Sb}\,(u+B)^{q/2}\,du .
 \label{eq:app-identity}
 \end{gather}
-with $b=-d\ln B/d\ln\Sb$ and $\langle w\rangle_q$ as in Eq.~\eqref{eq:identity}.  The composition term $c_q$ vanishes if the
-law of the floor does not depend on size.  On the network it does not vanish: larger lives have
-larger degrees on average, and the floor grows with the degree, so $c_q>0$ and the decline is slower
-than the noise share alone implies.  If the law of $\ln u$ only shifts with size, by $\delta(\Sb)$, then
-$c_q=(q/2)(1-\langle w\rangle_q)\,d\delta/d\ln\Sb$ and $\zeta_q=(q/2)\,[\,b\langle w\rangle_q-(1-\langle w\rangle_q)\,d\delta/d\ln\Sb\,]$: a
-rising floor flattens the decline and, since $\langle w\rangle_q$ falls with $q$, adds to the bend; a floor whose upper
-tail spreads with size adds more.  If the floor is the same for all firms of a given size, $E_q=(u+B)^{q/2}$
-and $\zeta_q=q\zeta_1$ exactly, whatever $c_q$: heterogeneity at fixed size is necessary for the bend in
-general, and sufficient when $c_q=0$.  The tests of Sec.~\ref{sec:multiscaling} use the measured floors of the lives in
-each bin, which include the composition term.
+The composition term vanishes if the law of the floor does not depend on size.  On the network it does not
+vanish: larger lives have larger degrees on average, and the floor grows with the degree, so $c_q>0$ and
+the decline is slower than the noise share alone implies.  If the law of $\ln u$ only shifts with size, by
+$\delta(\Sb)$, then $c_q=(q/2)(1-\langle w\rangle_q)\,d\delta/d\ln\Sb$: a rising floor flattens the decline and,
+since $\langle w\rangle_q$ falls with $q$, adds to the bend.  If the floor is the same for all firms of a given
+size, $E_q=(u+B)^{q/2}$ and $\zeta_q=q\zeta_1$ exactly, whatever $c_q$.
 
-\paragraph{Monotonicity of $\langle w\rangle_q$.}  With $Y=u+B$, $\langle w\rangle_q=B\,\E[Y^{q/2-1}]/\E[Y^{q/2}]=
-B\exp[h(q-2)-h(q)]$, where $h(q)=\ln\E[Y^{q/2}]$ is the cumulant generating function of $\tfrac12\ln Y$
-evaluated at $q$ and therefore convex.  Convexity makes $h(q)-h(q-2)$ non-decreasing, so $\langle w\rangle_q$ is
-non-increasing in $q$, strictly unless $Y$ is degenerate at fixed size.
+\paragraph{Monotonicity of $\langle w\rangle_q$.}  With $Y=u+B$, $\langle w\rangle_q=B\exp[h(q-2)-h(q)]$, where
+$h(q)=\ln\E[Y^{q/2}]$ is the cumulant generating function of $\tfrac12\ln Y$ evaluated at $q$ and therefore
+convex.  Convexity makes $h(q)-h(q-2)$ non-decreasing, so $\langle w\rangle_q$ is non-increasing in $q$, strictly
+unless $Y$ is degenerate at fixed size.
+
+\paragraph{Floor make-up.}  The core of a life runs from the first to the last sample at which the
+noise-free size is at least half its median.  For a climb in a constant field $h$, $u=S/h$ obeys
+$\dot u=hu(1-u)$ and $d\ln S/dt=h(1-u)$, so $\int(d\ln S/dt)^2dt=h[\ln(h/S_0)-1+S_0/h]$.  For a collapse in a
+field $-\varphi$, $d\ln S/dt=-(\varphi+S)$ and $\int(\varphi+S)^2dt=\varphi\ln(h/S_{\rm end})+h-S_{\rm end}$.  Times
+$\Delta t$ these are $E_{\rm in}$ and $E_{\rm out}$ of Eq.~\eqref{eq:floor}.  On the $175\,171$ complete lives with at
+least $20$ growth rates, the exit formula follows the measured sum life by life (log-correlation
+$0.85$--$0.91$ by fifth) and lies above it by $6$--$40\%$; the entry formula has the right scale but
+correlates less (log-correlation $0.5$), because a firm climbs in a field that moves.
+
+\paragraph{Life lengths.}  For $dS=r(t)S\,dt+\sqrt{DS}\,dW$ the probability of extinction by time $t$ is
+$\exp[-2S_0/(D\int_0^te^{-R(s)}ds)]$, $R=\int_0^tr$, from the Laplace transform of this Feller diffusion;
+with $S_{\rm det}=S_0e^R$ this is Eq.~\eqref{eq:kill}.  At the bottom of a dip, where $\Phi=S_{\min}$, a saddle
+point gives $J\simeq\sqrt{2\pi/\Phi'}/S_{\min}$: a dip kills when it brings the firm below a size of order $D$
+times its recovery time.  Binned by the predicted probability, the observed kill fractions are $0.015$ at
+$0.027$, $0.102$ at $0.147$, $0.418$ at $0.450$, $0.894$ at $0.853$ and $0.986$ at $0.974$, and the log-likelihood per
+dip is $-0.175$ against $-0.591$ for a constant kill rate.  Rice's rate, from each node's mean, standard
+deviation and lag-$\Delta t$ autocorrelation of the field, lies $1$--$13\%$ above the observed rate in every
+decile of $u$ but the lowest.  Among complete lives the coefficient of variation of $n-20$ is $1.05$--$1.22$
+in every decile of $u$ but the highest, where the window cuts the longest lives.
 
 \paragraph{Per-life decomposition.}  Table~\ref{tab:mslaw} gives the exponents of the same lives under the
 measured volatility and three laws built from the per-life decomposition, on both graphs, and
 Table~\ref{tab:fifths} the quantities of the identity by fifths of size.  The per-life demographic part
-$B$ is an estimate from the life's sizes; its dispersion within a size bin ($\Var\ln B=0.22$--$0.60$ by fifth on the
+$B$ is an estimate from the life's sizes; its dispersion within a size bin ($\Var\ln B=0.22$--$0.64$ by fifth on the
 power-law graph) is larger than the measured volatilities allow, and with it the high-$q$ exponents
 explode (rows ``own floor + own noise'').  The law with the bin mean of $B$ isolates the floor.
 
@@ -1007,14 +1008,14 @@ as the growth standard deviation.  ``Own'' is the life's value, ``bin'' its mean
 \begin{tabular}{llll}
 graph & law & $\zeta_q$ & $\zeta_q/\zeta_1$\\
 \hline
-power law & measured $\Var g$ & 0.189, 0.335, 0.444, 0.525 & 1.77, 2.35, 2.78\\
- & own floor + bin noise & 0.232, 0.431, 0.593, 0.715 & 1.86, 2.56, 3.09\\
- & own floor + own noise & 0.233, 0.431, 0.682, 1.192 & 1.85, 2.92, 5.11\\
- & bin floor + own noise & 0.207, 0.431, 0.754, 1.361 & 2.08, 3.65, 6.58\\
-regular & measured $\Var g$ & 0.395, 0.762, 1.097, 1.399 & 1.93, 2.78, 3.54\\
- & own floor + bin noise & 0.431, 0.856, 1.271, 1.674 & 1.98, 2.95, 3.88\\
- & own floor + own noise & 0.441, 0.856, 1.266, 1.725 & 1.94, 2.87, 3.92\\
- & bin floor + own noise & 0.430, 0.856, 1.295, 1.791 & 1.99, 3.01, 4.17\\
+power law & measured $\Var g$ & 0.190, 0.332, 0.437, 0.512 & 1.75, 2.30, 2.70\\
+ & own floor + bin noise & 0.230, 0.427, 0.586, 0.706 & 1.85, 2.55, 3.07\\
+ & own floor + own noise & 0.234, 0.427, 0.681, 1.183 & 1.83, 2.91, 5.06\\
+ & bin floor + own noise & 0.205, 0.427, 0.755, 1.355 & 2.08, 3.68, 6.61\\
+regular & measured $\Var g$ & 0.397, 0.766, 1.102, 1.403 & 1.93, 2.78, 3.53\\
+ & own floor + bin noise & 0.433, 0.859, 1.276, 1.680 & 1.98, 2.95, 3.88\\
+ & own floor + own noise & 0.443, 0.859, 1.275, 1.726 & 1.94, 2.88, 3.90\\
+ & bin floor + own noise & 0.432, 0.859, 1.303, 1.786 & 1.99, 3.02, 4.14\\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -1028,50 +1029,23 @@ $\langle w\rangle_4/\langle w\rangle_1$ with the lognormal estimate $e^{-3s^2/2}
 \begin{tabular}{cccccccc}
 $\Sb$ & mean $\kappa$ & $\Var\ln V_F$ & share by degree & $b$ & $\langle w\rangle_1$ & $s^2$ & $\langle w\rangle_4/\langle w\rangle_1$ vs $e^{-3s^2/2}$\\
 \hline
-0.36 (0.29) & 0.76 & 0.51 (0.38) & 0.14 & 0.66 (0.73) & 0.79 (0.86) & 0.021 (0.008) & 0.96, 0.97 (0.99, 0.99)\\
-0.72 (0.60) & 0.82 & 0.44 (0.29) & 0.20 & 0.76 (0.64) & 0.67 (0.78) & 0.048 (0.015) & 0.92, 0.93 (0.98, 0.98)\\
-1.09 (0.91) & 0.89 & 0.50 (0.30) & 0.25 & 0.82 (0.87) & 0.60 (0.73) & 0.077 (0.022) & 0.86, 0.89 (0.96, 0.97)\\
-1.58 (1.35) & 1.01 & 0.58 (0.33) & 0.31 & 0.87 (1.18) & 0.53 (0.71) & 0.121 (0.030) & 0.79, 0.83 (0.95, 0.96)\\
-2.86 (2.55) & 1.51 & 0.85 (0.77) & 0.37 & 0.76 (1.97) & 0.43 (0.68) & 0.253 (0.053) & 0.62, 0.68 (0.89, 0.92)\\
+0.36 (0.29) & 0.76 & 0.52 (0.38) & 0.14 & 0.72 (0.72) & 0.80 (0.86) & 0.021 (0.007) & 0.96, 0.97 (0.99, 0.99)\\
+0.71 (0.58) & 0.82 & 0.47 (0.29) & 0.19 & 0.74 (0.69) & 0.68 (0.77) & 0.047 (0.015) & 0.92, 0.93 (0.97, 0.98)\\
+1.07 (0.90) & 0.89 & 0.53 (0.31) & 0.24 & 0.65 (0.90) & 0.61 (0.74) & 0.076 (0.022) & 0.87, 0.89 (0.96, 0.97)\\
+1.55 (1.33) & 1.00 & 0.63 (0.34) & 0.29 & 0.79 (1.19) & 0.54 (0.71) & 0.123 (0.031) & 0.79, 0.83 (0.94, 0.95)\\
+2.83 (2.52) & 1.53 & 0.92 (0.77) & 0.37 & 0.76 (1.95) & 0.44 (0.69) & 0.264 (0.052) & 0.61, 0.67 (0.89, 0.93)\\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
 
 The local exponents of the law ``own floor + bin noise'' agree with $(q/2)\,b\,\langle w\rangle_q$ to about $10\%$
 in the four lower fifths of the power-law graph; in the largest fifth the local exponents are smaller
-($0.13$, $0.18$, $0.13$, $0.00$ against $0.16$, $0.29$, $0.37$, $0.41$), the effect of the composition term as
-the mean degree rises from $1.01$ to $1.51$.
-
-\paragraph{Floor make-up.}  The core of a life runs from the first to the last sample at which the noise-free
-size is at least half its median (the whole life if fewer than $10$ growth rates lie between them).  For a
-climb in a constant field $h$, $u=S/h$ obeys $\dot u=hu(1-u)$ and $d\ln S/dt=h(1-u)$, so
-$\int(d\ln S/dt)^2dt=h\int_{S_0/h}^1(1-u)u^{-1}du=h[\ln(h/S_0)-1+S_0/h]$.  For a collapse in a field $-\varphi$,
-$d\ln S/dt=-(\varphi+S)$ and $\int(\varphi+S)^2dt=\int_{S_{\rm end}}^h(\varphi+S)S^{-1}dS=\varphi\ln(h/S_{\rm end})+h-S_{\rm end}$.
-Times $\Delta t$ these are the sums of squared yearly growth rates $E_{\rm in}$ and $E_{\rm out}$ of Eq.~\eqref{eq:floor}.
-On the $175\,171$ complete lives (born and exited inside the window) with at least $20$ growth rates, the
-exit formula follows the measured sum life by life (log-correlation $0.85$--$0.91$ by fifth of size) and lies
-above it by $6$--$40\%$; the entry formula has the right scale, from $45\%$ below the measured mean in the
-smallest fifth to $38\%$ above in the largest, but correlates less (log-correlation $0.5$), because a firm
-climbs in a field that moves.
-
-\paragraph{Life lengths.}  For $dS=r(t)S\,dt+\sqrt{DS}\,dW$ the probability of extinction by time $t$ is
-$\exp[-2S_0/(D\int_0^te^{-R(s)}ds)]$, $R=\int_0^tr$, from the Laplace transform of this linear (Feller)
-diffusion, whose exponent obeys a Riccati equation; with $S_{\rm det}=S_0e^R$ this is Eq.~\eqref{eq:kill}.  At the bottom of a dip, where $\Phi=S_{\min}$, a saddle point gives
-$J\simeq\sqrt{2\pi/\Phi'}/S_{\min}$: a dip kills when it brings the firm below a size of order $D$ times its
-recovery time.  The test takes every downcrossing of zero by the field of a node whose firm has $S\ge0.3$,
-restarts the noise-free path at the firm's actual size, and integrates it until it recovers to that size
-(at most $30$ time units).  Binned by the predicted probability, the observed kill fractions are $0.015$ at
-$0.027$, $0.102$ at $0.147$, $0.418$ at $0.450$, $0.894$ at $0.853$ and $0.986$ at $0.974$: the law is slightly too soft at
-both ends, and its log-likelihood per dip is $-0.175$ against $-0.591$ for a constant kill rate.  Rice's
-downcrossing rate, computed from each node's mean, standard deviation and lag-$\Delta t$ autocorrelation of
-the field, lies $1$--$13\%$ above the observed rate in every decile of $u$ but the lowest ($24\%$, the hubs), in
-part because sampling every $\Delta t$ misses brief crossings.  Among complete lives with at least $20$ growth
-rates, the coefficient of variation of $n-20$ is $1.05$--$1.22$ in every decile of $u$ but the highest, where the
-window cuts the longest lives ($0.91$), and the mean of $n$ grows from $23$ to $222$ (\texttt{notebooks/07\_floor\_theory.ipynb}).
+($0.13$, $0.16$, $0.10$, $-0.03$ against $0.17$, $0.29$, $0.37$, $0.41$), the effect of the composition term as
+the mean degree rises from $1.00$ to $1.53$.
 
 \paragraph{A fitted floor.}  An alternative test, without the noise-free integration, fits
 $v^2=A\kappa^g+B_j$ (mean absolute deviation, one $B_j$ per size bin) to the same lives.  It gives
-$g=1.00$ and predicts ratios $1.86$, $2.56$, $3.06$ against $1.80$, $2.42$, $2.88$ measured; the same law at
+$g=1.03$ and predicts ratios $1.85$, $2.53$, $3.00$ against $1.79$, $2.37$, $2.80$ measured; the same law at
 the mean degree gives exactly $2$, $3$, $4$ (\texttt{notebooks/05\_multiscaling.ipynb}).  The
 fit assigns all of the top bins' variance to the floor ($B_j\to0$), so its partition differs from the
 physical one of Table~\ref{tab:fifths}.
@@ -1080,13 +1054,13 @@ physical one of Table~\ref{tab:fifths}.
 \section{Robustness}
 \label{app:robust}
 
-\paragraph{Production run and collective bursts.}  The facts of Sec.~\ref{sec:facts} come from eight economies
+\paragraph{Production run and collective bursts.}  The facts of Sec.~\ref{sec:data} come from eight economies
 at the reference point with $N=32000$ (\texttt{notebooks/06\_facts.ipynb}).  In seven of them the aggregate
-volatility per year is $0.03$--$0.23$ and $\zeta_1$ ($n_{\min}=5$) is $0.19$--$0.24$.  The eighth is in a
-collective burst: its aggregate volatility is $0.54$, its turnover $0.68$ against $0.56$--$0.65$, and
-volatility hardly depends on size ($\zeta_1=0.07$, ratios $1.54$, $1.56$, $1.15$).  We exclude economies
+volatility per year is $0.04$--$0.26$ and $\zeta_1$ ($n_{\min}=5$) is $0.19$--$0.25$.  The eighth is in a
+collective burst: its aggregate volatility is $0.48$, its turnover $0.69$ against $0.56$--$0.66$, and
+volatility hardly depends on size ($\zeta_1=0.08$, ratios $1.64$, $1.80$, $1.54$).  We exclude economies
 whose aggregate volatility exceeds $0.3$ (\texttt{kept} in \texttt{notebooks/06\_facts.ipynb}); with the burst included the pooled
-exponents are $\zeta_q=0.167$, $0.297$, $0.378$, $0.411$ and the ratios $1.78$, $2.26$, $2.46$, because the burst
+exponents ($n_{\min}=5$) are $\zeta_q=0.170$, $0.305$, $0.391$, $0.430$ and the ratios $1.79$, $2.30$, $2.52$, because the burst
 economy contributes the largest number of lives.  Across all $80$ economies of
 Table~\ref{tab:robust}, $5$ exceed the threshold.  What triggers a burst is open.
 
@@ -1102,7 +1076,7 @@ before the retune.  Source: \texttt{notebooks/06\_facts.ipynb}.}
 \begin{tabular}{lcccccccccc}
  & $\alpha$ & $\sigma$ & $D$ & $N$ & $C$ & economies & $\zeta_1$ & $\zeta_q/\zeta_1$ & agg.\ vol. & turnover\\
 \hline
-production & 2.5 & 1.70 & 0.10 & 32000 & 200 & 7/8 & $0.205\pm0.020$ & 1.92, 2.70, 3.31 & 0.081 & 0.597\\
+production & 2.5 & 1.70 & 0.10 & 32000 & 200 & 7/8 & $0.209\pm0.024$ & 1.92, 2.69, 3.28 & 0.088 & 0.602\\
 \hline
 $N$ sequence & 2.5 & 1.75 & 0.10 & 8000 & 200 & 8/8 & $0.188\pm0.039$ & 1.91, 2.67, 3.28 & 0.088 & 0.686\\
  & 2.5 & 1.75 & 0.10 & 16000 & 200 & 4/4 & $0.124\pm0.052$ & 1.82, 2.42, 2.80 & 0.108 & 0.693\\
@@ -1138,30 +1112,23 @@ $\sigma\in\{1.70,1.72\}$ and $D\in\{0.1,0.15,0.2\}$ gives $\zeta_1=0.17$--$0.25$
 with $D$ and falling with $\sigma$; the reference point $\sigma=1.70$, $D=0.1$ gives $\zeta_q=0.198$, $0.382$, $0.537$,
 $0.657$.
 
-\paragraph{Softer and harder self-limitation.}  Table~\ref{tab:theta} replaces the self-limitation and
-the interactions by $(x_i/m)^\theta$ and $\sum_jJ_{ij}(x_j/m)^\theta$ (Sec.~\ref{sec:limits}) at $\alpha=2.5$, $D=0.1$, $C=200$,
-$N=16000$, four economies per row, none in a burst.  The temporal share of the field variance is measured on
-one economy with $N=8000$ over a window of $100$.
-
-\begin{table*}[t]
-\caption{Self-limitation exponent $\theta$ with noise ($n_{\min}=5$).  $R$: decades spanned by the $25$ bins;
-$\pm$: standard deviation of $\zeta_1R$ between economies; volatility of the smallest and largest bin;
-Hill index of the top $1\%$ of sizes.  The $\theta=1$ row is the retune economy at the reference point.
-Source: \texttt{notebooks/06\_facts.ipynb}.}
-\label{tab:theta}
-\begin{ruledtabular}
-\begin{tabular}{ccccccccc}
-$\theta$ & $\sigma$ & $\zeta_1$ & $R$ & $\zeta_1R$ & $\zeta_q/\zeta_1$ & volatility & size Hill & temporal share\\
-\hline
-1.5 & 1.70 & 0.105 & 1.89 & $0.20\pm0.04$ & 1.75, 2.21, 2.41 & 1.12, 0.62 & 6.7 & 0.204\\
-1 & 1.70 & 0.198 & 2.00 & $0.40\pm0.04$ & 1.93, 2.71, 3.32 & 1.11, 0.41 & 4.6 & 0.165\\
-0.75 & 1.70 & 0.289 & 1.98 & $0.57\pm0.03$ & 2.03, 3.05, 4.05 & 1.11, 0.30 & 3.8 & 0.125\\
-0.5 & 1.70 & 0.338 & 1.71 & $0.58\pm0.01$ & 2.08, 3.24, 4.45 & 1.11, 0.29 & 2.7 & 0.018\\
-0.5 & 1.90 & 0.266 & 2.13 & $0.57\pm0.03$ & 2.05, 3.12, 4.18 & 1.12, 0.33 & 2.2 & 0.176\\
-0.5 & 2.00 & 0.186 & 2.35 & $0.44\pm0.01$ & 2.02, 3.01, 3.94 & 1.12, 0.45 & 2.0 & 0.262\\
-\end{tabular}
-\end{ruledtabular}
-\end{table*}
+\paragraph{Noise at equal depth.}  The noise moves the instability line, by $0.33$ per unit $D$ at $\mu=-1.25$
+and $0.49$ at $\mu=-2.5$, and in the retune $\zeta_1$ grows with $D$ as the depth $\sigma-\sigma_c(\mu,D)$ falls.
+The retune contains two pairs of economies at equal depth and different noise, $(\sigma,D)=(1.70,0.10)$ and
+$(1.72,0.15)$, and $(1.70,0.15)$ and $(1.72,0.20)$, whose exponents agree to $0.006$ in $\zeta_1$ and $0.04$ in
+the ratios.  Away from the reference point we ran two economies with $N=16000$ at depth $0.21$, where the fit
+of Sec.~\ref{sec:economy} gives $\zeta_1=0.21$, for $D=0.05$, $0.1$ and $0.2$ at $\mu=-1.25$ and $-2.5$.  They
+give $\zeta_1=0.180$, $0.192$, $0.187$ and $0.213$, $0.227$, $0.226$ ($n_{\min}=5$): over a factor four in $D$
+the exponent varies by at most $0.014$, against $0.07$ and $0.10$ at fixed $\sigma$.  The two graphs at
+$\mu=-2.5$ differ by $0.09$, so a dependence on $\mu$ at equal depth is not resolved.  The ratio curve
+collapses less well: between $D=0.05$ and $0.2$, $\zeta_4/\zeta_1$ rises from $3.25$ to $3.43$ and from $3.57$
+to $3.77$ ($n_{\min}=5$), and from $2.52$ to $2.94$ and from $2.80$ to $3.15$ ($n_{\min}=20$), as expected if
+more noise raises the share of the demographic part $B\simeq D\Delta t/\Sb$ and hides the floors.  For
+$\mu\le-1$ the facts of Sec.~\ref{sec:data} therefore hold in a slab $0.18\lesssim\sigma-\sigma_c(\mu,D)\lesssim0.25$,
+with $\sigma_c(\mu,D)$ from the renewal theory, and less noise bends the ratio curve further.  At equal depth the
+mean firm grows faster with more noise, by $0.08$ and $0.12$ per unit time between $D=0.05$ and $0.2$, because
+the zero-growth line rises with $D$ more slowly than $\sigma_c$ (Fig.~\ref{fig:phaselines}a;
+\texttt{notebooks/02\_phase\_diagram.ipynb}).
 
 %======================================================================
 \section{Protocol}
@@ -1170,36 +1137,68 @@ $\theta$ & $\sigma$ & $\zeta_1$ & $R$ & $\zeta_1R$ & $\zeta_q/\zeta_1$ & volatil
 \paragraph{The year.}  We sample every $0.5$ time units.  The lag-one autocorrelation of growth within
 lives is $+0.13$, $+0.18$ and $0.00$ at steps $0.5$, $1$ and $2$; a step of $2$ would remove it but leaves
 too few growth rates per life for the panel.  In the two reference economies, lives with at least five
-growth rates give $\zeta_q=0.209$, $0.405$, $0.572$, $0.702$ (ratios $1.94$, $2.74$, $3.36$) over $2.0$
-decades at step $0.5$, and $\zeta_q=0.156$, $0.270$, $0.339$, $0.370$ (ratios $1.73$, $2.17$, $2.36$) over
+growth rates give $\zeta_q=0.208$, $0.403$, $0.572$, $0.711$ (ratios $1.94$, $2.75$, $3.41$) over $2.0$
+decades at step $0.5$, and $\zeta_q=0.154$, $0.259$, $0.316$, $0.333$ (ratios $1.68$, $2.06$, $2.16$) over
 $1.4$ decades at step $2$: volatility per step rises by a factor $1.1$ in the smallest size bin and $2.2$
 in the largest, so the decline flattens, and the ratio curve bends further below $q$.  For lives with
-at least $20$ growth rates the change is smaller ($\zeta_1=0.254$ and $0.230$, ratios $1.80$, $2.42$,
-$2.88$ and $1.75$, $2.27$, $2.60$, although at step $2$ these lives span only $0.9$ decades).  The bend
+at least $20$ growth rates the change is smaller ($\zeta_1=0.253$ and $0.247$, ratios $1.79$, $2.37$,
+$2.80$ and $1.75$, $2.28$, $2.62$, although at step $2$ these lives span only $0.9$ decades).  The bend
 below $q$ survives the coarser year; the level of $\zeta_1$ for short lives does not
 (\texttt{notebooks/06\_facts.ipynb}).
 
 \paragraph{Minimum life length.}  MSB keep every firm with at least two growth rates; their firms have $46$ on
-average, and their results do not change for firms with at least $20$.  The model's lives are much shorter:
-$38\%$ of the lives with at least two growth rates have exactly two ($N=16000$).  We therefore use
-$n_{\min}=20$ for the facts, as for the theory tests.  In the production run $\zeta_q=0.178$, $0.431$, $0.706$, $0.968$
-(ratios $2.42$, $3.96$, $5.43$) for $n_{\min}=2$, $0.205$, $0.394$, $0.554$, $0.679$ ($1.92$, $2.70$, $3.31$) for $n_{\min}=5$,
-$0.214$, $0.381$, $0.501$, $0.577$ ($1.79$, $2.35$, $2.70$) for $n_{\min}=10$ and $0.249$, $0.443$, $0.587$, $0.688$ ($1.78$, $2.35$,
-$2.76$) for $n_{\min}=20$, over $2.1$, $2.0$, $1.8$ and $1.4$ decades: the ratios lie above $q$ for $n_{\min}=2$ and below
-from $n_{\min}=5$, and the range shrinks because long lives do not occur at the newborn sizes.
+average, and their results do not change for firms with at least $20$.  Their growth rates are annual
+differences rolled over quarters, $g_t=\ln S_{t+4}-\ln S_t$, so $46$ of them span about twelve years and $20$
+about six, or five non-overlapping annual growth rates.  The model's lives are much shorter: $38\%$ of the
+lives with at least two growth rates have exactly two ($N=16000$).  We therefore compare with data at
+$n_{\min}=5$ and test the theory at $n_{\min}=20$, where each life is long enough to estimate its floor.  In
+the production run $\zeta_q=0.180$, $0.434$, $0.708$, $0.965$ (ratios $2.41$, $3.94$, $5.36$) for $n_{\min}=2$, $0.209$,
+$0.400$, $0.561$, $0.685$ ($1.92$, $2.69$, $3.28$) for $n_{\min}=5$, $0.218$, $0.388$, $0.508$, $0.582$ ($1.78$, $2.33$,
+$2.67$) for $n_{\min}=10$ and $0.254$, $0.452$, $0.598$, $0.701$ ($1.78$, $2.35$, $2.75$) for $n_{\min}=20$, over $2.1$,
+$2.0$, $1.8$ and $1.4$ decades: the ratios lie above $q$ for $n_{\min}=2$ and below from $n_{\min}=5$, as the
+estimation noise of short lives requires (Sec.~\ref{sec:criterion}), and the range shrinks because long lives
+do not occur at the newborn sizes.
 
 \paragraph{The tail index $b$.}  For lives with at least two growth rates the model gives
-$b=4.40$--$4.44$ at every parameter point, close to the Compustat value $4.6$.  A null with iid Laplace
+$b=4.39$--$4.44$ at every parameter point, close to the Compustat value $4.6$.  A null with iid Laplace
 growth rates, no differences between firms and the model's distribution of life lengths gives
-$4.34$, so the agreement is an effect of short lives.  For longer lives $b$ grows: $5.5$ and $6.8$ in the production
-run for $n_{\min}=10$ and $20$ ($5.7$ and $6.9$ at $N=16000$), against $9.3$ and $12.6$ for the Laplace null and $4.6$ in
+$4.34$, so the agreement is an effect of short lives.  For longer lives $b$ grows: $5.2$, $5.5$ and $6.6$ in the production
+run for $n_{\min}=5$, $10$ and $20$ ($5.7$ and $6.9$ at $N=16000$ for $10$ and $20$), against $9.3$ and $12.6$ for the Laplace null and $4.6$ in
 Compustat for both samples (\texttt{notebooks/06\_facts.ipynb}).
 
 \paragraph{Volatility estimator.}  With the standard deviation instead of $\sqrt{\pi/2}$ times the mean
 absolute deviation, $\zeta_1$ is $0.03$ lower and the ratios are $0.03$--$0.3$ higher (\texttt{notebooks/06\_facts.ipynb},
-rows SD; production run: $\zeta_1=0.175$, ratios $1.96$, $2.82$, $3.58$ at $n_{\min}=5$).
+rows SD; production run: $\zeta_1=0.178$, ratios $1.95$, $2.81$, $3.54$ at $n_{\min}=5$).
+
+\paragraph{Rescaled growth.}  MSB rescale each growth rate by its firm's leave-one-out mean and volatility,
+$\hat g_t=(g_t-\bar g_{-t})/\sigma_{-t}$, so that a large rate does not shrink its own scale, and find densities
+that hardly depend on size \cite{moran2024}.  We rescale the lives with at least five growth rates of the two
+reference economies the same way (Fig.~\ref{fig:tails}).  Compustat's densities, kernel estimates in $25$ size
+bins, are read from the vector paths of MSB's figures (\texttt{scripts/msb\_curves.py}); we use the plotted
+curves because we could not reconcile the fitted parameters of their Table~1 with the plotted fit.  The
+curves stop at a density of $10^{-4}$ on $|z|\le8$, so we compare the excess kurtosis on that window.  By fifth
+of size the model gives $3.0$, $3.7$, $4.3$, $4.8$, $5.7$ and Compustat $4.2$, $5.6$, $5.1$, $5.4$, $5.7$
+($3.5$--$4.2$ in its three smallest bins).  A Gaussian null with the same life lengths gives $2.5$, $2.4$, $1.6$,
+$0.4$, $0.1$: among small firms most of the model's kurtosis is the rescaling of short lives.  The full fourth
+moments are dominated by rare events beyond $|z|=8$, outside the range of the Compustat curves; rescaling
+instead by each life's own volatility, lives with at least $10$ growth rates give $1.3$ to $23$ by fifth in the
+production run (\texttt{notebooks/06\_facts.ipynb}).
+
+\begin{figure*}[t]
+\centering
+\includegraphics{figS_growth_tails.pdf}
+\caption{Rescaled growth against Compustat (two reference economies, $N=16000$, lives with at least five growth
+rates).  (a) The model's growth rates pooled and divided by their common volatility, with a Gaussian and a
+Laplace law of the same volatility.  (b) Growth rates rescaled by the life's leave-one-out mean and volatility,
+by fifth of life-mean size, and a Gaussian null with the same life lengths.  (c) The same in Compustat, read
+from MSB's Figs.~5 and 7 \cite{moran2024}: kernel density estimates averaged over the five size bins of each
+fifth, and all firms.  (d) Excess kurtosis on $|z|\le8$ against size rank.  Source:
+\texttt{notebooks/06\_facts.ipynb}.}
+\label{fig:tails}
+\end{figure*}
 
 \clearpage
+
 \bibliography{bib}
 
 \end{document}

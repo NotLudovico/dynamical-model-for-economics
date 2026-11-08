@@ -1,6 +1,6 @@
 - [Article goal](project-article-goal.md) — thesis submitted; work targets a journal article; 2026-10-11/12 cleanup log (STORY/CEMETERY, notebooks, main only)
 - [Demographic paper](project-demographic-paper.md) — PRE draft, SM merged into appendices A-F (2026-10-26), burst rule (aggvol > 0.3), ζ_q identity with s², theta-with-noise result, phase-section check
-- [n_min=5 switch pending](project-nmin5-switch.md) — MSB rolling-quarter growth: their 20 = our 5; TODO in paper.tex, user runs it
+- [n_min=5 switch done](project-nmin5-switch.md) — data comparison at n_min=5 (MSB like-for-like), theory tests at 20; prod re-run locally 2026-11-08
 - [V_F floor theory](project-vf-floor-theory.md) — floor = plateau core + entry/exit transients; bend from life-length heterogeneity
 - [Depth collapse](project-depth-collapse.md) — zeta_1 and bend set by sigma - sigma_c; zero-growth line crosses the working band for mu -1.25..-2.25
 - [Noise vs interactions](project-noise-vs-interactions.md) — ablation: sqrt(DS) noise alone gives the decline (ratios = q); interactions give the bend and large-firm fat tails
@@ -28,3 +28,5 @@
 - [Literature novelty check](reference-literature-novelty-2026-10.md) — Mallmin/Bunin cover turnover + focal reduction; Al-Hiyasat 2026 read (one-exponent Taylor law, small overlap)
 - [_ALPHA_PL global gotcha](reference-alpha-pl-global.md) — powerlaw exponent is a module global; set it in the process building the graph
 - [Decline-beta peak instability](reference-decline-beta-peak-instability.md) — argmax-peak fit start makes beta jump ~0.09 on spells
+- [Bouchaud-Mezard test](project-bouchaud-mezard-test.md) — mean-field BM fails all MSB facts but Zipf; vol rises with size
+- [Region in (mu, sigma, D)](project-region-mu-sigma-d.md) — slab above sigma_c(mu,D); D enters via sigma_c, dsc/dD 0.30-0.49; width empirical
