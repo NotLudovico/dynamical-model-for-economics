@@ -825,6 +825,21 @@ out, as the static closure does, costs so much.  Predicting its amplitude needs 
 between nodes, such as the cavity method on a tree solved by population dynamics; in the main text we
 take it from simulation.
 
+Supplying the closure with measured inputs shows what else it lacks
+(\texttt{scripts/two\_time\_dmft.py measured}, \texttt{measured3}).  With the temporal field taken from
+simulation, an amplitude $2.16\sqrt\kappa$ and an exponential correlation with the measured $1/e$ time $4.5$,
+and the rest self-consistent, the panel has $\zeta_1=0.26$ and ratios $1.85$, $2.54$, $3.08$, against $0.25$ and
+$1.79$, $2.37$, $2.80$ for the full model; the volatility of the smallest and largest bins is $0.71$ and $0.37$,
+against $0.70$ and $0.32$.  The frozen spread of the closure is then $12$--$15\%$ low in standard deviation.
+Fixing it at its measured value, $2.66\sqrt\kappa$ in every class but the top one, brings it to within $4\%$
+and leaves $\zeta_1$ at $0.26$, but moves the ratios only to $1.83$, $2.49$, $2.98$.  The measured mean fields,
+reshuffled among nodes of similar degree, give $1.81$, $2.42$, $2.86$, and each node's own measured mean and
+amplitude $1.78$, $2.37$, $2.81$ (Sec.~\ref{sec:onefirm}).  The bend therefore depends on the shape of the
+spread of mean fields at equal degree and not only on its variance: its fat tail, which we attribute to the
+few neighbours that dominate a field at finite $C$, is what a Gaussian closure cannot produce.  With three
+measured numbers the closure reproduces the size--volatility slope and the volatility levels; the bend needs
+a closure at finite $C$.
+
 \paragraph{Onset in simulation.}  Since the closure is least accurate near $\sigma_c$, we locate the onset
 directly.  For each $\sigma$ we run two replicas on each of two graphs ($\alpha=6$, $\mu=-1.76$, $D=0.1$,
 $N=4000$, $C=100$, $T=4200$, the first $200$ discarded) with the same couplings and different initial sizes and

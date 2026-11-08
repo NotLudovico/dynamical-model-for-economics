@@ -10,7 +10,9 @@ Q_p(tau) - Q_p(inf) moves.  Solved by sampling (Eissfeller-Opper): draw eta from
 dS = S(Phi - S)dt + sqrt(D S)dW with exit at S <= 0 and a newborn at D, re-measure Q, mix, repeat.
 No network, no measured field: the inputs are (mu, sigma, D) and the degree sequence.
 
-    uv run python scripts/two_time_dmft.py        # sim field stats, solve, panel -> data/two_time_dmft.npz
+    uv run python scripts/two_time_dmft.py            # sim field stats, solve, panel -> data/two_time_dmft.npz
+    uv run python scripts/two_time_dmft.py measured   # same, with the temporal field taken from simulation
+    uv run python scripts/two_time_dmft.py measured3  # and the frozen spread too
 """
 import sys
 import time
@@ -91,14 +93,16 @@ def autocorr(X, nlag, wt=None):
     return np.fft.irfft(avg, nfft)[:nlag] / (n - np.arange(nlag))
 
 
-def node_fields(Q, B, a, r, n_t, rng):
+def node_fields(Q, B, a, r, n_t, rng, moving=None, frozen=None):
     """Fields of the sampled nodes, class by class: r B_p mean, sqrt(r) times a frozen Gaussian part plus the moving
-    part of Q_p.  r is a list of relative-degree arrays, one per class."""
+    part of Q_p (or the given moving covariance and frozen variance).  r is a list of relative-degree arrays, one per class."""
     out = np.empty((sum(x.size for x in r), n_t), np.float32)
     i = 0
     for p, rp in enumerate(r):
         qinf = Q[p, -TAIL:].mean()
-        eta = np.sqrt(qinf) * rng.standard_normal((rp.size, 1)) + gaussian_paths(Q[p] - qinf, n_t, rp.size, rng)
+        cov = Q[p] - qinf if moving is None else moving[p]
+        qinf = qinf if frozen is None else frozen[p]
+        eta = np.sqrt(qinf) * rng.standard_normal((rp.size, 1)) + gaussian_paths(cov, n_t, rp.size, rng)
         out[i:i + rp.size] = a - MU * rp[:, None] * B[p] + SIGMA * np.sqrt(rp)[:, None] * eta
         i += rp.size
     return out
@@ -108,10 +112,11 @@ def draw_r(kdeg, m, rng):
     return [rng.choice(k, m) / k.mean() for k in kdeg]
 
 
-def solve(Kc, w, kdeg, iters=80, m=250, burn=100.0, T=250.0, seed=0):
+def solve(Kc, w, kdeg, iters=80, m=250, burn=100.0, T=250.0, seed=0, moving=None, frozen=None):
     """Stationary self-consistency for the degree-weighted C_p(tau), E_k S_p, and a (node-average E S = 1).  Mixing
     0.5 for the first half, then a running average of the iterates (the sampled C is noisy: E S^2 sits in the tail).
-    Returns the weighted C and E_k S, the node-average C and E S, and a."""
+    With `moving` (and `frozen`) the temporal (and frozen) part of the field is that fixed input and only the rest
+    is solved for.  Returns the weighted C and E_k S, the node-average C and E S, and a."""
     rng = np.random.default_rng(seed)
     n = len(w)
     lag = np.arange(NLAG) * DTF
@@ -121,7 +126,7 @@ def solve(Kc, w, kdeg, iters=80, m=250, burn=100.0, T=250.0, seed=0):
     for it in range(iters):
         t0 = time.time()
         r = draw_r(kdeg, m, rng)
-        S, _ = integrate(node_fields(Kc @ C, Kc @ Ew, a, r, nt, rng), rng)
+        S, _ = integrate(node_fields(Kc @ C, Kc @ Ew, a, r, nt, rng, moving, frozen), rng)
         S = S[:, nb:].reshape(n, m, -1)
         newC = np.array([autocorr(S[p], NLAG, r[p]) for p in range(n)])
         newCn = np.array([autocorr(S[p], NLAG) for p in range(n)])
@@ -134,7 +139,8 @@ def solve(Kc, w, kdeg, iters=80, m=250, burn=100.0, T=250.0, seed=0):
         if it % 5 == 0 or it == iters - 1:
             Q = Kc @ C
             print(f"it {it:2d}  a {a:.4f}  E S {w @ newEs:.4f}  class-0 moving sd "
-                  f"{SIGMA * np.sqrt(Q[0, 0] - Q[0, -TAIL:].mean()):.3f}  ({time.time() - t0:.0f} s)", flush=True)
+                  f"{SIGMA * np.sqrt(Q[0, 0] - Q[0, -TAIL:].mean()):.3f}  frozen sd {SIGMA * np.sqrt(Q[0, -TAIL:].mean()):.3f}"
+                  f"  ({time.time() - t0:.0f} s)", flush=True)
     return C, Ew, Cn, Es, a
 
 
@@ -154,7 +160,7 @@ def sim_stats(seed, nlag=int(TAU / DT) + 1):
     return {k: np.array([r[k] for r in rows]) for k in rows[0]}
 
 
-def panel(Q, B, a, kdeg, m_class, seed=1, burn=100.0, T=480.0, nmin=20):
+def panel(Q, B, a, kdeg, m_class, seed=1, burn=100.0, T=480.0, nmin=20, moving=None, frozen=None):
     """DMFT life panel: m_class nodes per class (degrees drawn from the class) over a window T after burn."""
     rng = np.random.default_rng(seed)
     nt, every = int(round((burn + T) / DTF)), int(round(DT / DTF))
@@ -163,13 +169,74 @@ def panel(Q, B, a, kdeg, m_class, seed=1, burn=100.0, T=480.0, nmin=20):
     for p in range(len(Q)):
         m = max(int(round(m_class[p])), 1)
         r = [np.zeros(0)] * p + [rng.choice(kdeg[p], m) / kdeg[p].mean()]
-        S, L = integrate(node_fields(Q[:p + 1], B[:p + 1], a, r, nt, rng), rng, every=every)
+        mv = None if moving is None else moving[:p + 1]
+        fz = None if frozen is None else frozen[:p + 1]
+        S, L = integrate(node_fields(Q[:p + 1], B[:p + 1], a, r, nt, rng, mv, fz), rng, every=every)
         rows += [(x[0], x[1], x[2]) for x in lives(S[:, nb:].astype(float), L[:, nb:])]
     out = np.array(rows)
     return out[out[:, 2] >= nmin]
 
 
-if __name__ == "__main__":
+def sim_panel(nmin=20):
+    """Life panel of the two stored reference economies (Sbar, v, n), lives with >= nmin growth rates."""
+    rows = []
+    for s in SEEDS:
+        d = np.load(simulate_reference(s))
+        rows += [(x[0], x[1], x[2]) for x in lives(d["S"].astype(float), d["L"])]
+    out = np.array(rows)
+    return out[out[:, 2] >= nmin]
+
+
+def measured_temporal(with_frozen=False):
+    """Theory for the mean and the frozen field, with only the temporal field taken from simulation: its amplitude
+    c sqrt(kappa) (one number) and its correlation, either the measured shape or exp(-tau/tau_c) (one more).
+    with_frozen: the frozen spread at equal degree, f sqrt(kappa), is measured too (a third number)."""
+    deg = np.load(simulate_reference(SEEDS[0]))["deg"]
+    order, w, Kc = degree_classes(deg)
+    kdeg = [deg[o].astype(float) for o in order]
+    kappa = Kc.sum(1)
+    sims = [sim_stats(s) for s in SEEDS]
+    sim = {k: np.mean([x[k] for x in sims], axis=0) for k in sims[0]}
+    c = float(np.exp(w @ (0.5 * np.log(sim["moving"] / kappa))))
+    lag = np.arange(NLAG) * DTF
+    rho05 = (w @ sim["acov"]) / (w @ sim["acov"][:, 0])
+    rho = np.interp(lag, np.arange(rho05.size) * DT, rho05)
+    tau_c = float(lag[np.argmax(rho < np.exp(-1))])
+    var_r = np.array([(k / k.mean()).var() for k in kdeg])
+    frz = sim["frozen"] - (MU * (Kc @ sim["ES"])) ** 2 * var_r          # less the spread of degrees within a class
+    ok = frz > 0                                     # the top class's field is not linear in its wide degree range
+    f = float(np.exp(w[ok] @ (0.5 * np.log(frz[ok] / kappa[ok])) / w[ok].sum()))
+    frozen = (f ** 2 / SIGMA ** 2) * kappa if with_frozen else None
+    print(f"measured: moving field sd = {c:.3f} sqrt(kappa), 1/e time {tau_c:.2f}, frozen sd = {f:.3f} sqrt(kappa)"
+          f" ({'used' if with_frozen else 'not used'})")
+    sp = sim_panel()
+    zs = zeta_bins(sp[:, 0], sp[:, 1])
+    print(f"simulation panel: zeta {np.round(zs[0], 3)}  ratios {np.round(zs[0] / zs[0][0], 2)}  "
+          f"vol smallest/largest bin {zs[2]:.3f} {zs[3]:.3f}  decades {zs[4]:.2f}  local slopes {np.round(zs[5], 2)}")
+    out = {}
+    for name, shape in (("measured shape", rho), ("exponential", np.exp(-lag / tau_c))):
+        moving = (c ** 2 / SIGMA ** 2) * kappa[:, None] * shape[None, :]
+        C, Ew, Cn, Es, a = solve(Kc, w, kdeg, iters=50, moving=moving, frozen=frozen)
+        Q, B = Kc @ C, Kc @ Ew
+        qinf = Q[:, -TAIL:].mean(1) if frozen is None else frozen
+        rows = panel(Q, B, a, kdeg, m_class=2 * N * w, moving=moving, frozen=frozen)
+        z = zeta_bins(rows[:, 0], rows[:, 1])
+        print(f"\n[{name}]  a {a:.3f}")
+        print("class kappa | mean field th sim | frozen sd th sim | E S th sim")
+        for p in (0, 10, 20, 24, 28):
+            print(f"{p:3d} {kappa[p]:5.2f} | {a - MU * B[p]:6.2f} {sim['mean'][p]:6.2f} | {SIGMA * np.sqrt(qinf[p]):5.2f} "
+                  f"{np.sqrt(sim['frozen'][p]):5.2f} | {Es[p]:5.2f} {sim['ES'][p]:5.2f}")
+        print(f"panel: zeta {np.round(z[0], 3)}  ratios {np.round(z[0] / z[0][0], 2)}  vol smallest/largest bin "
+              f"{z[2]:.3f} {z[3]:.3f}  decades {z[4]:.2f}  local slopes {np.round(z[5], 2)}", flush=True)
+        out[name] = dict(zeta=z[0], a=a, B=B, qinf=qinf, Es=Es)
+    np.savez(DATA / ("two_time_dmft_measured_three.npz" if with_frozen else "two_time_dmft_measured_temporal.npz"),
+             c=c, tau_c=tau_c, f=f, sim_zeta=zs[0],
+             **{f"{k.split()[0]}_{q}": v for k, d in out.items() for q, v in d.items()})
+
+
+if __name__ == "__main__" and sys.argv[1:] in (["measured"], ["measured3"]):
+    measured_temporal(with_frozen=sys.argv[1] == "measured3")
+elif __name__ == "__main__":
     deg = np.load(simulate_reference(SEEDS[0]))["deg"]
     order, w, Kc = degree_classes(deg)
     kdeg = [deg[o].astype(float) for o in order]
