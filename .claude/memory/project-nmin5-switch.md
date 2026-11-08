@@ -12,7 +12,9 @@ MSB growth rates are annual diffs rolled over quarters (g = ln S_{t+4} - ln S_t)
 
 Switched on 2026-11-08: the production run (8 economies, N=32000, ~25 min on the 12-core Mac) was re-simulated locally into data/demographic/robustness/prod_seed*.npz; facts table, Fig. facts and appendix numbers now at n_min=5 (zeta_1 0.209, ratios 1.92/2.69/3.28, b 5.2). Theory tests stay at 20. The other robustness jobs in that folder were not re-run here, and notebook 06's stored outputs are from the old machine.
 
+Merged into main 2026-11-08 (merge commit da5b04e). data/demographic/ is gitignored, so the Linux machine still has the OLD prod_seed*.npz (2026-10-12); notebook 06 there won't reproduce the paper's n_min=5 numbers until the Mac's files are copied.
+
 **Why:** the old justification compared overlapping (MSB) with non-overlapping (model) counts.
-**How to apply:** don't revert to n_min=20 for data comparisons; quote n_min=20 only for theory tests.
+**How to apply:** check remote branches (`git branch -a`) before telling the user what is open: on 2026-11-08 I called this pending because I only read main. Don't revert to n_min=20 for data comparisons; quote n_min=20 only for theory tests.
 
 Related: [[project-msb-protocol-spells]], [[reference-msb2024-facts]].
