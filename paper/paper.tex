@@ -36,22 +36,16 @@
 \date{\today}
 
 \begin{abstract}
-The growth volatility of firms falls with their size as $\E[v^q\mid\Sb]\sim\Sb^{-\zeta_q}$, and the ratios
-$\zeta_q/\zeta_1$ lie below $q$: the dispersion of volatilities among firms of equal size grows with size.
-Granular models, in which a firm is a sum of independent parts, give ratios equal to $q$ when
-well-diversified firms dominate the moments and close to $1$ when firms made of a few parts do; the data
-lie between.  We show that
-whenever a firm's growth variance is a floor plus a part that falls with size,
-$\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $w$ the share of the falling part, and the ratios bend below $q$
-only if floors differ between firms of equal size.  We then build a dynamical economy in which they do: firms
-interact on a scale-free network through generalised Lotka--Volterra dynamics, with birth--death noise
-and turnover.  Each firm reduces to a logistic unit driven by its own field.  Its floor contains the
-climb after entry and the collapse before exit, and lives end in dips of the field at a rate we derive,
-so floors differ with the length of a life and with the degree of its node.  With equal degrees the
-floors barely differ and the ratios return to $q$, as the criterion requires.  Sizes, entries, exits and the co-movement of firms, which grows with size as
-in the data, are outputs of the dynamics, not inputs.  The model gives
-$\zeta_1\simeq0.2$, as in firm data, and a ratio curve below $q$, though less bent than in the data; it
-caps firm size and has no Zipf law.  We derive tests of the mechanism on firm data.
+The growth volatility of firms falls with size as $\E[v^q\mid\Sb]\sim\Sb^{-\zeta_q}$.  Granular models, in
+which a firm is a sum of independent parts, miss how these exponents depend on $q$, the fat tails that growth
+keeps after rescaling by each firm's volatility, and the co-movement of firms.  We propose an economy of interacting firms: generalised
+Lotka--Volterra dynamics on a scale-free network, with birth--death noise and turnover.  It gives
+$\zeta_1\simeq0.2$, exponents $\zeta_q$ that grow more slowly than $q\zeta_1$, tent-shaped growth rates that stay
+non-Gaussian after rescaling, and correlations that rise with size.  The slow growth of
+$\zeta_q$ comes from firms of equal size that differ in the part of their volatility that does not fall with
+size: entry and exit bring large growth rates, which weigh more in a short life than in a long one, and a
+firm with more links feels a more volatile environment.
+No firm grows beyond a few times the mean firm, so the model does not reproduce Zipf's law of firm sizes.
 \end{abstract}
 
 \maketitle
@@ -71,78 +65,84 @@ with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$ over f
 \cite{stanley1996,amaral1997,sutton2002,moran2024}.  The ratios $\zeta_q/\zeta_1=1.95$, $2.55$, $2.90$ lie
 below $q$ \cite{moran2024}.  If a firm's volatility were a function of its size times a random factor
 whose law does not depend on size, the ratios would be exactly $q$.  The bend therefore says that firms of
-equal size differ more in volatility the larger they are.  Firm sizes themselves follow Zipf's law
+equal size differ more in volatility the larger they are.  Three further facts come with it.  Growth rates
+have tent-shaped tails, and they stay fat-tailed when each firm's growth is rescaled by its own volatility,
+even among the largest firms \cite{moran2024}.  The growth of a firm correlates more with the aggregate, and
+with firms of similar size, the larger the firm \cite{moran2024}.  And firm sizes follow Zipf's law
 \cite{axtell2001}.
 
 Granular models, in which a firm is a sum of subunits with independent shocks
-\cite{wyartbouchaud2003,gabaix2011}, give $\zeta_1<1/2$ when the subunit sizes are broad.  Moran, Secchi
-and Bouchaud (MSB) derive their higher moments \cite{moran2024}.  Well-diversified firms give
-$\zeta_q=q\zeta_1$, but large firms made of a few subunits, whose volatility does not fall with size,
-dominate every moment of order two and above, which then all fall with the same exponent, about $0.2$:
-the ratios would be close to $1$.  The data lie between the two limits.  MSB attribute their departure
-from $q$ to subdominant corrections from the tail of the volatility distribution, and show that granular
-models also miss the shape of that distribution and the fat tails of growth rates at every size.  They
-conclude that granular mechanisms alone cannot account for the data, and point to the co-movement of
-firms, which grows with size, as the missing ingredient \cite{moran2024,herskovic2020}: firms made of
-independent parts do not co-move.  What
-makes the dispersion of volatilities grow with size, and by as much as it does, has not been explained.
+\cite{wyartbouchaud2003,gabaix2011}, give $\zeta_1<1/2$ when the subunit sizes are broad, and values close to
+$0.2$ for suitable size laws \cite{sutton2002}.  Moran, Secchi and Bouchaud (MSB) tested them against the
+other facts \cite{moran2024}.  Well-diversified firms give $\zeta_q=q\zeta_1$, while large firms made of a few
+subunits push every moment of order two and above to the same exponent, so that the ratios would be close
+to $1$; the data lie between.  Rescaled by its own volatility, the growth of a granular firm becomes
+Gaussian, most of all for large firms with many subunits; in the data it does not.  And firms made of
+independent parts do not co-move.  MSB conclude that granular mechanisms alone cannot account for the data,
+and point to correlations that grow with size as the missing ingredient \cite{moran2024,herskovic2020}.
+Other models get parts of the picture: customer--supplier networks make volatilities co-move
+\cite{herskovic2020}, proportional growth of products gives tent-shaped growth \cite{fu2005}, and agent-based
+models of firm formation give Zipf's law \cite{axtell2016}.  To our knowledge, none has been shown to produce
+the volatility facts together.
 
-We answer in two steps.  The first does not depend on a model (Sec.~\ref{sec:criterion}).  The ratio
-curve lies below $q$ exactly where the dispersion of the rescaled volatility grows with size.  If a
-firm's growth variance is a floor plus a part that falls with size, as when a firm's own noise is
-averaged out by its size, the exponents obey $\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $b$ the slope of the
-falling part and $w$ its share, and the dispersion grows only if the floors differ between firms of
-equal size.  The noise of estimating a volatility from a short life acts the other way, because short
-lives are concentrated among small firms; this is why the measured bend depends on the shortest lives
-kept.
+We propose a dynamical economy of interacting firms in which these facts are outputs.  Firm sizes follow
+generalised Lotka--Volterra (GLV) dynamics on a scale-free network \cite{acemoglu2012,carvalho2019}: each firm
+grows, limits itself, and gains or loses from the firms it is linked to, through links of random sign and
+strength.  We measure interactions and self-limitation in units of the mean firm, so that the economy has no
+preferred size and the growth rate of the mean firm is selected by the dynamics.  Each firm is hit by
+birth--death noise, the sum of independent gains and losses of small pieces of business; a firm that reaches
+zero exits, and a newborn takes its node.  Nothing about a firm is put in by hand: its size, its entry and
+exit, the length of its life and its co-movement with other firms follow from one dynamics with five
+parameters.  The strongly interacting phase of the disordered GLV model keeps fluctuating, each species
+behaving as a logistic unit driven by a coloured Gaussian field \cite{roy2020,mallmin2024,arnouxbunin2024},
+and its mean-field theory on networks is known \cite{aguirrelopez,poley2025,patil2026}.  We use that theory to
+place the economy, and add to it the exact law of one firm with birth--death noise and turnover.
 
-The second step is a dynamical economy of interacting firms in which floors differ
-(Secs.~\ref{sec:economy}--\ref{sec:floor}).  A granular model takes the structure of each firm as given and
-its shocks as independent.  Here nothing about a firm is put in: its size, its entry and exit, the length
-of its life and its co-movement with other firms all follow from one dynamics with a few parameters.  We start
-from the disordered generalised Lotka--Volterra (GLV) model, whose strongly interacting phase keeps
-fluctuating, each species behaving as a logistic unit driven by a coloured Gaussian field
-\cite{roy2020,mallmin2024,arnouxbunin2024}.  We measure interactions and self-limitation in units of the
-mean firm, so that the economy has no preferred size, place firms on a scale-free network
-\cite{acemoglu2012,carvalho2019}, and replace immigration by birth--death noise with turnover: a firm
-that reaches zero exits and a newborn takes its node.  Each firm then reduces to a logistic unit in its
-own field, and its growth variance to a floor and a demographic part.  The floor contains the climb
-after entry and the collapse before exit, spread over the life, and lives end in dips of the field at a
-rate given by Rice's formula and the extinction probability of a branching process.  Floors therefore
-differ with the length of a life and with the degree of its node, which sets the amplitude of its field.
-On a graph with equal degrees they barely differ, and the ratios return close to $q$.  Anomalous moment
-scaling has been derived for GLV communities before: with multiplicative environmental noise and migration,
-abundances obey Taylor's law with a single exponent for every order \cite{alhiyasat2026}, through the
-Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000}.  That law concerns the moments of an abundance;
-ours concerns the moments of the growth volatility conditioned on size, whose exponents bend below
-$q\zeta_1$, and depends on the network and on turnover.
+With one fitted number, the model reproduces the facts together (Sec.~\ref{sec:data},
+Table~\ref{tab:scorecard}).  The depth of the economy in its fluctuating phase sets $\zeta_1$, and we place it
+where $\zeta_1\simeq0.2$.  The rest is predicted.  The ratios $\zeta_q/\zeta_1$ fall below $q$.  Growth rates
+have tent-shaped tails, and after rescaling by each firm's volatility the largest firms keep an excess
+kurtosis of $5.7$, as in Compustat, where a Gaussian null gives $0.1$.  The correlation of a firm's growth
+with the aggregate, with firms of similar size and with its own past all rise with size.  The model also has
+clear limits.  The self-limitation that makes volatility depend on size also caps firm size, so the decline
+spans two decades rather than four and there is no Zipf law; and a few economies enter collective bursts.
 
-At the minimum life length that matches the data, the model gives a monotone decline with
-$\zeta_1\simeq0.2$ and a ratio curve below $q$, though less bent than Compustat's, and
-fails elsewhere (Sec.~\ref{sec:data}): the self-limitation that makes volatility depend on size also caps
-firm size, so the decline spans two decades rather than four and there is no Zipf law.  Its theory is a
-one-firm problem given three statistics of the field.  Heterogeneous mean-field theory gives their form,
-but not the amplitude of the field's motion, which at finite connectivity is set close to marginal
-amplification, or how that amplitude differs between firms of equal degree; we take them from simulation
-(Appendix~\ref{app:closure}).
+Why the ratio curve bends has a model-free answer (Sec.~\ref{sec:criterion}).  The curve lies below $q$
+exactly where the dispersion of volatilities among firms of equal size grows with size.  If a firm's growth
+variance is a floor plus a part that falls with size, as when a firm's own noise is averaged out by its
+size, the exponents obey $\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $b$ the slope of the falling part and
+$w$ its share, and the dispersion grows only if the floors differ between firms of equal size.  The noise
+of estimating a volatility from a short life acts the other way, because short lives are concentrated among
+small firms, so the measured bend depends on the shortest lives kept.  In the economy the floors differ
+(Secs.~\ref{sec:onefirm} and \ref{sec:floor}).  Each firm reduces to a logistic unit in its own field, and
+its growth variance to a floor and a demographic part.  The floor contains the climb after entry and the
+collapse before exit, spread over the life.  Lives end in dips of the field, at a rate given by Rice's
+formula and the extinction probability of a branching process, so their lengths are broad; and the degree
+of a firm's node sets the amplitude of its field.  On a graph with equal degrees the floors barely differ and
+the ratios return close to $q$, and keeping short lives pushes them above $q$: one criterion accounts for a
+bend, its absence and its reversal.  The theory of the floors is a one-firm problem given three statistics
+of the field, which we take from simulation, because at finite connectivity a Gaussian closure misses the
+amplitude of the field's motion (Appendix~\ref{app:closure}).
+
+Anomalous moment scaling has been derived for GLV communities before: with multiplicative environmental
+noise and migration, abundances obey Taylor's law with a single exponent for every order
+\cite{alhiyasat2026}, through the Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000}.  That law
+concerns the moments of an abundance; ours concerns the moments of the growth volatility conditioned on size,
+whose exponents bend below $q\zeta_1$, and depends on the network and on turnover.
 
 The mechanism leads to tests on firm data (Sec.~\ref{sec:predictions}).  The dispersion of volatilities
 among firms of equal size should grow with size; the length of a firm's observed life should explain a
 growing share of it; trimming the years after entry and before exit should move the ratio curve towards
 $q$ and steepen the decline; and adding short lives should push the curve towards or above $q$.
-Derivations, checks and robustness tests are in the appendices, and every number is printed by a
-notebook of the companion code \cite{code}.
-
-\paragraph{How to read this paper.}  The main text gives the argument in words, with the formulas it needs and
-the numbers that test them.  Every calculation is written out in the appendices, in the order of the main
-text.  Appendix~\ref{app:relative} derives the equation of one firm in relative sizes.
-Appendix~\ref{app:hdmft} summarises the mean-field theory on a network from the literature.  Appendix~\ref{app:constant} solves one firm with
-birth--death noise in a constant field, uses the solution to place the instability line with noise, and
-tests the line in simulation.  Appendix~\ref{app:closure} discusses the time-dependent closure and where it
-falls short.  Appendix~\ref{app:reduction} derives the volatility law and tests the one-firm reduction.
-Appendix~\ref{app:multiscaling} derives the criterion for the bend, the make-up of the floor and the law of
-life lengths.  Appendices~\ref{app:robust} and \ref{app:protocol} give the robustness runs and the protocol.
-Table~\ref{tab:notation} lists the symbols.
+Section~\ref{sec:economy} presents the model, Sec.~\ref{sec:data} the facts, Sec.~\ref{sec:criterion} the
+criterion, Secs.~\ref{sec:onefirm} and \ref{sec:floor} the mechanism, and Sec.~\ref{sec:discussion}
+concludes.  The appendices give the derivations: the one-firm equation (Appendix~\ref{app:relative}), the
+mean-field theory on a network (Appendix~\ref{app:hdmft}), the law of one firm with noise and turnover and
+the instability line it gives (Appendix~\ref{app:constant}), the two-time closure
+(Appendix~\ref{app:closure}), the volatility law (Appendix~\ref{app:reduction}), the criterion and the law of
+life lengths (Appendix~\ref{app:multiscaling}), and the robustness runs and the protocol
+(Appendices~\ref{app:robust} and \ref{app:protocol}).  Every number is printed by a notebook of the companion
+code \cite{code}, and Table~\ref{tab:notation} lists the symbols.
 
 \begin{table}[b]
 \caption{Symbols used throughout.}
