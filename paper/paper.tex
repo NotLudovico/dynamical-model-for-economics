@@ -270,6 +270,9 @@ not controlled.  The star is the reference point.}
 \label{fig:phase}
 \end{figure}
 
+\section{Comparison with firm data}
+\label{sec:data}
+
 \paragraph{Protocol.}  We integrate Eq.~\eqref{eq:model} in relative form by Euler--Maruyama with step
 $0.01$, discard $t<100$, and record sizes every $\Delta t=0.5$, which we take as one year, over a window of
 length $480$.  A \emph{life} runs from a birth to the next exit at the same node; lives cut by the window
@@ -282,33 +285,9 @@ v=\sqrt{\frac{\pi}{2}}\,\frac1n\sum_{t=1}^{n}\big|g_t-\bar g\big|,\qquad
 \end{equation}
 the factor making $v$ the standard deviation for Gaussian growth.  Exponents are least-squares slopes of
 $\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:fits}).  We compare with data on lives with at
-least five growth rates, the cut that matches MSB's (Sec.~\ref{sec:data}), and test the theory on lives with
+least five growth rates, the cut that matches MSB's, and test the theory on lives with
 at least $20$, long enough to estimate each life's floor.  The comparison with data uses seven
 economies with $N=32000$; the theory tests use two with $N=16000$.
-
-\paragraph{Where the facts hold.}  The reference point is one point of a band (Fig.~\ref{fig:strip}).  Near
-the zero-growth line, $\zeta_1$ and the ratio curve depend on a single variable, the depth $\sigma-\sigma_c(\mu)$
-of the economy in the fluctuating phase: for $\mu\le-1$ and lives with at least five growth rates,
-$\zeta_1=0.49-1.34\,(\sigma-\sigma_c)$, with a scatter of $0.014$ over $27$ points.  The deeper the economy, the
-more its field moves, the larger the floor of large firms and the flatter the decline.  Depths from $0.18$
-to $0.25$ give $\zeta_1=0.15$--$0.25$.  For $\mu$ from $-1.25$ to $-2.25$ this band contains economies whose
-mean firm grows by between $-0.08$ and $+0.16$ per unit time, so an economy that competes moderately and
-grows slowly sits in it; slow growth alone does not, since along the zero-growth line $\zeta_1$ falls from
-$0.40$ under weak competition to $0.13$ under strong competition.  The band is about $0.07$ wide in $\sigma$.
-
-\begin{figure*}[t]
-\includegraphics[width=\linewidth]{fig_strip.pdf}
-\caption{Where the facts hold (reference graph, $N=16000$, $C=200$, $D=0.1$, two economies per point).  (a) Phase
-plane: instability line $\sigma_c$ and zero-growth line from the renewal theory, zero-growth line from simulation
-(dots), and the band of depths where $0.15\le\zeta_1\le0.25$ for lives with at least five growth rates; the star is the
-reference point.  (b) $\zeta_1$ against the depth $\sigma-\sigma_c(\mu)$, coloured by $\mu$, with the linear fit for $\mu\le-1$
-and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least $5$ (filled) and $20$ (open) growth rates, with the
-Compustat value.}
-\label{fig:strip}
-\end{figure*}
-
-\section{Comparison with firm data}
-\label{sec:data}
 
 We compare seven economies at the reference point ($N=32000$; an eighth, in a collective burst, is
 excluded) with the facts of MSB, using their estimator, the mean absolute deviation of a life's growth
@@ -334,7 +313,8 @@ range over the seven economies.  (c) Distribution of $v/\E[v\mid\Sb]$ by fifth o
 exponents.  Fifths are fifths of life-mean size.  Rows spanning both model columns use the minimum life
 length given in the row.  Rescaled growth is rescaled as by MSB, with the leave-one-out mean and volatility,
 in the two reference economies, and its kurtosis is taken on $|z|\le8$, the range of the Compustat curves, for
-both (Appendix~\ref{app:protocol}).}
+both (Appendix~\ref{app:protocol}).  The serial correlation of firm growth is from French manufacturing firms
+\cite{coad2007}.}
 \label{tab:facts}
 \begin{ruledtabular}
 \begin{tabular}{llll}
@@ -351,6 +331,7 @@ excess kurtosis of rescaled growth & \multicolumn{2}{l}{$3.0\to5.7$ by fifth ($n
 3-year persistence (kurtosis/iid) & \multicolumn{2}{l}{$0.72\to1.30$ by fifth ($n_{\min}=20$)} & $>1$ at all sizes\\
 correlation with the aggregate & \multicolumn{2}{l}{$0.11\to0.29$ by fifth} & rises with size\\
 pairwise correlation, same fifth & \multicolumn{2}{l}{$0.03\to0.11$} & rises with size\\
+serial correlation of growth, lag one & \multicolumn{2}{l}{$-0.05\to+0.46$ by fifth ($n_{\min}=5$)} & small $<0$, large $>0$ \cite{coad2007}\\
 size distribution & \multicolumn{2}{l}{Hill index $4.5$} & Zipf, $\simeq1$\\
 \end{tabular}
 \end{ruledtabular}
@@ -371,6 +352,7 @@ MSB \cite{moran2024}.}
 \raggedright rescaled growth stays fat-tailed among large firms (no Gaussianisation) & \raggedright no, Gaussian & \raggedright not tested & \raggedright not tested & \raggedright not tested & \raggedright yes\tabularnewline
 \raggedright co-movement rising with size & \raggedright no & \raggedright no & \raggedright volatilities co-move & \raggedright not tested & \raggedright yes\tabularnewline
 \raggedright entry and exit from the dynamics & \raggedright no & \raggedright entry of products & \raggedright no & \raggedright yes & \raggedright yes\tabularnewline
+\raggedright serial correlation rising with size & \raggedright no & \raggedright not tested & \raggedright not tested & \raggedright not tested & \raggedright yes\tabularnewline
 \raggedright Zipf's law & \raggedright input & \raggedright not tested & \raggedright input & \raggedright yes & \raggedright no\tabularnewline
 \end{tabular}
 \end{ruledtabular}
@@ -387,7 +369,34 @@ Compustat.  This is the feature MSB single out as the missing ingredient of gran
 do not co-move \cite{moran2024}; here it comes from the interactions.  A natural reading is that small
 firms are moved mostly by their own noise and large ones by their field, which they share with their
 neighbours, but we have no quantitative theory of it.  Table~\ref{tab:scorecard} sets these facts against the main
-classes of models of firm growth: to our knowledge no other model gets the first six rows together.
+classes of models of firm growth: to our knowledge no other model gets all rows but the last together.
+
+\paragraph{Where the facts hold.}  The reference point is one point of a band (Fig.~\ref{fig:strip}).  Near
+the zero-growth line, $\zeta_1$ and the ratio curve depend on a single variable, the depth $\sigma-\sigma_c(\mu)$
+of the economy in the fluctuating phase: for $\mu\le-1$ and lives with at least five growth rates,
+$\zeta_1=0.49-1.34\,(\sigma-\sigma_c)$, with a scatter of $0.014$ over $27$ points.  The deeper the economy, the
+more its field moves, the larger the floor of large firms and the flatter the decline.  Depths from $0.18$
+to $0.25$ give $\zeta_1=0.15$--$0.25$.  For $\mu$ from $-1.25$ to $-2.25$ this band contains economies whose
+mean firm grows by between $-0.08$ and $+0.16$ per unit time, so an economy that competes moderately and
+grows slowly sits in it; slow growth alone does not, since along the zero-growth line $\zeta_1$ falls from
+$0.40$ under weak competition to $0.13$ under strong competition.  The band is about $0.07$ wide in $\sigma$.
+
+\begin{figure*}[t]
+\includegraphics[width=\linewidth]{fig_strip.pdf}
+\caption{Where the facts hold (reference graph, $N=16000$, $C=200$, $D=0.1$, two economies per point).  (a) Phase
+plane: instability line $\sigma_c$ and zero-growth line from the renewal theory, zero-growth line from simulation
+(dots), and the band of depths where $0.15\le\zeta_1\le0.25$ for lives with at least five growth rates; the star is the
+reference point.  (b) $\zeta_1$ against the depth $\sigma-\sigma_c(\mu)$, coloured by $\mu$, with the linear fit for $\mu\le-1$
+and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least $5$ (filled) and $20$ (open) growth rates, with the
+Compustat value.}
+\label{fig:strip}
+\end{figure*}
+
+\paragraph{What is fitted.}  One fact is fitted: the depth sets $\zeta_1$, and we place the reference point at
+the depth that gives $\zeta_1\simeq0.2$.  The others are outputs.  Across the band of depths that gives
+$\zeta_1=0.15$--$0.25$ the ratio curve stays below $q$ (Fig.~\ref{fig:strip}c and Table~\ref{tab:robust}), and the
+tails of growth, their survival among large firms, the co-movement and the serial correlation of growth come
+from the same point.
 
 \paragraph{What it misses.}  The decline spans two decades rather than four, and volatility falls by a
 factor $2.8$ against $5.5$.  The tail of the volatility distribution is too thin, $b=5.2$ against $4.6$, and thinner for longer
@@ -398,8 +407,16 @@ the same lives gives $2.5$ from the rescaling of short lives alone.  The model's
 negative one fatter, and multi-year persistence is confined to the largest firms: small firms are moved by
 near-Gaussian, mean-reverting birth--death noise, large firms by rare and persistent dips of their field,
 which make their fat tails and the collapses before exit.  Aggregate volatility is several times too large
-and does not fall as $N^{-1/2}$ over the sizes we simulate, and $5$ of $80$ economies in our robustness runs
-enter a collective burst in which volatility no longer depends on size.  The size distribution has no
+and does not fall as $N^{-1/2}$ over the sizes we simulate.  Five of the $80$ economies of our robustness
+runs, one of the eight at the reference point, enter a collective burst: aggregate volatility per year above
+$0.3$, against $0.04$--$0.26$ in the others, higher turnover, and a volatility that hardly depends on size
+($\zeta_1=0.08$).  We exclude economies above this threshold; with the burst economy the pooled exponents at the
+reference point are $\zeta_1=0.170$ and ratios $1.79$, $2.30$, $2.52$, because it contributes the largest number
+of lives (Appendix~\ref{app:robust}).  What triggers a burst is open.  The year is a choice.  At our step
+of $0.5$ time units the serial correlation of growth rises with size, from about zero in the smallest fifth
+to $+0.46$ in the largest, as reported for firm data \cite{coad2007}, though probably too strongly among
+large firms; at a step of $2$ it vanishes at every size.  The bend survives the coarser step, but $\zeta_1$
+for lives with at least five growth rates falls to $0.15$ (Appendix~\ref{app:protocol}).  The size distribution has no
 Pareto tail, newborns have extreme infant mortality, and small established firms shrink on average.  The
 missing tail and the short range come from the self-limitation: a firm whose field stays at $\Phi>0$
 relaxes to the plateau $x=m\Phi$, a few times the mean firm, so sizes are capped near the highest plateaus,
@@ -499,6 +516,16 @@ the model: on a scale-free network the dispersion at fixed size grows from $s^2=
 fifth of sizes to $0.26$ in the largest and the ratios bend; on a graph with equal degrees it stays below
 $0.05$ and the ratios are close to $q$; with all lives the estimation noise dominates and the ratios lie
 above $q$ (Sec.~\ref{sec:floor}).
+
+\paragraph{The shape of the bend.}  Equation~\eqref{eq:general} reads the row $\zeta_q-q\zeta_1$ of
+Table~\ref{tab:facts} as the growth with size of the moments of the rescaled volatility.  In Compustat the
+second moment hardly grows and the fourth does: the upper tail spreads.  At the like-for-like cut the
+model gets the second moment but its upper tail spreads too little ($-0.15$ against $-0.22$).  At
+$n_{\min}=20$ its dispersion grows already in the bulk ($-0.06$ against $-0.01$) and its tail at least as
+much as in Compustat.  The difference between the two cuts is the estimation noise of short lives, which
+shrinks with size and offsets part of the floors' spread (Sec.~\ref{sec:criterion}).  Neither cut gives
+Compustat's shape: the floors of the model spread the whole distribution of volatilities at fixed size,
+while in Compustat the spread is concentrated in the upper tail.
 
 \section{One firm in its field}
 \label{sec:onefirm}
@@ -669,17 +696,6 @@ $B$ at its bin mean, with the growth standard deviation as the volatility; dotte
 growth rates (power-law graph, Table~\ref{tab:cases}).}
 \label{fig:mechanism}
 \end{figure*}
-
-
-\paragraph{The shape of the bend.}  Equation~\eqref{eq:general} reads the row $\zeta_q-q\zeta_1$ of
-Table~\ref{tab:facts} as the growth with size of the moments of the rescaled volatility.  In Compustat the
-second moment hardly grows and the fourth does: the upper tail spreads.  At the like-for-like cut the
-model gets the second moment but its upper tail spreads too little ($-0.15$ against $-0.22$).  At
-$n_{\min}=20$ its dispersion grows already in the bulk ($-0.06$ against $-0.01$) and its tail at least as
-much as in Compustat.  The difference between the two cuts is the estimation noise of short lives, which
-shrinks with size and offsets part of the floors' spread (Sec.~\ref{sec:criterion}).  Neither cut gives
-Compustat's shape: the floors of the model spread the whole distribution of volatilities at fixed size,
-while in Compustat the spread is concentrated in the upper tail.
 
 \section{Predictions for firm data}
 \label{sec:predictions}
@@ -1659,9 +1675,13 @@ the zero-growth line rises with $D$ more slowly than $\sigma_c$ (Fig.~\ref{fig:p
 \section{Protocol}
 \label{app:protocol}
 
-\paragraph{The year.}  We sample every $0.5$ time units.  The lag-one autocorrelation of growth within
-lives is $+0.13$, $+0.18$ and $0.00$ at steps $0.5$, $1$ and $2$; a step of $2$ would remove it but leaves
-too few growth rates per life for the panel.  In the two reference economies, lives with at least five
+\paragraph{The year.}  We sample every $0.5$ time units.  The lag-one autocorrelation of growth, demeaned within
+each life, for lives with at least five growth rates of the two reference economies, is $-0.05$, $+0.30$,
+$+0.36$, $+0.40$ and $+0.46$ by fifth of size at step $0.5$; $+0.13$, $+0.31$, $+0.32$, $+0.32$ and $+0.31$ at
+step $1$; and $+0.02$, $+0.06$, $+0.05$, $+0.02$ and $-0.01$ at step $2$.  Demeaning biases each value down by
+about $1/n$, most among the short lives of small firms, so the rise with size is robust and the sign in the
+smallest fifth is not.  At step $0.5$ the serial correlation rises with size, as in firm data
+\cite{coad2007}; at step $2$ it is gone at every size, and a step of $2$ also leaves few growth rates per life.  In the two reference economies, lives with at least five
 growth rates give $\zeta_q=0.208$, $0.403$, $0.572$, $0.711$ (ratios $1.94$, $2.75$, $3.41$) over $2.0$
 decades at step $0.5$, and $\zeta_q=0.154$, $0.259$, $0.316$, $0.333$ (ratios $1.68$, $2.06$, $2.16$) over
 $1.4$ decades at step $2$: volatility per step rises by a factor $1.1$ in the smallest size bin and $2.2$
