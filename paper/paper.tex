@@ -61,7 +61,7 @@ the conditional moments in Compustat scale as
 \E[v^q\mid\Sb]\sim\Sb^{-\zeta_q},
 \label{eq:zeta}
 \end{equation}
-with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$ over four decades of size
+with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$ over four orders of magnitude of size
 \cite{stanley1996,amaral1997,sutton2002,moran2024}.  The ratios $\zeta_q/\zeta_1=1.95$, $2.55$, $2.90$ lie
 below $q$ \cite{moran2024}.  If a firm's volatility were a function of its size times a random factor
 whose law does not depend on size, the ratios would be exactly $q$.  The bend therefore says that firms of
@@ -85,64 +85,22 @@ Other models get parts of the picture: customer--supplier networks make volatili
 models of firm formation give Zipf's law \cite{axtell2016}.  To our knowledge, none has been shown to produce
 the volatility facts together.
 
-We propose a dynamical economy of interacting firms in which these facts are outputs.  Firm sizes follow
-generalised Lotka--Volterra (GLV) dynamics on a scale-free network \cite{acemoglu2012,carvalho2019}: each firm
-grows, limits itself, and gains or loses from the firms it is linked to, through links of random sign and
-strength.  We measure interactions and self-limitation in units of the mean firm, so that the economy has no
-preferred size and the growth rate of the mean firm is selected by the dynamics.  Each firm is hit by
-birth--death noise, the sum of independent gains and losses of small pieces of business; a firm that reaches
-zero exits, and a newborn takes its node.  Nothing about a firm is put in by hand: its size, its entry and
-exit, the length of its life and its co-movement with other firms follow from one dynamics with five
-parameters.  The strongly interacting phase of the disordered GLV model keeps fluctuating, each species
-behaving as a logistic unit driven by a coloured Gaussian field \cite{roy2020,mallmin2024,arnouxbunin2024},
-and its mean-field theory on networks is known \cite{aguirrelopez,poley2025,patil2026}.  We use that theory to
-place the economy, and add to it the exact law of one firm with birth--death noise and turnover.
+Why interacting firms?  MSB point to correlations that grow with size as the missing ingredient.  Firms
+interact: they compete for the same customers, and they buy from and sell to each other, so the fortunes of
+one change the growth of others \cite{acemoglu2012,carvalho2019}.  Interactions make firms co-move.  In an
+economy where they matter, the environment of a firm, its competitors, customers and suppliers, keeps
+changing, so even a large firm cannot average its volatility away.  And interactions make firms enter and
+exit, and so set the length of their lives.  This led us to ask whether an economy of interacting firms, with
+nothing about a single firm put in by hand, can produce the facts.  We take the simplest such dynamics, the
+generalised Lotka--Volterra (GLV) model of interacting species, whose strongly interacting phase keeps
+fluctuating \cite{roy2020,mallmin2024,arnouxbunin2024}: firms grow, limit themselves, and gain or lose from
+the firms they are linked to on a scale-free network.  We add birth--death noise and turnover: a firm that
+reaches zero exits, and a newborn takes its place.
 
-With one fitted number, the model reproduces the facts together (Sec.~\ref{sec:data},
-Table~\ref{tab:scorecard}).  The depth of the economy in its fluctuating phase sets $\zeta_1$, and we place it
-where $\zeta_1\simeq0.2$.  The rest is predicted.  The ratios $\zeta_q/\zeta_1$ fall below $q$.  Growth rates
-have tent-shaped tails, and after rescaling by each firm's volatility the largest firms keep an excess
-kurtosis of $5.7$, as in Compustat, where a Gaussian null gives $0.1$.  The correlation of a firm's growth
-with the aggregate, with firms of similar size and with its own past all rise with size.  The model also has
-clear limits.  The self-limitation that makes volatility depend on size also caps firm size, so the decline
-spans two decades rather than four and there is no Zipf law; and a few economies enter collective bursts.
-
-Why the ratio curve bends has a model-free answer (Sec.~\ref{sec:criterion}).  The curve lies below $q$
-exactly where the dispersion of volatilities among firms of equal size grows with size.  If a firm's growth
-variance is a floor plus a part that falls with size, as when a firm's own noise is averaged out by its
-size, the exponents obey $\zeta_q=(q/2)\,b\,\langle w\rangle_q$, with $b$ the slope of the falling part and
-$w$ its share, and the dispersion grows only if the floors differ between firms of equal size.  The noise
-of estimating a volatility from a short life acts the other way, because short lives are concentrated among
-small firms, so the measured bend depends on the shortest lives kept.  In the economy the floors differ
-(Secs.~\ref{sec:onefirm} and \ref{sec:floor}).  Each firm reduces to a logistic unit in its own field, and
-its growth variance to a floor and a demographic part.  The floor contains the climb after entry and the
-collapse before exit, spread over the life.  Lives end in dips of the field, at a rate given by Rice's
-formula and the extinction probability of a branching process, so their lengths are broad; and the degree
-of a firm's node sets the amplitude of its field.  On a graph with equal degrees the floors barely differ and
-the ratios return close to $q$, and keeping short lives pushes them above $q$: one criterion accounts for a
-bend, its absence and its reversal.  The theory of the floors is a one-firm problem given three statistics
-of the field, which we take from simulation, because at finite connectivity a Gaussian closure misses the
-amplitude of the field's motion (Appendix~\ref{app:closure}).
-
-Anomalous moment scaling has been derived for GLV communities before: with multiplicative environmental
-noise and migration, abundances obey Taylor's law with a single exponent for every order
-\cite{alhiyasat2026}, through the Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000}.  That law
-concerns the moments of an abundance; ours concerns the moments of the growth volatility conditioned on size,
-whose exponents bend below $q\zeta_1$, and depends on the network and on turnover.
-
-The mechanism leads to tests on firm data (Sec.~\ref{sec:predictions}).  The dispersion of volatilities
-among firms of equal size should grow with size; the length of a firm's observed life should explain a
-growing share of it; trimming the years after entry and before exit should move the ratio curve towards
-$q$ and steepen the decline; and adding short lives should push the curve towards or above $q$.
-Section~\ref{sec:economy} presents the model, Sec.~\ref{sec:data} the facts, Sec.~\ref{sec:criterion} the
-criterion, Secs.~\ref{sec:onefirm} and \ref{sec:floor} the mechanism, and Sec.~\ref{sec:discussion}
-concludes.  The appendices give the derivations: the one-firm equation (Appendix~\ref{app:relative}), the
-mean-field theory on a network (Appendix~\ref{app:hdmft}), the law of one firm with noise and turnover and
-the instability line it gives (Appendix~\ref{app:constant}), the two-time closure
-(Appendix~\ref{app:closure}), the volatility law (Appendix~\ref{app:reduction}), the criterion and the law of
-life lengths (Appendix~\ref{app:multiscaling}), and the robustness runs and the protocol
-(Appendices~\ref{app:robust} and \ref{app:protocol}).  Every number is printed by a notebook of the companion
-code \cite{code}, and Table~\ref{tab:notation} lists the symbols.
+Section~\ref{sec:economy} presents the model, Sec.~\ref{sec:data} compares it with firm data,
+Secs.~\ref{sec:criterion}--\ref{sec:floor} explain why the moments of volatility behave as they do,
+Sec.~\ref{sec:predictions} derives tests on firm data, and Sec.~\ref{sec:discussion} concludes.  Every number is
+printed by a notebook of the companion code \cite{code}, and Table~\ref{tab:notation} lists the symbols.
 
 \begin{table}[b]
 \caption{Symbols used throughout.}
@@ -294,8 +252,7 @@ excluded) with the facts of MSB, using their estimator, the mean absolute deviat
 rates.  Which minimum life length matches theirs needs care.  MSB's growth rates are annual differences
 rolled over quarters, so their robustness cut of $20$ growth rates spans about six years, or five
 non-overlapping annual growth rates; their full sample has $46$ per firm on average.  Our $n_{\min}=5$ is
-the like-for-like cut, and we compare at it (Fig.~\ref{fig:facts}).  Table~\ref{tab:facts} also gives
-$n_{\min}=20$, the cut of the theory tests of Secs.~\ref{sec:onefirm} and \ref{sec:floor}.
+the like-for-like cut, and we compare at it (Fig.~\ref{fig:facts}, Table~\ref{tab:facts}).
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_facts.pdf}
@@ -310,29 +267,29 @@ range over the seven economies.  (c) Distribution of $v/\E[v\mid\Sb]$ by fifth o
 \begin{table*}[t]
 \caption{The facts of MSB at the reference point ($N=32000$, seven economies) and in Compustat
 \cite{moran2024}, with MSB's uncertainties in brackets; the Compustat ratios are computed from their
-exponents.  Fifths are fifths of life-mean size.  Rows spanning both model columns use the minimum life
-length given in the row.  Rescaled growth is rescaled as by MSB, with the leave-one-out mean and volatility,
+exponents.  Fifths are fifths of life-mean size.  Model values are for lives with at least five growth rates unless the row
+says otherwise.  Rescaled growth is rescaled as by MSB, with the leave-one-out mean and volatility,
 in the two reference economies, and its kurtosis is taken on $|z|\le8$, the range of the Compustat curves, for
 both (Appendix~\ref{app:protocol}).  The serial correlation of firm growth is from French manufacturing firms
 \cite{coad2007}.}
 \label{tab:facts}
 \begin{ruledtabular}
-\begin{tabular}{llll}
-fact & model, $n_{\min}=5$ & model, $n_{\min}=20$ & Compustat\\
+\begin{tabular}{lll}
+fact & model & Compustat\\
 \hline
-$\zeta_q$ & $0.209$, $0.400$, $0.561$, $0.685$ & $0.254$, $0.452$, $0.598$, $0.701$ & $0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$\\
-spread of $\zeta_1$ between economies & $\pm0.024$ & $\pm0.028$ & \\
-$\zeta_q/\zeta_1$ & $1.92$, $2.69$, $3.28$ & $1.78$, $2.35$, $2.75$ & $1.95$, $2.55$, $2.90$\\
-$\zeta_q-q\zeta_1$ & $-0.02$, $-0.07$, $-0.15$ & $-0.06$, $-0.16$, $-0.32$ & $-0.01$, $-0.09$, $-0.22$\\
-range of the decline & $2.0$ decades & $1.4$ decades & $4$ decades\\
-volatility, smallest $\to$ largest bin & $1.11\to0.39$ & $0.70\to0.32$ & $1.22\to0.22$\\
-tail $b$ of $v/\E[v\mid\Sb]$ & $5.2$ & $6.6$ & $4.6$\\
-excess kurtosis of rescaled growth & \multicolumn{2}{l}{$3.0\to5.7$ by fifth ($n_{\min}=5$; Gaussian null $2.5\to0.1$)} & $4.2\to5.7$\\
-3-year persistence (kurtosis/iid) & \multicolumn{2}{l}{$0.72\to1.30$ by fifth ($n_{\min}=20$)} & $>1$ at all sizes\\
-correlation with the aggregate & \multicolumn{2}{l}{$0.11\to0.29$ by fifth} & rises with size\\
-pairwise correlation, same fifth & \multicolumn{2}{l}{$0.03\to0.11$} & rises with size\\
-serial correlation of growth, lag one & \multicolumn{2}{l}{$-0.05\to+0.46$ by fifth ($n_{\min}=5$)} & small $<0$, large $>0$ \cite{coad2007}\\
-size distribution & \multicolumn{2}{l}{Hill index $4.5$} & Zipf, $\simeq1$\\
+$\zeta_q$ & $0.209$, $0.400$, $0.561$, $0.685$ & $0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$\\
+spread of $\zeta_1$ between economies & $\pm0.024$ & \\
+$\zeta_q/\zeta_1$ & $1.92$, $2.69$, $3.28$ & $1.95$, $2.55$, $2.90$\\
+$\zeta_q-q\zeta_1$ & $-0.02$, $-0.07$, $-0.15$ & $-0.01$, $-0.09$, $-0.22$\\
+range of the decline, orders of magnitude & $2.0$ & $4$\\
+volatility, smallest $\to$ largest bin & $1.11\to0.39$ & $1.22\to0.22$\\
+tail $b$ of $v/\E[v\mid\Sb]$ & $5.2$ & $4.6$\\
+excess kurtosis of rescaled growth & $3.0\to5.7$ by fifth (Gaussian null $2.5\to0.1$) & $4.2\to5.7$\\
+3-year persistence (kurtosis/iid) & $0.72\to1.30$ by fifth (lives with at least $20$) & $>1$ at all sizes\\
+correlation with the aggregate & $0.11\to0.29$ by fifth & rises with size\\
+pairwise correlation, same fifth & $0.03\to0.11$ & rises with size\\
+serial correlation of growth, lag one & $-0.05\to+0.46$ by fifth & small $<0$, large $>0$ \cite{coad2007}\\
+size distribution & Hill index $4.5$ & Zipf, $\simeq1$\\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -358,8 +315,8 @@ MSB \cite{moran2024}.}
 \end{ruledtabular}
 \end{table*}
 
-\paragraph{What the model gets.}  At the like-for-like cut, $\zeta_1=0.209\pm0.024$ against $0.20(1)$.  The
-decline is monotone, with no hump at small sizes, and the ratio curve lies below $q$ at both cuts.  Growth
+\paragraph{What the model gets.}  The model gives $\zeta_1=0.209\pm0.024$, against $0.20(1)$ in Compustat.  The
+decline is monotone, with no hump at small sizes, and the ratio curve lies below $q$.  Growth
 rates have exponential, tent-shaped tails, fatter than a Laplace law of the same volatility, as in
 Compustat (Fig.~\ref{fig:tails}a, c).  Rescaled by each firm's volatility, they stay fat-tailed among the
 largest firms, with an excess kurtosis of $5.7$ against $5.7$ in Compustat and $0.1$ for a Gaussian null
@@ -387,8 +344,7 @@ $0.40$ under weak competition to $0.13$ under strong competition.  The band is a
 plane: instability line $\sigma_c$ and zero-growth line from the renewal theory, zero-growth line from simulation
 (dots), and the band of depths where $0.15\le\zeta_1\le0.25$ for lives with at least five growth rates; the star is the
 reference point.  (b) $\zeta_1$ against the depth $\sigma-\sigma_c(\mu)$, coloured by $\mu$, with the linear fit for $\mu\le-1$
-and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least $5$ (filled) and $20$ (open) growth rates, with the
-Compustat value.}
+and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least five growth rates, with the Compustat value.}
 \label{fig:strip}
 \end{figure*}
 
@@ -398,7 +354,7 @@ $\zeta_1=0.15$--$0.25$ the ratio curve stays below $q$ (Fig.~\ref{fig:strip}c an
 tails of growth, their survival among large firms, the co-movement and the serial correlation of growth come
 from the same point.
 
-\paragraph{What it misses.}  The decline spans two decades rather than four, and volatility falls by a
+\paragraph{What it misses.}  The decline spans two orders of magnitude of size rather than four, and volatility falls by a
 factor $2.8$ against $5.5$.  The tail of the volatility distribution is too thin, $b=5.2$ against $4.6$, and thinner for longer
 lives; with all lives the model gives $b=4.4$, but a null with iid Laplace growth and no differences
 between firms gives $4.3$, so that value is an artefact of short lives.  The rescaled growth rates of small
@@ -519,12 +475,8 @@ above $q$ (Sec.~\ref{sec:floor}).
 
 \paragraph{The shape of the bend.}  Equation~\eqref{eq:general} reads the row $\zeta_q-q\zeta_1$ of
 Table~\ref{tab:facts} as the growth with size of the moments of the rescaled volatility.  In Compustat the
-second moment hardly grows and the fourth does: the upper tail spreads.  At the like-for-like cut the
-model gets the second moment but its upper tail spreads too little ($-0.15$ against $-0.22$).  At
-$n_{\min}=20$ its dispersion grows already in the bulk ($-0.06$ against $-0.01$) and its tail at least as
-much as in Compustat.  The difference between the two cuts is the estimation noise of short lives, which
-shrinks with size and offsets part of the floors' spread (Sec.~\ref{sec:criterion}).  Neither cut gives
-Compustat's shape: the floors of the model spread the whole distribution of volatilities at fixed size,
+second moment hardly grows and the fourth does: the upper tail spreads.  The model gets the second
+moment, but its upper tail spreads too little ($-0.15$ against $-0.22$).  The shape differs: the floors of the model spread the whole distribution of volatilities at fixed size,
 while in Compustat the spread is concentrated in the upper tail.
 
 \section{One firm in its field}
@@ -758,6 +710,12 @@ structure of firms and the independence of their shocks as given; here the floor
 spread them, entries and exits, and the co-movement of large firms all come from one dynamics of
 interacting firms.
 
+Anomalous moment scaling has been derived for GLV communities before: with multiplicative environmental
+noise and migration, abundances obey Taylor's law with a single exponent for every order
+\cite{alhiyasat2026}, through the Bouchaud--M\'ezard wealth model \cite{bouchaudmezard2000}.  That law
+concerns the moments of an abundance; ours concerns the moments of the growth volatility conditioned on size,
+whose exponents bend below $q\zeta_1$, and depends on the network and on turnover.
+
 Two limits are clear.  The theory is a one-firm problem given three statistics of the field, but at finite
 connectivity a Gaussian closure predicts neither the amplitude of the field's motion, set close to a
 marginal amplification, nor its spread between firms of equal degree, which carries part of the bend; a
@@ -765,7 +723,7 @@ closure that keeps the
 differences between firms of equal degree, such as the cavity method solved by population dynamics, is
 open.  And the model spreads the whole distribution of volatilities at fixed size, while in Compustat only
 its upper tail spreads; the self-limitation that makes volatility depend on size also caps firm size, so
-the range is two decades rather than four and there is no Zipf law.  A dynamics that decouples the decline
+the range is two orders of magnitude rather than four and there is no Zipf law.  A dynamics that decouples the decline
 of volatility from the size cap, and a theory of the co-movement of large firms, are the next steps.  The
 tests of Sec.~\ref{sec:predictions} do not depend on these limits: they ask whether firm data show the
 dispersion, the role of life length and the response to trimming that the mechanism implies.
@@ -1683,11 +1641,11 @@ about $1/n$, most among the short lives of small firms, so the rise with size is
 smallest fifth is not.  At step $0.5$ the serial correlation rises with size, as in firm data
 \cite{coad2007}; at step $2$ it is gone at every size, and a step of $2$ also leaves few growth rates per life.  In the two reference economies, lives with at least five
 growth rates give $\zeta_q=0.208$, $0.403$, $0.572$, $0.711$ (ratios $1.94$, $2.75$, $3.41$) over $2.0$
-decades at step $0.5$, and $\zeta_q=0.154$, $0.259$, $0.316$, $0.333$ (ratios $1.68$, $2.06$, $2.16$) over
-$1.4$ decades at step $2$: volatility per step rises by a factor $1.1$ in the smallest size bin and $2.2$
+orders of magnitude at step $0.5$, and $\zeta_q=0.154$, $0.259$, $0.316$, $0.333$ (ratios $1.68$, $2.06$, $2.16$) over
+$1.4$ orders of magnitude at step $2$: volatility per step rises by a factor $1.1$ in the smallest size bin and $2.2$
 in the largest, so the decline flattens, and the ratio curve bends further below $q$.  For lives with
 at least $20$ growth rates the change is smaller ($\zeta_1=0.253$ and $0.247$, ratios $1.79$, $2.37$,
-$2.80$ and $1.75$, $2.28$, $2.62$, although at step $2$ these lives span only $0.9$ decades).  The bend
+$2.80$ and $1.75$, $2.28$, $2.62$, although at step $2$ these lives span only $0.9$ orders of magnitude).  The bend
 below $q$ survives the coarser year; the level of $\zeta_1$ for short lives does not
 (\texttt{notebooks/06\_facts.ipynb}).
 
@@ -1705,7 +1663,7 @@ $n_{\min}=5$ and test the theory at $n_{\min}=20$, where each life is long enoug
 the production run $\zeta_q=0.180$, $0.434$, $0.708$, $0.965$ (ratios $2.41$, $3.94$, $5.36$) for $n_{\min}=2$, $0.209$,
 $0.400$, $0.561$, $0.685$ ($1.92$, $2.69$, $3.28$) for $n_{\min}=5$, $0.218$, $0.388$, $0.508$, $0.582$ ($1.78$, $2.33$,
 $2.67$) for $n_{\min}=10$ and $0.254$, $0.452$, $0.598$, $0.701$ ($1.78$, $2.35$, $2.75$) for $n_{\min}=20$, over $2.1$,
-$2.0$, $1.8$ and $1.4$ decades: the ratios lie above $q$ for $n_{\min}=2$ and below from $n_{\min}=5$, as the
+$2.0$, $1.8$ and $1.4$ orders of magnitude: the ratios lie above $q$ for $n_{\min}=2$ and below from $n_{\min}=5$, as the
 estimation noise of short lives requires (Sec.~\ref{sec:criterion}), and the range shrinks because long lives
 do not occur at the newborn sizes.
 
@@ -1753,7 +1711,7 @@ are exponential, not power laws.  Over the $1.8\times10^7$ growth rates of lives
 by their common volatility, the Hill index of $|z|$ rises with the depth of the tail, $2.3$, $3.0$, $3.5$,
 $4.3$ and $5.2$ for the top $10\%$, $3\%$, $1\%$, $0.3\%$ and $0.1\%$, as for a Laplace law ($3.1$ to $7.8$)
 and unlike a power law (Student $t_3$: $2.5$ to $3.0$).  The slope of $\ln P(|z|>x)$ against $x$ is
-$-0.53$, $-0.47$ and $-0.48$ over the three decades of probability from $10^{-2}$ to $10^{-5}$: an exponential
+$-0.53$, $-0.47$ and $-0.48$ over the three orders of magnitude of probability from $10^{-2}$ to $10^{-5}$: an exponential
 tail, fatter than the Laplace law of the same volatility (\texttt{notebooks/06\_facts.ipynb}).
 
 \begin{figure*}[t]
