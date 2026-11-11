@@ -1,6 +1,9 @@
-% The article: main text, then derivations, checks and robustness as appendices.  Restructured on
-% 2026-11-08 around the model-free criterion for the bend (earlier drafts are in the git history).
-% Build: latexmk -pdf paper.tex   (from this directory)
+% The article: main text, then every derivation, check and robustness test as appendices.  Expanded on
+% 2026-11-11 for reading by someone who has not followed the project since June: the main text explains the
+% argument, the appendices carry the calculations step by step (ported from derivations.tex, which stays as
+% the private note with the flags).  One column for annotation; switch `onecolumn' to `twocolumn' for the
+% journal layout (the long displayed equations of the appendices then need breaking).
+% Build: tectonic -X compile paper.tex   (from this directory)
 %
 % Open (2026-11-08): the one-off numbers now come from notebooks 05 (all lives) and 07 (field statistics,
 % spread tests, predictions); the within-class kurtosis is 0.3, not 2.1 (notebook 04 pooled a top class
@@ -8,17 +11,22 @@
 % Linux copies differ); the red \todo{} numbers come from the Linux copies and are to be replaced.
 % figS_moment_fits.pdf is a draft from the Linux copy of the production run; notebook 06 rewrites it.  Every
 % figure in figures/ is written by a notebook in ../notebooks/.
-\documentclass[pre,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
+\documentclass[pre,onecolumn,superscriptaddress,nofootinbib]{revtex4-2}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
 \newcommand{\E}{\mathbb E}
 \newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
 \newcommand{\Sb}{\bar S}
 \newcommand{\PhiN}{\Phi_{\mathcal N}}
+\newcommand{\fb}{\bar f}
+\newcommand{\dd}{\mathrm d}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newenvironment{verify}{\par\smallskip\noindent\emph{Check.}\ }{\par\smallskip}
 \graphicspath{{figures/}}
 
 \begin{document}
@@ -125,9 +133,58 @@ $q$ and steepen the decline; and adding short lives should push the curve toward
 Derivations, checks and robustness tests are in the appendices, and every number is printed by a
 notebook of the companion code \cite{code}.
 
+\paragraph{How to read this paper.}  The main text gives the argument in words, with the formulas it needs and
+the numbers that test them.  Every calculation is written out in the appendices, in the order of the main
+text.  Appendix~\ref{app:relative} derives the equation of one firm in relative sizes.
+Appendix~\ref{app:hdmft} derives the mean-field theory on a network and the line at which its static
+solution becomes unstable, first without noise.  Appendix~\ref{app:constant} solves one firm with
+birth--death noise in a constant field, uses the solution to place the instability line with noise, and
+tests the line in simulation.  Appendix~\ref{app:closure} discusses the time-dependent closure and where it
+falls short.  Appendix~\ref{app:reduction} derives the volatility law and tests the one-firm reduction.
+Appendix~\ref{app:multiscaling} derives the criterion for the bend, the make-up of the floor and the law of
+life lengths.  Appendices~\ref{app:robust} and \ref{app:protocol} give the robustness runs and the protocol.
+Table~\ref{tab:notation} lists the symbols.
+
+\begin{table}[b]
+\caption{Symbols used throughout.}
+\label{tab:notation}
+\begin{ruledtabular}
+\begin{tabular}{ll}
+$x_i$, $m$ & size of firm $i$; mean firm, $m=N^{-1}\sum_jx_j$\\
+$S_i=x_i/m$ & relative size\\
+$\Sb$, $v$ & mean relative size and growth volatility of a life\\
+$\zeta_q$ & exponent of $\E[v^q\mid\Sb]\sim\Sb^{-\zeta_q}$\\
+$\mu$, $\sigma$ & mean and spread of the interactions ($\mu<0$: competition)\\
+$\alpha$, $C$ & exponent of the degree law; mean degree\\
+$\kappa=k/C$ & relative degree of a node\\
+$D$ & strength of the birth--death noise; relative size of a newborn\\
+$\bar f$ & growth rate of the mean firm\\
+$\Phi_i(t)$ & field on firm $i$: its growth rate at vanishing size, relative to the mean firm\\
+$\sigma_c$ & disorder above which the composition keeps fluctuating\\
+$V_F$, $B$ & floor and demographic part of a life's growth variance\\
+$w$ & share of the demographic part, $B/(V_F+B)$\\
+$n$, $n_{\min}$ & number of growth rates of a life; smallest number kept\\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+
 %======================================================================
 \section{When the ratio curve bends}
 \label{sec:criterion}
+
+\paragraph{What the exponents measure.}  The exponent $\zeta_1$ says how fast the typical volatility falls with
+size.  The higher exponents say how the whole distribution of volatilities at a given size changes with size.
+Suppose first that it does not change, apart from its scale: $v=A(\Sb)\,X$, with the law of $X$ the same at
+every size.  Then $\E[v^q\mid\Sb]=A(\Sb)^q\,\E[X^q]$ and $\zeta_q=q\zeta_1$ for every $q$.  Ratios
+$\zeta_q/\zeta_1$ equal to $q$ therefore mean that firms of different sizes have the same distribution of
+volatilities up to a scale factor.  High moments weigh the most volatile firms of each size.  Ratios below $q$
+mean that these fall with size more slowly than the typical firm does: among large firms, some stay much more
+volatile than the rest.  The rest of this section makes this precise, in two steps.  The first is an identity
+that holds for any panel.  The second assumes that a firm's growth variance has two parts, and identifies
+which dispersion is responsible.  The derivations are in Appendix~\ref{app:multiscaling}.
+
+
 
 \paragraph{Dispersion at fixed size.}  Write a firm's volatility as its conditional mean times a rescaled
 volatility, $v=m(\Sb)\,X$ with $\E[X\mid\Sb]=1$, and let $K_q(\Sb)=\ln\E[X^q\mid\Sb]$.  Then
@@ -225,6 +282,19 @@ and when the dynamics makes firms exit.  Every term is homogeneous of degree one
 has no preferred scale, and the mean firm grows at a rate the dynamics selects.  The noise unit grows
 with the economy, and can be read as an indivisible piece of business, such as a contract or a customer.
 
+\paragraph{Reading the equation.}  The bracket of Eq.~\eqref{eq:model} is the growth rate of firm $i$.  The $1$
+is the rate at which a firm would grow alone.  The term $-x_i/m$ is self-limitation: a firm's growth slows
+as it becomes large compared with the mean firm, as when it saturates its own market.  The sum is the effect
+of the firms it is linked to, each in proportion to its size.  A negative $J_{ij}$ means that firm $j$ takes
+growth from firm $i$, as a competitor does, and a positive one that it feeds it, as a customer or a supplier
+does.  The links are fixed and their strengths are random: $\mu$ sets their mean and $\sigma$ their spread,
+and the scalings with $C$ make both the mean and the spread of the total effect on a firm of average degree
+of order one.  The last term is birth--death noise.  Its variance is proportional to the size of the firm, as
+for a sum of independent gains and losses of pieces of business of size $Dm$, so it matters for small firms
+and averages out for large ones: its contribution to the variance of the growth rate $dx_i/x_i$ is
+$Dm/x_i$ per unit time.  This is the only place where a granular, $1/\text{size}$ effect enters.  The model has five
+parameters, $\mu$, $\sigma$, $\alpha$, $C$ and $D$.
+
 \paragraph{A logistic unit in a moving field.}  In relative sizes $S_i=x_i/m$,
 \begin{equation}
 dS_i=S_i\big[\Phi_i(t)-S_i\big]dt+\sqrt{DS_i}\,dW_i+O(N^{-1/2}),
@@ -242,7 +312,21 @@ $x_i=m\Phi$; if $\Phi<0$, it shrinks until it exits.  For $C\to\infty$ the relat
 standard GLV with demographic noise \cite{altieri2021}, and on the complete graph, with immigration in place
 of the noise, onto the chaotic-turnover model of Refs.~\cite{bunin2017,mallmin2024}.
 
-\paragraph{Phase diagram.}  For $C\to\infty$ heterogeneous dynamical mean-field theory (HDMFT) replaces the
+The field $\Phi_i$ collects everything that acts on firm $i$ except its own self-limitation: it is the rate
+at which the firm would grow, relative to the mean firm, if it were very small.  Two firms differ only through
+their fields, and the field of a firm is set by its neighbours on the network.  The rest of the paper rests
+on this reduction: the statistics of volatility follow from one firm and the statistics of its field.
+
+\paragraph{Phase diagram.}  The model has two regimes.  If the interactions are weak, the economy relaxes: every
+field settles to a constant, every firm sits on its plateau or is replaced again and again by newborns that
+fail, and only the birth--death noise moves sizes.  If they are strong, no such state is stable: the fields
+keep moving because the firms that make them keep rising and falling, and the composition of the economy
+changes for ever.  The facts we are after need the second regime, since a firm's floor comes from the motion
+of its field.  A second question is whether the mean firm grows or shrinks, which the dynamics decides: the
+growth rate $\bar f$ is an output.  The phase diagram answers both, in the plane of the mean interaction $\mu$
+and the disorder $\sigma$ (Fig.~\ref{fig:phase}).
+
+For $C\to\infty$ heterogeneous dynamical mean-field theory (HDMFT) replaces the
 network by one process per degree class, closed by averages over neighbours drawn in proportion to their
 degree \cite{aguirrelopez,patil2026}.  A node of relative degree $\kappa=k/C$ feels
 \begin{equation}
@@ -250,19 +334,42 @@ degree \cite{aguirrelopez,patil2026}.  A node of relative degree $\kappa=k/C$ fe
 \label{eq:hdmft}
 \end{equation}
 with $\bar B$ the degree-weighted mean size and $\xi$ a Gaussian process whose correlation is the
-degree-weighted correlation of sizes.  The static solution loses stability at a line $\sigma_c(\mu)$, which
-on an uncorrelated graph is, to first order in the degree variance,
+degree-weighted correlation of sizes (Appendix~\ref{app:hdmft}).  A better connected firm has a lower mean
+field under competition, because it competes with more firms, and a field of larger amplitude, because it
+sums more random terms.  In the relaxing regime $\xi$ is constant in time, and the theory reduces to a static
+self-consistency.  The static solution loses stability at a line $\sigma_c(\mu)$, where the response of the
+sizes to a small static change of the fields diverges.  Without noise, on an uncorrelated graph and to first
+order in the degree variance,
 \begin{equation}
 \sigma_c\simeq\sqrt2\Big[1-\frac{\Var\kappa}{2}\Big(1-\frac{\mu^2}{2\pi}\Big)\Big]
 \label{eq:sigmac}
 \end{equation}
 (Appendix~\ref{app:hdmft}): hubs feel a field of amplitude $\propto\sqrt\kappa$ and lower the threshold, while a mean
-interaction of either sign spreads the classes' distances from extinction and raises it.  With noise the line
-follows from the renewal law of a node at constant field, which also predicts the turnover to $1$--$2\%$
-(Appendix~\ref{app:constant}).  Above it
-the composition of the economy keeps changing.  Our reference point, $\alpha=2.5$, $\sigma=1.70$, $D=0.1$,
-$C=200$, $\mu=-1.76$, lies in this fluctuating phase ($\sigma_c=1.497$ at $D=0.1$), close to the line on which
+interaction of either sign spreads the classes' distances from extinction and raises it.  With noise the
+static solution is built from the exact stationary law of one firm at constant field, a renewal process of
+successive lives, which also predicts the turnover to $1$--$2\%$ (Appendix~\ref{app:constant}).  Noise raises the
+line almost linearly in $D$.  The same solution gives the zero-growth line, on which $\bar f=0$.
+
+We tested the instability line in simulation (Appendix~\ref{app:constant}, Fig.~\ref{fig:instability}).  On a
+scale-free graph the onset of the fluctuating regime rises with competition as predicted, from $\sigma=0.98$ at
+$\mu=0$ to $1.73$ at $\mu=-2.5$, against $0.95$ and $1.66$ predicted for the graphs simulated, which are smaller than the reference graph of
+Fig.~\ref{fig:phase}; on a graph with a light degree tail it stays
+between $1.44$ and $1.46$, against $1.42$ to $1.47$.  The onset is a crossover $0.1$--$0.2$ wide, and the
+theory places it to within that width.  The zero-growth line of the static solution lies within $0.04$ of the
+simulated one for $\mu$ from $-0.5$ to $-2.5$ (Fig.~\ref{fig:strip}a).  Our reference point, $\alpha=2.5$, $\sigma=1.70$, $D=0.1$,
+$C=200$, $\mu=-1.76$, lies in the fluctuating phase ($\sigma_c=1.497$ at $D=0.1$), close to the line on which
 the mean firm stops growing.
+
+\begin{figure}[t]
+\centering
+\includegraphics{fig_phase.pdf}
+\caption{Phase diagram at $D=0.1$ from the renewal theory.  Above the instability line $\sigma_c(\mu)$ the
+composition keeps fluctuating (shaded for the reference graph, $\alpha=2.5$); the lines for $\alpha=6$ and the
+complete graph are shown for comparison.  The zero-growth line separates economies whose mean firm
+grows from those where it shrinks; above $\sigma_c$ it is the continuation of the static solution and is
+not controlled.  The star is the reference point.}
+\label{fig:phase}
+\end{figure}
 
 \paragraph{Protocol.}  We integrate Eq.~\eqref{eq:model} in relative form by Euler--Maruyama with step
 $0.01$, discard $t<100$, and record sizes every $\Delta t=0.5$, which we take as one year, over a window of
@@ -303,6 +410,15 @@ Compustat value.}
 
 \section{One firm in its field}
 \label{sec:onefirm}
+
+The economy of Sec.~\ref{sec:economy} has $N$ coupled firms, but Eq.~\eqref{eq:onefirm} describes each of them
+as one logistic unit driven by its field.  This section uses that description in three steps.  We first check
+that the field can be treated as an external input, so that the problem is one of a single firm.  We then ask
+which statistics of the field matter.  Last, we split the growth variance of a firm into the part that comes
+from the motion of its field and the part that comes from its own birth--death noise.  The first part is what
+Sec.~\ref{sec:criterion} called the floor.
+
+
 
 \paragraph{The field can be taken as given.}  Equation~\eqref{eq:onefirm} is exact; its content is that a
 firm's own noise does not feed back on its field through the network.  We store the fields of the two
@@ -621,159 +737,589 @@ of volatility from the size cap, and a theory of the co-movement of large firms,
 tests of Sec.~\ref{sec:predictions} do not depend on these limits: they ask whether firm data show the
 dispersion, the role of life length and the response to trimming that the mechanism implies.
 
+
 \appendix
 
-\section{Relative sizes and the standard model}
+%======================================================================
+\section{Relative sizes and the one-firm equation}
 \label{app:relative}
 
-Write $x_i=mS_i$ in Eq.~\eqref{eq:model}.  By It\^o's rule, with $\bar f=\dot m/m$ the drift of the
-mean firm,
-\begin{align}
-dS_i={}&S_i\big[F_i-\bar f\big]dt+\sqrt{DS_i}\,dW_i\nonumber\\
-&-\frac{S_i}{N}\sum_j\sqrt{DS_j}\,dW_j+O(N^{-1})\,dt,\nonumber\\
-F_i={}&1-S_i+\sum_jJ_{ij}S_j ,
-\label{eq:app-rel}
-\end{align}
-and $\bar f=N^{-1}\sum_iS_iF_i$ is the value that keeps $\sum_iS_i=N$ between entries.  The third term, of order
-$N^{-1/2}$, is the share of the aggregate noise that each firm carries.  Each entry adds $D$ to $\sum_iS_i$, i.e.\
-$Dm$ to the economy, and multiplies every relative size by $1-D/N$; at a rate $N\nu$ of entries this is a drift
-$-D\nu S_i$, so the growth rate of the mean firm is $\bar f=N^{-1}\sum_iS_iF_i+D\nu$, the value used in the field
-throughout.  This is a replicator equation
-with birth--death noise; with $\Phi_i=F_i+S_i-\bar f$ it is Eq.~\eqref{eq:onefirm}.  If $\bar f$ self-averages to a constant
-$f^*$ at large $N$, the substitution $S=ry$, $t'=rt$ with $r=1-f^*$ gives
+This appendix goes from the model, Eq.~\eqref{eq:model}, to the equation of one firm in its field,
+Eq.~\eqref{eq:onefirm}, and to the standard model it maps onto.  Throughout, $S_i=x_i/m$ is the relative size, so that
+$\sum_iS_i=N$; $\langle\cdot\rangle$ is an average over degree classes or nodes, $\E$ an average over the disorder or the
+noise, and an overbar a time or life average; $\phi$ and $\PhiN$ are the standard normal density and distribution
+function, and $\phi_0=\phi(0)=1/\sqrt{2\pi}$.
+
+\subsection{The mean firm}
+
+Write $F_i=1-S_i+\sum_jJ_{ij}S_j$, so that the drift of $x_i$ is $x_iF_i$ (because $x_j/m=S_j$).  Summing
+Eq.~\eqref{eq:model} over $i$ and dividing by $N$,
 \begin{equation}
-dy_i=y_i\Big[1-y_i+\sum_jJ_{ij}y_j\Big]dt'+\sqrt{(D/r^2)\,y_i}\,dW_i' ,
+\dd m=\frac1N\sum_jmS_jF_j\,\dd t+\frac1N\sum_j\sqrt{D\,m\cdot mS_j}\,\dd W_j
+=m\big[\fb_0\,\dd t+\dd Z\big],
+\label{eq:app-dm}
 \end{equation}
-the GLV with demographic noise of Ref.~\cite{altieri2021} on the same graph, with noise $D/r^2$ and newborns
-of size $D/r$.  The
-stationary statistics of relative sizes are therefore those of the standard model with renormalised
-noise; the normalisation adds the growth rate $f^*$ as an output, a common mode $\bar f(t)-f^*$ at
-finite $N$, and observables measured relative to the mean firm.
+with
+\begin{equation}
+\fb_0=\frac1N\sum_jS_jF_j,\qquad \dd Z=\frac1N\sum_j\sqrt{DS_j}\,\dd W_j,\qquad
+(\dd Z)^2=\frac{1}{N^2}\sum_jDS_j\,\dd t=\frac DN\,\dd t ,
+\label{eq:app-Z}
+\end{equation}
+where the last equality uses $\sum_jS_j=N$.  The common noise $Z$ has quadratic variation of order
+$1/N$.
+
+\subsection{It\^o's rule for the quotient}
+
+For $S_i=x_i/m$ It\^o's rule for $f(x,m)=x/m$ gives
+\begin{equation}
+\dd S_i=\frac{\dd x_i}{m}-\frac{x_i\,\dd m}{m^2}+\frac{x_i\,(\dd m)^2}{m^3}-\frac{\dd x_i\,\dd m}{m^2}.
+\end{equation}
+Term by term:
+\begin{align}
+\frac{\dd x_i}{m}&=S_iF_i\,\dd t+\sqrt{DS_i}\,\dd W_i,\\
+\frac{x_i\,\dd m}{m^2}&=S_i\big[\fb_0\,\dd t+\dd Z\big],\\
+\frac{x_i(\dd m)^2}{m^3}&=S_i\,(\dd Z)^2=\frac{DS_i}{N}\,\dd t,\\
+\frac{\dd x_i\,\dd m}{m^2}&=\sqrt{DS_i}\,\dd W_i\cdot\frac1N\sqrt{DS_i}\,\dd W_i=\frac{DS_i}{N}\,\dd t ,
+\end{align}
+where the last line uses $\dd W_i\dd W_j=\delta_{ij}\dd t$.  The two It\^o corrections cancel exactly, and
+\begin{equation}
+\boxed{\dd S_i=S_i\big[F_i-\fb_0\big]\dd t+\sqrt{DS_i}\,\dd W_i-S_i\,\dd Z .}
+\label{eq:app-rel}
+\end{equation}
+This is exact between entries.
+
+\paragraph{Conservation.}  Summing Eq.~\eqref{eq:app-rel},
+$\sum_i\dd S_i=\big(\sum_iS_iF_i-N\fb_0\big)\dd t+\sum_i\sqrt{DS_i}\,\dd W_i-N\,\dd Z=0$
+by the definitions of $\fb_0$ and $Z$.  So $\sum_iS_i=N$ is preserved between entries.
+
+\paragraph{Size of the common-noise term.}  $S_i\,\dd Z$ has variance $S_i^2D\,\dd t/N$, against $DS_i\,\dd t$
+for the own noise: relative size $S_i/N$.  It is of order $N^{-1/2}$ in amplitude and is dropped in the
+one-firm equation.  It is the only place where the finite size of the economy enters the single-firm
+dynamics directly.
+
+\subsection{Entry dilution}
+
+An exit at $S_i=0$ removes nothing from $m$.  The newborn adds $Dm$ to $\sum_jx_j$, so
+$m\to m'=m(1+D/N)$, every incumbent's relative size is multiplied by $1/(1+D/N)$, and the newborn's
+relative size is $D/(1+D/N)=D+O(1/N)$.  If entries happen at a rate $N\nu$ per unit time ($\nu$ per
+node), then over $\dd t$
+\begin{equation}
+\frac{m(t+\dd t)}{m(t)}=(1+D/N)^{N\nu\,\dd t}\big[1+\fb_0\,\dd t+\dd Z\big]
+\;\Rightarrow\; \fb=\fb_0+D\nu ,
+\end{equation}
+and each incumbent picks up the drift $-D\nu S_i$.  So the growth rate of the mean firm is
+\begin{equation}
+\fb(t)=\frac1N\sum_iS_iF_i+D\nu(t),
+\label{eq:app-fbar}
+\end{equation}
+and in Eq.~\eqref{eq:app-rel} $\fb_0$ is replaced by $\fb$.  Here $\nu(t)$ is the empirical entry rate, which fluctuates at finite $N$.  (At the reference point $D\nu\simeq0.06$.)
+
+\subsection{The field and the one-firm equation}
+
+Collect everything except the firm's own self-limitation into the field
+\begin{equation}
+\Phi_i(t)=F_i+S_i-\fb=1+\sum_jJ_{ij}S_j(t)-\fb(t).
+\label{eq:app-field}
+\end{equation}
+Then
+\begin{equation}
+\boxed{\dd S_i=S_i\big[\Phi_i(t)-S_i\big]\dd t+\sqrt{DS_i}\,\dd W_i+O(N^{-1/2}),}
+\label{eq:app-onefirm}
+\end{equation}
+with exit at $S_i=0$ and entry at $S_i=D$.  This is exact as a rewriting; the content of the
+``one firm is enough'' result is that $\Phi_i$ may be treated as an external input, i.e.\ that firm $i$'s own
+noise does not feed back on $\Phi_i$ through its neighbours.  The feedback is of order
+$J_{ij}J_{ji}\sim A_{ij}(\mu^2/C^2+\sigma^2\E[z_{ij}z_{ji}]/C)$, so at zero reciprocity it is $\mu^2/C^2$ per
+neighbour and $O(1/C)$ in total after summing over $k\sim C$ neighbours.  The approximation is controlled in $1/C$ and is tested in Appendix~\ref{app:reduction}.
+
+\paragraph{Plateau.}  At constant $\Phi>0$ the noise-free equation $\dot S=S(\Phi-S)$ has the stable fixed
+point $S=\Phi$ ($\partial_S[S(\Phi-S)]=\Phi-2S=-\Phi<0$ there) and relaxes to it at rate $\Phi$.  For
+$\Phi<0$, $S=0$ is the only non-negative fixed point and is attracting.  In absolute units the plateau is
+$x_i=m\Phi$.
+
+\subsection{Logarithmic form and ``size is mean field''}
+
+By It\^o, $\dd\ln S=\dd S/S-\tfrac12(\dd S)^2/S^2$ with $(\dd S)^2=DS\,\dd t$:
+\begin{equation}
+\dd\ln S_i=\Big[\Phi_i-S_i-\frac{D}{2S_i}\Big]\dd t+\sqrt{\frac{D}{S_i}}\,\dd W_i .
+\label{eq:app-log}
+\end{equation}
+Integrate over a window $[t_1,t_2]$ of length $T$ with $\ln S_i(t_2)=\ln S_i(t_1)$ and divide by $T$:
+\begin{equation}
+\Sb_i=\bar\Phi_i-\frac D2\,\overline{S_i^{-1}}+\frac1T\int_{t_1}^{t_2}\sqrt{D/S_i}\,\dd W_i .
+\end{equation}
+Without noise, $\Sb_i=\bar\Phi_i$ exactly: a firm's mean size is its mean field.  With noise the
+stochastic integral has zero mean for a window fixed in advance, but not for a window chosen by the path
+(a life selected for its length), which is why the identity holds per life only to about 5\%.
+
+\subsection{Mapping to the standard GLV with demographic noise}
+
+Suppose $\fb(t)\to f^*$ (self-averaging at large $N$) and $r\equiv1-f^*>0$.  Then
+$\dd S_i=S_i[r-S_i+\sum_jJ_{ij}S_j]\dd t+\sqrt{DS_i}\,\dd W_i$.  Set $S=ry$, $t'=rt$.
+\begin{itemize}
+\item Drift: $S[r-S+\sum JS]\dd t=ry\cdot r[1-y+\sum Jy]\cdot\dd t'/r=ry[1-y+\sum Jy]\,\dd t'$.
+\item Noise: $W_t$ as a function of $t'$ has $\E[(\dd W)^2]=\dd t=\dd t'/r$, so $\dd W=r^{-1/2}\dd W'$ with $W'$
+  standard in $t'$.  Then $\sqrt{DS}\,\dd W=\sqrt{Dry}\,r^{-1/2}\dd W'=\sqrt{Dy}\,\dd W'$.
+\item Divide by $r$ (since $\dd S=r\,\dd y$):
+\end{itemize}
+\begin{equation}
+\dd y_i=y_i\Big[1-y_i+\sum_jJ_{ij}y_j\Big]\dd t'+\sqrt{\frac{D}{r^2}\,y_i}\;\dd W_i' ,
+\end{equation}
+with newborns at $y=D/r$.  This is the GLV with demographic noise of strength $D'=D/r^2$.
+This requires $\fb$ to self-average and $f^*<1$.
 
 %======================================================================
-\section{Heterogeneous mean-field theory and the deterministic stability line}
+\section{Heterogeneous mean-field theory and the stability line without noise}
 \label{app:hdmft}
 
-\paragraph{Degree classes.}  Group the nodes into classes $p$ with fractions $\rho_p$ and degrees
-$k_p$, and let $P_{pr}$ be the probability that a node of class $p$ links to one of class $r$, with
-$k_p/N=\sum_r\rho_rP_{pr}$.  The uncorrelated choice $P_{pr}=k_pk_r/(NC)$ exceeds one for pairs of hubs
-at $\alpha=2.5$; we use the soft-configuration kernel $P_{pr}=h_ph_r/(h_ph_r+C/N)$ with hidden degrees fixed
-by the degree constraint \cite{patil2026}, and write $K_{pr}=N\rho_rP_{pr}/C$.
+This appendix derives the mean-field description of the network, Eq.~\eqref{eq:hdmft}, its static solution without
+noise, the condition under which that solution is stable, and the stability line in closed form,
+Eq.~\eqref{eq:sigmac}.  Noise is added in Appendix~\ref{app:constant}.
 
-\paragraph{Effective process.}  For $C\to\infty$ the mean part of the interaction field on a node of
-class $p$ tends to $\mu B_p$ and, by the dynamical cavity argument
-\cite{bunin2017,galla2018,aguirrelopez}, the random part to a Gaussian process of covariance
-$\sigma^2q_p(t,t')$, with
-\begin{gather}
-B_p(t)=\sum_rK_{pr}\E[S_r(t)],\nonumber\\
-q_p(t,t')=\sum_rK_{pr}\E[S_r(t)S_r(t')] .
+\subsection{Degree classes and kernels}
+
+Group the nodes into classes $p$ with population fractions $\rho_p$ and degrees $k_p$.  Let $P_{pr}$ be the
+probability that a given node of class $p$ is linked to a given node of class $r$.  The expected number
+of class-$r$ neighbours of a class-$p$ node is $N\rho_rP_{pr}$, and the degree constraint is
+$\sum_rN\rho_rP_{pr}=k_p$.  Define
+\begin{equation}
+K_{pr}=\frac{N\rho_rP_{pr}}{C}\qquad\Rightarrow\qquad\sum_rK_{pr}=\kappa_p .
+\end{equation}
+\emph{Uncorrelated (bilinear) kernel:} $P_{pr}=k_pk_r/(NC)$, so $K_{pr}=\rho_r\kappa_p\kappa_r$; it satisfies
+the constraint because $\sum_r\rho_r\kappa_r=1$.  It is a probability only if $k_pk_r\le NC$; at $\alpha=2.5$
+the largest degrees violate this (structural cutoff $k\sim\sqrt{NC}$).  \emph{Soft configuration:}
+$P_{pr}=h_ph_r/(h_ph_r+C/N)$, always in $[0,1]$, with hidden degrees $h_p$ chosen so that the constraint
+holds; for $h_ph_r\ll C/N$ it reduces to the bilinear form with $h_p\propto k_p$.
+
+\subsection{The mean part of the interaction field}
+
+The interaction term on node $i$ in class $p$ is
+$\sum_jJ_{ij}S_j=\frac\mu C\sum_jA_{ij}S_j+\frac{\sigma}{\sqrt C}\sum_jA_{ij}z_{ij}S_j$.
+The first sum has $k_i\sim C$ terms; by the law of large numbers over neighbours drawn with the kernel,
+\begin{equation}
+\frac\mu C\sum_jA_{ij}S_j\;\to\;\frac\mu C\sum_rN\rho_rP_{pr}\,\E[S_r]=\mu\sum_rK_{pr}\E[S_r]\equiv\mu B_p ,
+\end{equation}
+with fluctuations of relative order $k^{-1/2}$, i.e.\ an absolute correction $O(C^{-1/2})$.
+
+\subsection{The random part: cavity argument}
+
+Remove node $0$ (the cavity) and let the rest of the system evolve; the neighbours' sizes $S_j^{\setminus0}(t)$
+are then independent of the couplings $z_{0j}$.  Reinserting node $0$ has two effects.
+\begin{enumerate}
+\item \emph{Direct field.}  $\eta_0(t)=C^{-1/2}\sum_jA_{0j}z_{0j}S_j^{\setminus0}(t)$ is a sum of $k_0$
+  independent zero-mean terms conditional on the cavity trajectories, so by the central limit theorem it is a
+  Gaussian process with covariance
+  \begin{equation}
+  \E[\eta_0(t)\eta_0(t')]=\frac1C\sum_jA_{0j}S_j(t)S_j(t')\;\to\;\sum_rK_{pr}\E[S_r(t)S_r(t')]\equiv q_p(t,t') .
+  \end{equation}
+\item \emph{Reaction.}  Node $0$ perturbs each neighbour $j$ by $J_{j0}S_0$; the response of $j$ is
+  $\chi_j J_{j0}S_0$ and feeds back on $0$ through $J_{0j}$.  The total is
+  $\sum_jJ_{0j}J_{j0}\chi_jS_0$, whose mean is $\sum_jA_{0j}(\mu^2/C^2+\sigma^2\E[z_{0j}z_{j0}]/C)\chi_j=O(\mu^2/C)+0$
+  at zero reciprocity.  It vanishes for $C\to\infty$.
+\end{enumerate}
+So for $C\to\infty$ the field on a class-$p$ node is
+\begin{equation}
+\Phi_p(t)=1-\fb(t)+\mu B_p(t)+\sigma\eta_p(t),\qquad \E[\eta_p(t)\eta_p(t')]=q_p(t,t'),
+\label{eq:app-effproc}
+\end{equation}
+\begin{equation}
+B_p(t)=\sum_rK_{pr}\E[S_r(t)],\qquad q_p(t,t')=\sum_rK_{pr}\E[S_r(t)S_r(t')] .
 \label{eq:app-closure}
-\end{gather}
-At zero reciprocity there is no reaction term.  Each class obeys Eq.~\eqref{eq:onefirm} with field
-$\Phi_p(t)=1-\bar f(t)+\mu B_p(t)+\sigma\eta_p(t)$, $\E[\eta_p(t)\eta_p(t')]=q_p(t,t')$, closed by
-Eq.~\eqref{eq:app-closure} and by $\sum_p\rho_p\E[S_p]=1$, which fixes $\bar f$.  For the bilinear kernel the
-closures factorise, $B_\kappa=\kappa\bar B$ and $q_\kappa=\kappa Q$, with $\kappa=k/C$, which gives Eq.~\eqref{eq:hdmft}: the field's mean falls linearly in $\kappa$ under competition and its amplitude grows as
-$\sqrt\kappa$.
+\end{equation}
+Each class obeys Eq.~\eqref{eq:app-onefirm} with this field; Eq.~\eqref{eq:app-closure} closes the problem, and
+$\fb(t)$ is fixed by $\sum_p\rho_p\E[S_p(t)]=1$ (which is $\sum_iS_i=N$, not an extra approximation).
+This is the standard dynamical cavity derivation
+\cite{bunin2017,galla2018,aguirrelopez} with degree classes.
 
-\paragraph{Stability line.}  Without noise, a relaxed composition has $S_p^*=\sigma\sqrt{q_p^*}
-[\Delta_p+z]_+$ with $\Delta_p=(a+\mu B_p^*)/(\sigma\sqrt{q_p^*})$, $a=1-f^*$ and $z$ standard Gaussian.  With the
-truncated moments $w_n(\Delta)=\int_{-\Delta}^\infty(\Delta+z)^n\phi(z)\,dz$, the survival fraction is
-$\varphi_p=w_0(\Delta_p)$.  A persistent perturbation of variance $Y_r$ in class $r$ produces in class $p$ a
-field of variance $\sigma^2K_{pr}Y_r$, which the survivors convert into $Y_p=\sigma^2\varphi_p\sum_rK_{pr}Y_r$; the
-fixed point loses stability when the Perron root of $\sigma^2\varphi_pK_{pr}$ reaches one.  On a regular graph
-this gives $\sigma_c=\sqrt2$ at zero reciprocity, independent of $\mu$, the onset of the fluctuating
-phase of the GLV \cite{roy2020,mallmin2024}.  For the bilinear kernel the operator has rank one, and
-the threshold is
-\begin{gather}
-\sigma_c^{-2}=\big\langle\kappa^2\PhiN(\Delta_\kappa)\big\rangle,\qquad \Delta_\kappa=A\kappa^{-1/2}+M\kappa^{1/2},\nonumber\\
-\big\langle\kappa^2\Delta_\kappa w_1(\Delta_\kappa)\big\rangle=0,\qquad M=\mu\big\langle\kappa^{3/2}w_1(\Delta_\kappa)\big\rangle .
+\subsection{Bilinear kernel: the field law}
+
+With $K_{pr}=\rho_r\kappa_p\kappa_r$, both closures factorise:
+\begin{equation}
+B_p=\kappa_p\bar B,\quad \bar B=\sum_r\rho_r\kappa_r\E[S_r];\qquad q_p=\kappa_pQ,\quad Q(t,t')=\sum_r\rho_r\kappa_r\E[S_r(t)S_r(t')] .
+\end{equation}
+$\bar B$ and $Q$ are degree-weighted averages (a random neighbour is drawn in proportion to its degree).
+Writing $\eta_p=\sqrt{\kappa_p}\,\xi$ with $\E[\xi(t)\xi(t')]=Q(t,t')$:
+\begin{equation}
+\boxed{\Phi_\kappa(t)=1-\fb(t)+\mu\kappa\bar B+\sigma\sqrt\kappa\,\xi(t).}
+\label{eq:app-fieldlaw}
+\end{equation}
+Under competition ($\mu<0$, $\bar B>0$) the field's mean falls linearly in $\kappa$; its amplitude grows as
+$\sqrt\kappa$.  (On the reference graph the bilinear kernel is not a probability for the hubs,
+so the factorisation is approximate there; the measured amplitude exponent $0.54$ against $0.5$ is measured.)
+
+\subsection{Stationary sizes at a static field}
+
+Without noise and floor, if the field is static, $\Phi=h$, every firm goes to the attracting fixed point of
+$\dot S=S(h-S)$: $S^*=h$ if $h>0$, $S^*=0$ if $h\le0$.  So $S^*=[h]_+$.  (For an extinct firm the condition
+$h<0$ is also the non-invasibility condition.)  In class $p$, $h_p=a+\mu B_p^*+\sigma\sqrt{q_p^*}\,z$ with
+$a=1-f^*$, $z\sim\mathcal N(0,1)$ frozen; so
+\begin{equation}
+S_p^*=\sigma\sqrt{q_p^*}\,[\Delta_p+z]_+,\qquad \Delta_p=\frac{a+\mu B_p^*}{\sigma\sqrt{q_p^*}} .
+\end{equation}
+
+\subsection{Truncated Gaussian moments}
+
+Define $w_n(\Delta)=\int_{-\Delta}^\infty(\Delta+z)^n\phi(z)\,\dd z$.  Using $\int_{-\Delta}^\infty z\phi\,\dd z=\phi(\Delta)$ and
+$\int_{-\Delta}^\infty z^2\phi\,\dd z=\PhiN(\Delta)-\Delta\phi(\Delta)$ (integration by parts with $z\phi=-\phi'$):
+\begin{align}
+w_0&=\PhiN(\Delta),\\
+w_1&=\phi(\Delta)+\Delta\PhiN(\Delta),\\
+w_2&=\Delta^2\PhiN+2\Delta\phi+\PhiN-\Delta\phi=(1+\Delta^2)\PhiN(\Delta)+\Delta\phi(\Delta).
+\end{align}
+Two identities are used repeatedly.
+\begin{enumerate}
+\item $w_n'(\Delta)=n\,w_{n-1}(\Delta)$ for $n\ge1$ (differentiate under the integral; the boundary term is
+  $(\Delta+z)^n\phi|_{z=-\Delta}=0$), and $w_0'=\phi$.
+\item $w_2-w_0=\Delta w_1$.  Proof: $(\Delta+z)^2=\Delta(\Delta+z)+z(\Delta+z)$ and
+  $\int_{-\Delta}^\infty z(\Delta+z)\phi\,\dd z=\int(\Delta+z)(-\phi')\,\dd z=[-(\Delta+z)\phi]_{-\Delta}^\infty+\int_{-\Delta}^\infty\phi=w_0$.
+\end{enumerate}
+Values at $0$: $w_0(0)=\tfrac12$, $w_1(0)=\phi_0$, $w_2(0)=\tfrac12$; $w_0''(\Delta)=\phi'(\Delta)=-\Delta\phi(\Delta)$ vanishes at $0$.
+
+\begin{verify}
+Both identities verified numerically on a grid of $\Delta$ to $10^{-6}$.
+\end{verify}
+
+\subsection{Static closure}
+
+The moments of $S_p^*$ are $\E S_p^*=\sigma\sqrt{q_p^*}\,w_1(\Delta_p)$, $\E(S_p^*)^2=\sigma^2q_p^*w_2(\Delta_p)$ and the
+survival fraction $\varphi_p=\Pr(S_p^*>0)=w_0(\Delta_p)$.  Inserting into Eq.~\eqref{eq:app-closure} at equal times
+($q_p^*$ is the static covariance):
+\begin{equation}
+B_p^*=\sum_rK_{pr}\,\sigma\sqrt{q_r^*}\,w_1(\Delta_r),\qquad
+q_p^*=\sum_rK_{pr}\,\sigma^2q_r^*\,w_2(\Delta_r),\qquad
+1=\sum_p\rho_p\,\sigma\sqrt{q_p^*}\,w_1(\Delta_p).
+\label{eq:app-staticclosure}
+\end{equation}
+The last equation (normalisation) is what fixes $a$, i.e.\ the growth rate $f^*=1-a$.
+
+\subsection{Stability: the response argument}
+
+Add to every node an independent, static, zero-mean perturbing field of variance $\varsigma^2$, and look for
+the stationary response.  A surviving firm ($h>0$) responds with unit susceptibility, $\delta S=\delta h$; an
+extinct one does not respond.  The perturbation of the neighbours' sizes creates, through the random
+couplings, an extra field on a class-$p$ node of variance $\sigma^2\sum_rK_{pr}\E[\delta S_r^2]$ (same cavity
+argument as above, with $\delta S$ in place of $S$).  In the cavity picture, whether a node survives is
+independent of the new perturbation, so with $Y_p=\E[\delta S_p^2]$,
+\begin{equation}
+Y_p=\varphi_p\Big(\varsigma^2+\sigma^2\sum_rK_{pr}Y_r\Big)\quad\Longrightarrow\quad
+Y=\big(\mathbb 1-\sigma^2\,{\rm diag}(\varphi)K\big)^{-1}\varphi\,\varsigma^2 .
+\end{equation}
+The response is finite while the Perron root $\Lambda$ of $\sigma^2{\rm diag}(\varphi)K$ (a non-negative matrix) is
+below one and diverges as $\Lambda\to1$: the unique fixed point loses stability there.  This is the standard criterion of Refs.~\cite{opperdiederich1992,bunin2017,roy2020}; the mean part of the perturbation, $\mu\sum_rK_{pr}\E\delta S_r$, has zero mean and does not diverge.
+
+\subsection{Regular and complete graphs: $\sigma_c=\sqrt2$}
+
+With one class, $\kappa=1$, $K=1$, so $B^*=\E S^*=1$ by the normalisation, and the mean interaction enters
+every field as the same constant $\mu$.  It can be absorbed into $a$: the composition does not depend on
+$\mu$, only the growth rate does.  The closure reads
+\begin{equation}
+\sigma^2w_2(\Delta)=1,\qquad \sigma\sqrt{q^*}\,w_1(\Delta)=1,\qquad \Delta=\frac{a+\mu}{\sigma\sqrt{q^*}} .
+\end{equation}
+The first fixes $\Delta(\sigma)$ ($w_2$ is increasing, from $0$ to $\infty$, so the root is unique).  The second
+gives $\sigma\sqrt{q^*}=1/w_1(\Delta)$, and the third $a+\mu=\Delta/w_1(\Delta)$, so
+\begin{equation}
+f^*=1-a=1+\mu-\frac{\Delta}{w_1(\Delta)}\equiv g_0(\sigma)+\mu,\qquad g_0(\sigma)=1-\frac{\Delta(\sigma)}{w_1(\Delta(\sigma))} .
+\end{equation}
+Stability: $\Lambda=\sigma^2\varphi=\sigma^2w_0(\Delta)$.  At the threshold
+$\sigma^2w_0=1=\sigma^2w_2$, so $w_2-w_0=\Delta w_1=0$, and since $w_1>0$, $\Delta=0$.  Then $w_2(0)=\tfrac12$ gives
+\begin{equation}
+\boxed{\sigma_c=\sqrt2,\qquad \varphi_c=\tfrac12,}
+\end{equation}
+independent of $\mu$.
+
+\paragraph{Zero-growth line on the regular graph.}  $f^*=0$ gives $\mu^{(0)}(\sigma)=\Delta/w_1(\Delta)-1=-g_0(\sigma)$.  At
+$\sigma=\sqrt2$, $\Delta=0$ and $\mu^{(0)}=-1$: the two regular-graph lines meet at $(\mu,\sigma)=(-1,\sqrt2)$.
+
+\paragraph{Its slope at the meeting point.}  Parametrise by $\Delta$.  $\dd\mu/\dd\Delta=\dd(\Delta/w_1)/\dd\Delta=(w_1-\Delta w_0)/w_1^2$, which at
+$\Delta=0$ is $1/\phi_0=\sqrt{2\pi}$.  From $\sigma=w_2^{-1/2}$, $\dd\sigma/\dd\Delta=-\tfrac12w_2^{-3/2}\cdot2w_1=-w_1w_2^{-3/2}$, which at $0$ is
+$-\phi_0\cdot2^{3/2}=-2/\sqrt\pi$.  Hence
+\begin{equation}
+\frac{\dd\mu^{(0)}}{\dd\sigma}\Big|_{\sigma=\sqrt2}=\frac{\sqrt{2\pi}}{-2/\sqrt\pi}=-\frac{\pi}{\sqrt2}\simeq-2.221 .
+\end{equation}
+\begin{verify}
+Finite difference of the numerically solved line: $-2.22144$, against $-\pi/\sqrt2=-2.22144$.
+\end{verify}
+
+\subsection{Heterogeneous graphs: the exact rank-one condition}
+
+For $K_{pr}=\rho_r\kappa_p\kappa_r$ (Appendix~\ref{app:hdmft}), $B_\kappa=\kappa\bar B$ and $q_\kappa=\kappa Q$, so
+\begin{equation}
+\Delta_\kappa=\frac{a+\mu\kappa\bar B}{\sigma\sqrt{\kappa Q}}=A\kappa^{-1/2}+M\kappa^{1/2},\qquad A=\frac{a}{\sigma\sqrt Q},\quad M=\frac{\mu\bar B}{\sigma\sqrt Q}.
+\end{equation}
+The closure, Eq.~\eqref{eq:app-staticclosure}, becomes:
+\begin{itemize}
+\item $\bar B$ equation: $\bar B=\langle\kappa\cdot\sigma\sqrt{\kappa Q}\,w_1\rangle=\sigma\sqrt Q\langle\kappa^{3/2}w_1\rangle$.
+  Multiplying by
+  $\mu/(\sigma\sqrt Q)$: $M=\mu\langle\kappa^{3/2}w_1(\Delta_\kappa)\rangle$.
+\item $Q$ equation: $Q=\langle\kappa\cdot\sigma^2\kappa Q\,w_2\rangle$, i.e.\ $\sigma^2\langle\kappa^2w_2(\Delta_\kappa)\rangle=1$.
+\item normalisation: $\sigma\sqrt Q\,\langle\kappa^{1/2}w_1(\Delta_\kappa)\rangle=1$.
+\end{itemize}
+The stability matrix $\sigma^2\varphi_pK_{pr}=(\sigma^2w_0(\Delta_p)\kappa_p)(\rho_r\kappa_r)$ is an outer product $u\,v^{\sf T}$; its only
+non-zero eigenvalue is $v^{\sf T}u=\sigma^2\langle\kappa^2w_0\rangle$.  At the threshold this equals one, and so does
+$\sigma^2\langle\kappa^2w_2\rangle$; subtracting and using $w_2-w_0=\Delta w_1$:
+\begin{equation}
+\boxed{\sigma_c^{-2}=\langle\kappa^2w_0(\Delta_\kappa)\rangle,\qquad\langle\kappa^2\Delta_\kappa w_1(\Delta_\kappa)\rangle=0,\qquad M=\mu\langle\kappa^{3/2}w_1(\Delta_\kappa)\rangle.}
 \label{eq:app-sigmac}
-\end{gather}
-Writing $\kappa=1+\epsilon$ and expanding to second order in $\epsilon$ gives Eq.~\eqref{eq:sigmac}.  At this
-order $\mu$ enters only through $\mu^2$: the terms odd in $\mu$, which lower or raise the survival of the hubs,
-cancel against the shift of the mean of $\Delta_\kappa$, and what remains is the variance $\mu^2\Var\kappa/(2\pi)$ of
-$\Delta_\kappa$ across classes.  Since $\Delta w_1(\Delta)$ is convex at $\Delta=0$ while $w_0$ has no curvature there,
-this spread lowers the mean of $\Delta_\kappa$ and with it the Perron root.  Beyond first order the dependence is
-not even: at $\alpha=3.5$ the exact relation gives $\sigma_c=1.32$ at $\mu=1$ and $1.29$ at $\mu=-1$.  Equation
-\eqref{eq:app-sigmac} agrees with the 60-class HDMFT to $0.002$ at $\alpha=6$ and $0.03$ at $\alpha=3.5$.  The
-zero-growth line, obtained by imposing $a=1$, shifts in $\mu$ with the degree variance by $c(\sigma)\Var\kappa$, with
-$c$ running from $0$ as $\sigma\to0$ to $5/4-\pi/2\simeq-0.32$ as $\sigma\to\sqrt2$.  There the regular-graph lines meet, at
-$\mu=-1$, and the zero-growth line $\mu=\Delta/w_1(\Delta)-1$, $\sigma^2w_2(\Delta)=1$ has slope $d\mu/d\sigma=-\pi/\sqrt2$; converted to a
-shift in $\sigma$ its shift is $0.14\Var\kappa$, about a quarter of the shift $(1-1/(2\pi))\Var\kappa/\sqrt2=0.59\Var\kappa$
-of $\sigma_c$ from Eq.~\eqref{eq:sigmac}.  The full
-derivation, the tables against the 60-class theory and the simulated phase diagram of the
-deterministic model are in \texttt{notebooks/02\_phase\_diagram.ipynb}.
+\end{equation}
+Three equations for $(A,M,\sigma_c)$.  The normalisation only fixes the scale $Q$ (and with it $a$) and is not
+needed for $\sigma_c$.
+
+\subsection{Expansion to first order in the degree variance}
+
+Write $\kappa=1+\epsilon$ with $\langle\epsilon\rangle=0$, $\langle\epsilon^2\rangle=V$, and count $\epsilon=O(V^{1/2})$.  We keep
+$O(V)$.  On the regular graph ($V=0$), the second relation gives $\Delta=A+M=0$, and the third
+$M_0=\mu w_1(0)=\mu\phi_0$, so $A_0=-M_0$.
+
+\paragraph{Step 1: expand $\Delta_\kappa$.}  With $(1+\epsilon)^{-1/2}=1-\tfrac\epsilon2+\tfrac{3\epsilon^2}8$ and
+$(1+\epsilon)^{1/2}=1+\tfrac\epsilon2-\tfrac{\epsilon^2}8$,
+\begin{equation}
+\Delta_\kappa=(A+M)+\frac{M-A}{2}\,\epsilon+\frac{3A-M}{8}\,\epsilon^2 .
+\end{equation}
+Let $\delta\equiv A+M=O(V)$.  Then $(M-A)/2=M-\delta/2$ and $(3A-M)/8=-M/2+3\delta/8$.  Products $\delta\epsilon$ average
+to zero and $\delta\epsilon^2$ is $O(V^2)$, so to the order needed
+\begin{equation}
+\Delta_\kappa\simeq\delta+M\epsilon-\frac M2\epsilon^2,\qquad \langle\Delta_\kappa\rangle=\delta-\frac{MV}2,\qquad \Var\Delta_\kappa\simeq M^2V.
+\end{equation}
+
+\paragraph{Step 2: the second relation.}  Let $G(\Delta)=\Delta w_1(\Delta)$.  Then $G(0)=0$,
+$G'=w_1+\Delta w_0$ so $G'(0)=\phi_0$, and $G''=2w_0+\Delta\phi$ so $G''(0)=1$.  To second order,
+$G(\Delta_\kappa)\simeq\phi_0(\delta+M\epsilon-\tfrac M2\epsilon^2)+\tfrac12M^2\epsilon^2$.  With $\kappa^2=1+2\epsilon+\epsilon^2$:
+\begin{equation}
+\langle\kappa^2G\rangle=\phi_0\delta+\phi_0\Big(2MV-\frac{MV}2\Big)+\frac{M^2V}2=\phi_0\delta+\frac32\phi_0MV+\frac12M^2V=0,
+\end{equation}
+so
+\begin{equation}
+\phi_0\delta=-\frac32\phi_0MV-\frac12M^2V .
+\label{eq:app-delta}
+\end{equation}
+
+\paragraph{Step 3: the Perron root.}  $w_0(\Delta)\simeq\tfrac12+\phi_0\Delta+O(\Delta^3)$ (no quadratic term).  So
+\begin{equation}
+\langle\kappa^2w_0\rangle=\Big\langle(1+2\epsilon+\epsilon^2)\Big(\tfrac12+\phi_0\big(\delta+M\epsilon-\tfrac M2\epsilon^2\big)\Big)\Big\rangle
+=\frac12+\frac V2+\phi_0\delta+\frac32\phi_0MV .
+\end{equation}
+Insert Eq.~\eqref{eq:app-delta}: the two terms odd in $\mu$ ($\pm\tfrac32\phi_0MV$) cancel, and
+\begin{equation}
+\sigma_c^{-2}=\langle\kappa^2w_0\rangle=\frac12\big[1+V(1-M^2)\big],\qquad M^2=M_0^2+O(V)=\frac{\mu^2}{2\pi}.
+\end{equation}
+Taking the inverse square root,
+\begin{equation}
+\boxed{\sigma_c\simeq\sqrt2\Big[1-\frac V2\Big(1-\frac{\mu^2}{2\pi}\Big)\Big].}
+\label{eq:app-sigmac-first}
+\end{equation}
+
+
+\paragraph{Reading.}  The $+V/2$ in the Perron root is the hubs' larger amplitude ($\kappa^2$ weight); it lowers $\sigma_c$.
+The $-M^2V/2$ comes only through $\delta$, from $G''(0)=1$: the spread $\Var\Delta_\kappa=M^2V$ of distances from extinction,
+acting on the convex function $\Delta w_1$, forces the mean of $\Delta_\kappa$ down to keep $\langle\kappa^2\Delta w_1\rangle=0$, and
+since $w_0$ is linear at $0$ this lowers the Perron root.  A mean interaction of either sign therefore raises $\sigma_c$, and
+only $\mu^2$ enters at this order.
+
+\begin{verify}
+Solving Eq.~\eqref{eq:app-sigmac} exactly for a gamma law of $\kappa$ with mean $1$ and variance $V$
+(4000 quantile nodes):
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+$\mu$ & $V$ & exact & Eq.~\eqref{eq:app-sigmac-first} & (exact$-$first order)$/V^2$\\
+\midrule
+$0$ & $0.01$ & $1.40720$ & $1.40714$ & $0.57$\\
+$0$ & $0.04$ & $1.38677$ & $1.38593$ & $0.52$\\
+$-1.76$ & $0.01$ & $1.41068$ & $1.41063$ & $0.54$\\
+$-1.76$ & $0.04$ & $1.40068$ & $1.39987$ & $0.50$\\
+$+1$ & $0.04$ & $1.39126$ & $1.39043$ & $0.52$\\
+$-1$ & $0.04$ & $1.39134$ & $1.39043$ & $0.57$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The residual scales as $V^2$, as it should.  The small difference between $\mu=\pm1$ at $V=0.04$ is the
+odd-in-$\mu$ dependence that appears beyond first order (at $\alpha=3.5$ the exact relation gives $\sigma_c=1.32$ at $\mu=1$ and $1.29$ at $\mu=-1$).
+\end{verify}
+
+\subsection{The zero-growth line on heterogeneous graphs}
+
+Zero growth is $a=1$.  Then $A=1/(\sigma\sqrt Q)$, and the normalisation $\sigma\sqrt Q\langle\kappa^{1/2}w_1\rangle=1$ becomes
+$\langle\kappa^{1/2}w_1\rangle=A$.  Unknowns $(A,M,\mu)$ at given $(\sigma,V)$:
+\begin{equation}
+\text{(i)}\ \sigma^2\langle\kappa^2w_2\rangle=1,\qquad \text{(ii)}\ M=\mu\langle\kappa^{3/2}w_1\rangle,\qquad \text{(iii)}\ \langle\kappa^{1/2}w_1\rangle=A .
+\end{equation}
+At $V=0$: $\Delta=A+M=\Delta_0(\sigma)$, $A=w_1(\Delta_0)$, $M=\mu w_1(\Delta_0)$, which reproduces $\mu^{(0)}=\Delta_0/w_1(\Delta_0)-1$.
+
+\paragraph{General expansion.}  With $\Delta_\kappa=\bar\Delta+d_1\epsilon+d_2\epsilon^2$, $\bar\Delta=A+M$, $d_1=(M-A)/2$,
+$d_2=(3A-M)/8$, and $\kappa^n=1+n\epsilon+\tfrac{n(n-1)}2\epsilon^2$, for any smooth $g$:
+\begin{equation}
+\langle\kappa^ng(\Delta_\kappa)\rangle\simeq g(\bar\Delta)+V\Big[\frac{n(n-1)}2g+n\,d_1g'+d_2g'+\frac{d_1^2}2g''\Big]_{\bar\Delta}.
+\label{eq:app-genexp}
+\end{equation}
+
+\paragraph{At $\sigma=\sqrt2$.}  Here $\Delta_0=0$, $A_0=\phi_0$, $M_0=-\phi_0$, $\mu_0=-1$, so $d_1=-\phi_0$ and $d_2=\phi_0/2$.  Let
+$\bar\Delta=\delta$ and use $w_2'=2w_1$, $w_2''=2w_0$, $w_1'=w_0$, $w_1''=\phi$.
+\begin{itemize}
+\item (i) with $n=2$: $w_2(\delta)\simeq\tfrac12+2\phi_0\delta$, and the bracket is
+  $w_2+4d_1w_1+2d_2w_1+d_1^2w_0=\tfrac12-4\phi_0^2+\phi_0^2+\tfrac12\phi_0^2=\tfrac12-\tfrac52\phi_0^2$.  So
+  $2[\tfrac12+2\phi_0\delta+V(\tfrac12-\tfrac52\phi_0^2)]=1$, i.e.
+  \begin{equation}
+  \delta=-\frac{V(1-5\phi_0^2)}{4\phi_0}.
+  \end{equation}
+\item (iii) with $n=\tfrac12$: the bracket is $-\tfrac18w_1+\tfrac12d_1w_0+d_2w_0+\tfrac12d_1^2\phi=-\tfrac{\phi_0}8-\tfrac{\phi_0}4+\tfrac{\phi_0}4+\tfrac{\phi_0^3}2\equiv\beta$, so
+  $A=\phi_0+\tfrac\delta2+V\beta$.
+\item (ii) with $n=\tfrac32$: the bracket is $\tfrac38w_1+\tfrac32d_1w_0+d_2w_0+\tfrac12d_1^2\phi=\tfrac{3\phi_0}8-\tfrac{3\phi_0}4+\tfrac{\phi_0}4+\tfrac{\phi_0^3}2=\beta$ as
+  well.  So $\langle\kappa^{3/2}w_1\rangle=\langle\kappa^{1/2}w_1\rangle=A$ to this order, and (ii) reads $M=\mu A$.
+\end{itemize}
+With $M=\delta-A=-\phi_0+\tfrac\delta2-V\beta$,
+\begin{equation}
+\mu=\frac MA=-\frac{\phi_0-\delta/2+V\beta}{\phi_0+\delta/2+V\beta}\simeq-1+\frac{\delta}{\phi_0}
+=-1-\frac{V(1-5\phi_0^2)}{4\phi_0^2}=-1+V\Big(\frac54-\frac\pi2\Big),
+\end{equation}
+using $\phi_0^{-2}=2\pi$.  So $c(\sqrt2)=\tfrac54-\tfrac\pi2\simeq-0.321$: with heterogeneous degrees zero growth needs slightly
+stronger competition.  At $\sigma\to0$ all firms survive, $S=a+\mu\kappa\bar B$, and the normalisation with $a=1$ gives
+$\mu\bar B=0$ while $\bar B=1/(1-\mu(1+V))\neq0$, so $\mu^{(0)}=0$ for every $V$: $c(0)=0$.
+
+\paragraph{Converting the shift to $\sigma$.}  The heterogeneous line is $\mu=\mu^{(0)}_{\rm reg}(\sigma)+cV$.  At fixed $\mu$ its $\sigma$
+moves by $-cV/(\dd\mu^{(0)}/\dd\sigma)=-(-0.321V)/(-2.221)=-0.144V$.  The shift of $\sigma_c$ at $\mu=-1$ from Eq.~\eqref{eq:app-sigmac-first} is
+$-\tfrac{\sqrt2}2(1-\tfrac1{2\pi})V=-0.595V$.  Ratio $0.24$: ``about a quarter''.
+
+\begin{verify}
+Numerical solution of (i)--(iii) with a gamma law of $\kappa$: the shift in $\mu$ at $\sigma=\sqrt2$ divided by $V$ is $-0.319$
+($V=0.01$) and $-0.318$ ($V=0.02$), against $-0.321$.  At other $\sigma$, $c=-0.056$, $-0.153$, $-0.235$ for $\sigma=0.7$,
+$1.0$, $1.2$: monotone from $0$ to $-0.32$, as stated.
+\end{verify}
+
+\paragraph{Against the full class theory.}  Equation~\eqref{eq:app-sigmac} agrees with the HDMFT solved on $60$ degree classes
+to $0.002$ at $\alpha=6$ and $0.03$ at $\alpha=3.5$, where the binning smooths the hub tail; the first-order formula is good only
+for light tails.  At $\alpha=2.5$ the bilinear kernel is not a probability and only the soft-configuration HDMFT applies; it is
+the one used for the lines of Fig.~\ref{fig:phase}.  The tables against the $60$-class theory and the simulated phase
+diagram of the deterministic model are in \texttt{notebooks/02\_phase\_diagram.ipynb}.
 
 %======================================================================
-\section{Demographic noise at constant field}
+\section{One firm with birth--death noise at constant field, and the instability line with noise}
 \label{app:constant}
 
-\paragraph{Renewal law.}  With noise and turnover, a node whose field is constant is a renewal
-process: its successive lives are independent and identically distributed.  Equation~\eqref{eq:onefirm}
-at constant $\Phi=h$ is a one-dimensional diffusion with scale function $s(y)=\int_0^ys'(u)\,du$, where
-$s'(u)=\exp[-(2/D)(hu-u^2/2)]$, and by the renewal--reward theorem the fraction of time the node spends
-at size $x$ is
-\begin{gather}
-p(x\mid h)=\frac{2\,s(\min(x,D))}{D\,x\,s'(x)\,T(D)},\nonumber\\
-T(D)=\int_0^\infty\frac{2\,s(\min(x,D))}{D\,x\,s'(x)}\,dx,
+With noise a firm in a constant field no longer sits at a fixed size: it fluctuates around its plateau, or fails
+and is replaced.  This appendix solves that problem exactly, uses the solution in place of the clipped Gaussian
+of Appendix~\ref{app:hdmft} to obtain the phase lines with noise, and tests the instability line in simulation.
+
+\subsection{Scale function, speed measure and boundaries}
+
+At constant $\Phi$, Eq.~\eqref{eq:app-onefirm} is the one-dimensional diffusion
+$\dd S=b(S)\,\dd t+\sqrt{a(S)}\,\dd W$ with $b(y)=y(\Phi-y)$ and $a(y)=Dy$, generator
+$\mathcal L=\tfrac12Dy\,\partial_y^2+y(\Phi-y)\partial_y$.  The scale density and speed density
+\cite{karlintaylor1981} are
+\begin{equation}
+s'(y)=\exp\Big[-\int_0^y\frac{2b(u)}{a(u)}\dd u\Big]=\exp\Big[-\frac2D\Big(\Phi y-\frac{y^2}2\Big)\Big],\qquad
+m(y)=\frac{2}{a(y)s'(y)}=\frac{2}{Dy\,s'(y)},
+\end{equation}
+since $2b/a=2(\Phi-u)/D$.  Let $s(y)=\int_0^ys'(u)\,\dd u$.  Properties:
+\begin{itemize}
+\item Near $0$, $s(y)\simeq y$ and $m(y)\simeq2/(Dy)$; $\int_0s(y)m(y)\,\dd y<\infty$, so $0$ is reached in finite time
+  (an exit boundary in Feller's classification).
+\item $s'(y)\sim e^{y^2/D}$ for large $y$, so $s(\infty)=\infty$: $\infty$ is never reached, and the process started anywhere
+  hits $0$ with probability one.  Every life ends, so at a node with constant field the lives form a proper
+  renewal sequence.
+\item $\int^\infty m(z)\,\dd z<\infty$ (Gaussian decay).
+\end{itemize}
+
+
+\subsection{Establishment probability}
+
+For $0<y_1<y_0<y_2$, $\Pr(\text{hit }y_2\text{ before }y_1\mid y_0)=[s(y_0)-s(y_1)]/[s(y_2)-s(y_1)]$ (the scale function is
+the harmonic function of $\mathcal L$).  With $y_1=0$, $y_0=D$, $y_2=\Phi$:
+\begin{equation}
+P_{\rm est}=\frac{\int_0^Ds'(y)\,\dd y}{\int_0^\Phi s'(y)\,\dd y}\qquad(\Phi>D).
+\end{equation}
+\emph{Feller comparison:} dropping the logistic term, $s'(y)=e^{-2\Phi y/D}$, and the probability of
+escaping to large sizes from $S_0=D$ is $1-e^{-2\Phi S_0/D}=1-e^{-2\Phi}$, independent of $D$.
+
+\subsection{Mean exit time}
+
+$T(x)$ solves $\mathcal LT=-1$ with $T(0)=0$ and no flux at infinity.  Since $s''/s'=-2b/a$,
+\begin{equation}
+\frac{\dd}{\dd y}\Big(\frac{T'}{s'}\Big)=\frac{T''+(2b/a)T'}{s'}=\frac{2\,\mathcal LT}{a\,s'}=-\frac{2}{a\,s'}=-m(y).
+\end{equation}
+Integrating from $y$ to $\infty$ with $T'/s'\to0$ at infinity, $T'(y)=s'(y)\int_y^\infty m(z)\,\dd z$, and
+\begin{equation}
+T(x)=\int_0^xs'(y)\int_y^\infty m(z)\,\dd z\,\dd y=2\int_0^xs'(y)\int_y^\infty\frac{\dd z}{Dz\,s'(z)}\,\dd y .
+\label{eq:app-T}
+\end{equation}
+
+
+\subsection{Green's function and the renewal law}
+
+Exchanging the order of integration in Eq.~\eqref{eq:app-T} (Fubini; all integrands positive),
+\begin{equation}
+T(x_0)=\int_0^\infty m(z)\int_0^{\min(x_0,z)}s'(y)\,\dd y\,\dd z=\int_0^\infty\underbrace{s(\min(x_0,z))\,m(z)}_{G(x_0,z)}\dd z .
+\end{equation}
+$G(x_0,z)$ is the Green's function: the expected time spent near $z$, per unit $z$, before absorption, starting at $x_0$.
+
+\paragraph{Renewal--reward.}  With replacement at $D$, the successive lives at a node are i.i.d.\ copies of the
+process started at $D$.  For any set $\mathcal A$, the long-run fraction of time spent in $\mathcal A$ equals
+$\E[\text{time in }\mathcal A\text{ during one life}]/\E[\text{life length}]$.  So the stationary density of sizes at the node is
+\begin{equation}
+\boxed{p(x\mid h)=\frac{G(D,x)}{T(D)}=\frac{2\,s(\min(x,D))}{D\,x\,s'(x)\,T(D)},\qquad T(D)=\int_0^\infty G(D,x)\,\dd x,}
 \label{eq:renewal}
-\end{gather}
-with turnover rate $1/T(D)$.  The law has two parts: a plateau $\propto x^{-1}e^{-(x-h)^2/D}$, Gaussian of
-variance $D/2$ around $h$ for $h\gg\sqrt D$, and below $D$ a nearly flat density of newborns drifting to exit.  Establishment probabilities and
-exit times follow from the same quadratures and agree with direct simulation to $3\%$ (Appendix~\ref{app:constant}).
-
-\paragraph{Instability line with noise.}  Replacing the clipped Gaussian by the renewal law in the
-static self-consistency gives the mean sizes $\langle S\rangle_h$ and the susceptibility
-$\chi=\partial\langle S\rangle_h/\partial h$; the static state is stable while the Perron root of
-$\sigma^2{\rm diag}(\E\chi^2)K$ is below one.  Noise smooths $\chi$ and raises the line almost linearly with
-$D$ (Fig.~\ref{fig:phaselines}): from $1.460$ to $1.577$ at $\alpha=2.5$ and from $1.399$ to $1.551$ at
-$\alpha=6$ between $D=0.003$ and $0.3$; at $D=0.003$ it agrees with the deterministic line to $0.002$
-($1.399$ against $1.400$ at $\alpha=6$, $1.413$ against $\sqrt2$ on the complete graph).  The closure
-treats each node's field as frozen, so it is controlled only below the line; in simulations at $\alpha=6$ and
-$D=0.1$, slow collective fluctuations of the composition set in between $\sigma=1.40$ and $1.50$, around the
-predicted $1.451$, as a smooth crossover rather than a sharp transition (Appendix~\ref{app:constant}).  The same theory
-predicts the turnover rate to $1\%$ below $\sigma_c$ and to about $2\%$ above it, where it is no longer
-controlled ($\alpha=6$; Appendix~\ref{app:constant}).  Turnover is set by
-the nodes with $h<0$, where a newborn's life hardly depends on $D$, and is nearly independent of the
-noise.  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
-disorder.  On the reference graph competition raises $\sigma_c$ strongly, from $0.83$ at $\mu=0$ to $1.68$ at
-$\mu=-2.5$, because its degrees are the most spread, and with them the mean field across classes; on the
-complete graph the line does not depend on $\mu$, and at $\alpha=6$ it barely does.  Under strong
-competition the zero-growth line is almost the same on the three graphs, within $0.05$ for $\mu\le-1.25$;
-under weak competition it is lower on the reference graph ($0.50$ against $0.63$ and $0.64$ at $\mu=0$).  The reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
-the static estimate of the zero-growth line ($1.72$ at $D=0.1$), which is not controlled there.  In
-simulation the zero-growth line nevertheless lies within $0.04$ of the static estimate for $\mu$ from $-0.5$ to $-2.5$, and
-the region where the facts of Sec.~\ref{sec:data} hold is a band along it (Fig.~\ref{fig:strip}).
-
-\begin{figure}[t]
-\includegraphics[width=\linewidth]{fig_phase.pdf}
-\caption{Phase diagram at $D=0.1$ from the renewal theory.  Above the instability line $\sigma_c(\mu)$ the
-composition keeps fluctuating (shaded for the reference graph, $\alpha=2.5$); the lines for $\alpha=6$ and the
-complete graph are shown for comparison.  The zero-growth line separates economies whose mean firm
-grows from those where it shrinks; above $\sigma_c$ it is the continuation of the static solution and is
-not controlled.  The star is the reference point.}
-\label{fig:phase}
-\end{figure}
-
-\paragraph{Quadratures.}  At constant $\Phi$, Eq.~\eqref{eq:onefirm} is a diffusion with drift $S(\Phi-S)$ and diffusion
-coefficient $DS$, absorbed at $0$.  Its scale density is $s'(y)=\exp[-(2/D)(\Phi y-y^2/2)]$, its scale function
-$s(y)=\int_0^ys'(u)\,du$ and its speed density $m(y)=2/(Dy\,s'(y))$ \cite{karlintaylor1981}.  A newborn reaches its plateau before exiting with
-probability
-\begin{equation}
-P_{\rm est}=\frac{\int_0^Ds'(y)\,dy}{\int_0^\Phi s'(y)\,dy}\qquad(\Phi>D),
 \end{equation}
-and the mean time to exit from $S_0$ is
+and by the elementary renewal theorem the turnover rate is $1/T(D)$ per node per unit time.
+
+\paragraph{Shape.}  For $x>D$, $s(\min(x,D))=s(D)$ is constant and
+$1/(xs'(x))=x^{-1}\exp[(2/D)(hx-x^2/2)]=x^{-1}e^{h^2/D}e^{-(x-h)^2/D}$: a Gaussian factor of variance $D/2$ around
+$h$ times $x^{-1}$.  For $x<D$ and $x\ll\sqrt D$, $s(x)\simeq x$ and $s'(x)\simeq1$, so $p\simeq2/(DT(D))$: flat.
+
+\begin{verify}
+At $h=0.5$, $D=0.1$, $\int G(D,x)\,\dd x=22.8305$ and the double integral \eqref{eq:app-T} give the same value to $10^{-12}$.
+\end{verify}
+
+\subsection{Asymptotics of the exit time}
+
+\paragraph{(a) Negative field, $-\Phi\gg\sqrt D$: $T(D)$ does not depend on $D$.}  Rescale $y=D\tilde y$, $z=D\tilde z$ in
+Eq.~\eqref{eq:app-T} with $x=D$.  Then $s'(D\tilde y)=e^{2|\Phi|\tilde y+D\tilde y^2}$, $\dd y=D\,\dd\tilde y$, and
+$\dd z/(Dz\,s'(z))=\dd\tilde z/(D\tilde z\,s'(D\tilde z))$.  So
 \begin{equation}
-T(S_0)=2\int_0^{S_0}s'(y)\int_y^\infty\frac{dz}{Dz\,s'(z)}\,dy .
+\begin{aligned}
+T(D)&=2\int_0^1e^{2|\Phi|\tilde y+D\tilde y^2}\int_{\tilde y}^\infty\frac{e^{-2|\Phi|\tilde z-D\tilde z^2}}{\tilde z}\dd\tilde z\,\dd\tilde y\\
+&\xrightarrow{D\to0}\;2\int_0^1e^{2|\Phi|\tilde y}E_1(2|\Phi|\tilde y)\,\dd\tilde y
+=\frac1{|\Phi|}\int_0^{2|\Phi|}e^tE_1(t)\,\dd t ,
+\end{aligned}
 \end{equation}
-For $-\Phi\gg\sqrt D$, $T$ is of order $1/|\Phi|$ and, for a newborn, nearly independent of $D$: near zero the
-logistic term is negligible and the Feller survival probability from $S_0=D$ does not contain $D$ ($T=2.32$,
-$2.16$, $1.92$ at $\Phi=-0.5$ and $D=0.01$, $0.1$, $0.3$).  At $\Phi=0$ the logistic term cuts the Feller tail
-$2/t$ off at $t\sim D^{-1/2}$, and $T$ grows as $\ln(1/D)$ ($6.05$, $3.84$, $2.88$).  For
-$\Phi>0$ it grows as $e^{\Phi^2/D}$, so an established firm exits through dips of its field rather than
-through noise.  Table~\ref{tab:constant} compares the quadratures with direct simulation.  On the
-plateau, linearising at $S=\Phi$ gives an Ornstein--Uhlenbeck process in $\ln S$ with rate $\Phi$, $\Var
-S=D/2$ and $\Var g=(D/\Phi^2)(1-e^{-\Phi\Delta t})$, accurate for $\Phi\gtrsim1$.
+with $E_1$ the exponential integral.  The $D\tilde z^2$ terms matter only for $\tilde z\gtrsim D^{-1/2}$, which the factor
+$e^{-2|\Phi|\tilde z}$ suppresses when $|\Phi|\gg\sqrt D$.  The limit is the Feller (linear birth--death) value.  Since $e^tE_1(t)\sim1/t$,
+$T\sim\ln(2|\Phi|)/|\Phi|$ for large $|\Phi|$: of order $1/|\Phi|$ up to a logarithm.
+
+\begin{verify}
+At $\Phi=-0.5$ the limit is $2.3471$, which coincides with $\int_0^\infty[1-\exp(-2|\Phi|/(e^{|\Phi|t}-1))]\dd t=2.3471$ from the
+Feller extinction law; the exact quadrature gives $2.323$, $2.156$, $1.924$ at $D=0.01$, $0.1$, $0.3$.
+\end{verify}
+
+\paragraph{(b) Zero field: $T(D)=\ln(1/D)+2-\gamma_E+O(D)$.}  At $\Phi=0$, $s'(y)=e^{y^2/D}$ and
+$m(z)=(2/Dz)e^{-z^2/D}$.  For $y\le D$, $y^2/D\le D$, so $s'(y)=1+O(D)$.  The inner integral, with $t=z^2/D$
+($\dd z/z=\dd t/2t$), is
+\begin{equation}
+\int_y^\infty\frac{2}{Dz}e^{-z^2/D}\dd z=\frac1DE_1\Big(\frac{y^2}{D}\Big)=\frac1D\Big[-\gamma_E-\ln\frac{y^2}{D}+O\Big(\frac{y^2}D\Big)\Big].
+\end{equation}
+Then
+\begin{equation}
+T(D)=\frac1D\int_0^D\Big[-\gamma_E+\ln D-2\ln y\Big]\dd y=-\gamma_E+\ln D-2(\ln D-1)=\ln\frac1D+2-\gamma_E .
+\end{equation}
+The heuristic: the critical Feller survival $\Pr(T>t)\simeq2S_0/(Dt)=2/t$ is cut off by the
+logistic term at $t\sim D^{-1/2}$, giving $\int_1^{D^{-1/2}}2\,\dd t/t=\ln(1/D)$.
+
+\begin{verify}
+$T(D)-\ln(1/D)=1.442$, $1.425$, $1.423$ at $D=10^{-2},10^{-3},10^{-4}$, against $2-\gamma_E=1.4228$.  At $D=0.01$, $0.1$, $0.3$ the
+quadrature gives $6.047$, $3.842$, $2.881$.
+\end{verify}
+
+\paragraph{(c) Positive field: $T\sim e^{\Phi^2/D}$.}  For a firm on its plateau, $s'(y)$ falls from $1$ at $y=0$ over a scale $D/\Phi$,
+so $\int_0^{S_0}s'\simeq D/(2\Phi)$; $\int_y^\infty m$ is dominated by the peak of $m$ at $z\simeq\Phi$, of height
+$(2/D\Phi)e^{\Phi^2/D}$ and width $\sqrt{\pi D}$ (Laplace).  So
+\begin{equation}
+T\simeq\frac{\sqrt{\pi D}}{\Phi^2}\,e^{\Phi^2/D}\big[1+O(D/\Phi^2)\big].
+\end{equation}
+An established firm exits through dips of its field rather than through its own noise.
+\begin{verify}
+Exact against Laplace at $D=0.1$: $13.18$ vs $15.3$ ($\Phi=0.3$), $38.0$ vs $27.3$ ($\Phi=0.5$), $200$ vs $154$ ($\Phi=0.7$).  The exponential
+order is right, the prefactor is off by 15--40\% at $\Phi^2/D=1$--$5$; only the exponential order is used.
+\end{verify}
+
+Table~\ref{tab:constant} compares the quadratures with direct simulation.
 
 \begin{table}[t]
 \caption{Constant field, $D=0.1$: exact quadratures against simulation.  Source:
@@ -794,39 +1340,107 @@ $T$, $\Phi=0.5$, $S_0=\Phi$ & 38.75 & 38.01 & \\
 \end{ruledtabular}
 \end{table}
 
-\paragraph{Derivation of the renewal law.}  With turnover the lives at a node of constant field are independent and
-identically distributed.  By the renewal--reward theorem the fraction of time spent near $x$ is the
-expected time one life spends there, the Green's function $G(D,x)=s(\min(x,D))\,m(x)$, divided by the
-mean life $T(D)=\int_0^\infty G(D,x)\,dx$; this is Eq.~\eqref{eq:renewal}.  Against direct
-simulation of one node at $D=0.1$ and $\Phi=-0.5,\dots,1$ it gives $\langle S\rangle$, $\langle S^2\rangle$ and the
-turnover to within $0.5\%$ (\texttt{notebooks/02\_phase\_diagram.ipynb}).
+\subsection{The plateau as an Ornstein--Uhlenbeck process}
 
-\paragraph{Static closure and phase lines.}  When the field is static each node follows the renewal
-law at its $h=a+\mu B_p+\sigma\sqrt{q_p}z$, and the self-consistency reads
-\begin{gather}
-B_p=\sum_rK_{pr}\E\langle S\rangle_{h_r},\qquad q_p=\sum_rK_{pr}\E\langle S\rangle_{h_r}^2,\nonumber\\
-\sum_p\rho_p\E\langle S\rangle_{h_p}=1,
-\end{gather}
-with $\E$ the Gaussian average over $z$.  Counting the temporal fluctuations of $S$ in $q$ as if
-quenched moves the lines by less than $0.015$.  Stability is the Perron condition with $\E\chi^2$, where
-$\chi=\partial\langle S\rangle_h/\partial h$, in place of the survival fraction (without noise $\chi$ is the
-survival step and $\E\chi^2=\varphi$).  Table~\ref{tab:phase} tests the
-turnover against simulation.  The share of the field variance that moves in time grows from $0.025$
-at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it below $\sigma_c$, by a factor
-of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field
-fluctuations.  The two-time closure includes it, but at $C=200$ only in part.
+Linearise $S=\Phi+\varepsilon$: $\dd\varepsilon=-\Phi\varepsilon\,\dd t+\sqrt{D\Phi}\,\dd W$, an OU process with rate $\Phi$ and stationary
+variance $D\Phi/(2\Phi)=D/2$.  In logs, $\ln S-\ln\Phi\simeq\varepsilon/\Phi$ has rate $\Phi$ and variance $D/(2\Phi^2)$.  For an OU
+process of rate $k$ and stationary variance $v$, the increment over $\Delta t$ has variance $2v(1-e^{-k\Delta t})$, so
+\begin{equation}
+\Var g=\frac{D}{\Phi^2}\big(1-e^{-\Phi\Delta t}\big).
+\label{eq:app-ouvar}
+\end{equation}
+(Including the $-D/2S$ It\^o drift of Eq.~\eqref{eq:app-log} shifts the rate to $\Phi-D/2\Phi$, a
+correction of the same order.)
 
-\paragraph{Onset in simulation.}  Since the closure is least accurate near $\sigma_c$, we locate the onset
-directly.  For each $\sigma$ we run two replicas on each of two graphs ($\alpha=6$, $\mu=-1.76$, $D=0.1$,
-$N=4000$, $C=100$, $T=4200$, the first $200$ discarded) with the same couplings and different initial sizes and
-noise, and compare their time-averaged sizes over the last $W$ units of time,
-$d(W)=\overline{(\bar S_i^A-\bar S_i^B)^2}/\Var_i\bar S_i$.  Fast noise alone gives $d\propto1/W$ with $Wd$ set by its
-correlation time; slow collective motion raises $Wd$, and distinct attractors would keep $d$ finite.  For
-$W=125$ to $2000$, $Wd\simeq0.6$ at $\sigma=1.30$ and $1.35$, $0.7$--$1.1$ at $1.40$, $1.3$--$2.9$ at $1.45$, $1.2$--$4.6$ at
-$1.50$ and $5$--$8$ at $1.60$ and $1.70$.  The slow component sets in between $1.40$ and $1.50$, steepest
-between $1.45$ and $1.50$, in agreement with the predicted $\sigma_c=1.451$.  Up to $\sigma=1.7$, $d$ keeps falling
-roughly as $1/W$: the replicas agree on average, and what grows is the correlation time of the
-composition, not the number of attractors (\texttt{scripts/phase\_onset.py}).
+\begin{verify}
+Simulation of one node at $D=0.1$, absorbing at $0$, growth rates within lives only, $\Delta t=0.5$:
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+$\Phi$ & simulated $\Var g$ & Eq.~\eqref{eq:app-ouvar} & ratio\\
+\midrule
+$0.7$ & $0.104$ & $0.060$ & $1.72$\\
+$1.0$ & $0.047$ & $0.039$ & $1.20$\\
+$1.5$ & $0.025$ & $0.024$ & $1.08$\\
+$2.0$ & $0.0165$ & $0.0158$ & $1.04$\\
+$4.0$ & $0.0055$ & $0.0054$ & $1.02$\\
+\bottomrule
+\end{tabular}
+\end{center}
+At $D=0.02$ the ratio is $1.02$ already at $\Phi=1$.  The excess behaves as $1+c\,D/\Phi^2$ with $c\simeq2$.
+\end{verify}
+
+\subsection{The static closure with noise}
+
+When the field is static, each node follows the renewal law \eqref{eq:renewal} at its own $h=a+\mu B_p+\sigma\sqrt{q_p}\,z$.
+Let $\langle S\rangle_h=\int xp(x\mid h)\,\dd x$.  The static closure is Eq.~\eqref{eq:app-closure} with time averages:
+\begin{equation}
+B_p=\sum_rK_{pr}\E\langle S\rangle_{h_r},\qquad q_p=\sum_rK_{pr}\E\langle S\rangle_{h_r}^2,\qquad \sum_p\rho_p\E\langle S\rangle_{h_p}=1,
+\end{equation}
+with $\E$ the Gaussian average over $z$.  Using $\langle S\rangle^2_h$ in $q_p$ counts only the static part of the neighbours'
+sizes in the field covariance, i.e.\ the temporal fluctuations of $S$ produced by the noise are taken as not
+feeding the field.  (Using $\langle S^2\rangle_h$ instead, ``as if quenched'', moves the lines by less than $0.015$.)
+
+\subsection{The susceptibility and the instability line}
+\label{app:susceptibility}
+
+The response argument of Appendix~\ref{app:hdmft} carries over with one change.  Shift the growth rate of every
+node by a small static amount $\delta h_i$, independent between nodes, of zero mean and variance $\varsigma^2$.  The
+time-averaged size of a node responds to the shift of its own field and to the shifts of its neighbours' mean
+sizes,
+\begin{equation}
+\delta\langle S_i\rangle=\chi_i\Big(\delta h_i+\sum_jJ_{ij}\,\delta\langle S_j\rangle\Big),\qquad
+\chi=\frac{\partial\langle S\rangle_h}{\partial h},
+\end{equation}
+where $\chi_i$ is evaluated at the node's own field.  By the cavity argument the sum is a Gaussian of variance
+$\sigma^2\sum_rK_{pr}Y_r$ for a node of class $p$, independent of $\chi_i$, with $Y_r=\E[\delta\langle S\rangle_r^2]$.
+Squaring and averaging,
+\begin{equation}
+Y_p=\E[\chi_p^2]\Big(\varsigma^2+\sigma^2\sum_rK_{pr}Y_r\Big)\quad\Longrightarrow\quad
+Y=\big(\mathbb 1-\sigma^2\,{\rm diag}(\E\chi^2)K\big)^{-1}\E\chi^2\,\varsigma^2 .
+\end{equation}
+The mean squared response per unit variance of the shift is the spin-glass susceptibility,
+\begin{equation}
+\boxed{\chi_{\rm SG}=\frac1{\varsigma^2}\sum_p\rho_pY_p=\rho^{\sf T}\big(\mathbb 1-\sigma^2\,{\rm diag}(\E\chi^2)K\big)^{-1}\E\chi^2 .}
+\label{eq:chisg}
+\end{equation}
+It is finite while the Perron root $\Lambda$ of $\sigma^2{\rm diag}(\E\chi^2)K$ is below one and diverges as
+$\Lambda\to1$, which defines $\sigma_c(\mu,D)$.  Without noise $\langle S\rangle_h=[h]_+$, $\chi=\theta(h)$, $\chi^2=\chi$ and
+$\E\chi^2=\varphi$: the deterministic criterion is recovered.  With noise $\chi$ is a smooth function of $h$ in place of a step, and the line moves up, almost linearly in $D$ (below).
+
+\paragraph{Numerical solution.}  We tabulate $\langle S\rangle_h$, $\langle S^2\rangle_h$ and $\ln T(D;h)$ once per $D$ on a grid of fields,
+by quadrature of Eq.~\eqref{eq:renewal} in logarithms, with a logarithmic grid below $D$, and obtain $\chi$ by
+differentiation.  The closure is iterated with damping on $(B_p,q_p)$, the normalisation being solved for $a$ at
+every step, with $60$ degree classes of equal population built from the realised degree sequence and the
+soft-configuration kernel.  The instability line is the root in $\sigma$ of $\Lambda=1$, and the zero-growth line the
+root of $a=1$.
+
+\paragraph{Turnover.}  $\sum_p\rho_p\E[1/T(D;h_p)]$ per node per unit time.  Nodes with $h<0$ dominate it, and by
+Appendix~\ref{app:constant}(a) their newborns' lives are nearly $D$-independent: turnover is nearly independent of the noise.
+
+\subsection{The phase lines}
+
+Noise raises the instability line almost linearly with $D$ (Fig.~\ref{fig:phaselines}a): from $1.460$ to $1.577$ at
+$\alpha=2.5$ and from $1.399$ to $1.551$ at $\alpha=6$ between $D=0.003$ and $0.3$, at $\mu=-1.76$; at $D=0.003$ it agrees
+with the deterministic line to $0.002$ ($1.399$ against $1.400$ at $\alpha=6$, $1.413$ against $\sqrt2$ on the complete
+graph).  Figure~\ref{fig:phase} shows the phase diagram in the plane of the mean interaction and the
+disorder.  On the reference graph competition raises $\sigma_c$ strongly, from $0.83$ at $\mu=0$ to $1.68$ at
+$\mu=-2.5$, because its degrees are the most spread, and with them the mean field across classes; on the
+complete graph the line does not depend on $\mu$, and at $\alpha=6$ it barely does.  Under strong
+competition the zero-growth line is almost the same on the three graphs, within $0.05$ for $\mu\le-1.25$;
+under weak competition it is lower on the reference graph ($0.50$ against $0.63$ and $0.64$ at $\mu=0$).  The
+reference point, $\sigma=1.70$ against $\sigma_c(0.1)=1.497$, lies in the fluctuating phase, close to
+the static estimate of the zero-growth line ($1.72$ at $D=0.1$).  The closure treats each node's field as
+frozen, so above the instability line it is a continuation and not a controlled solution.  In
+simulation the zero-growth line nevertheless lies within $0.04$ of the static estimate for $\mu$ from $-0.5$ to $-2.5$, and
+the region where the facts of Sec.~\ref{sec:data} hold is a band along it (Fig.~\ref{fig:strip}).
+
+\paragraph{Turnover and the motion of the field.}  The same theory predicts the turnover rate to $1\%$ below
+$\sigma_c$ and to about $2\%$ above it (Table~\ref{tab:phase}, $\alpha=6$).  The share of the field variance that moves in
+time grows from $0.025$ at $\sigma=1.2$ to $0.138$ at $\sigma=1.7$; the static closure underestimates it below $\sigma_c$, by a
+factor of about $2$ at $\sigma=1.2$ and $5$ at $\sigma_c$, because it omits the collective amplification of slow field
+fluctuations (Fig.~\ref{fig:phaselines}b).  The two-time closure includes it, but at $C=200$ only in part
+(Appendix~\ref{app:closure}).
 
 \begin{figure*}[t]
 \centering
@@ -855,6 +1469,74 @@ $\sigma$ & turnover (sim) & turnover (theory) & temporal share of field variance
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
+
+\subsection{The instability line in simulation}
+\label{app:linetest}
+
+\paragraph{Protocol.}  Equation~\eqref{eq:chisg} can be measured directly.  For each point we run three economies with
+the same couplings and the same realisation of the noise ($D=0.1$, total time $700$, the first $200$ discarded,
+$N=4000$, $C=100$): a base run; a run in which the growth rate of every firm is shifted by $\varsigma\eta_i$, with
+$\eta_i$ independent standard Gaussians and $\varsigma=0.01$; and a run from other initial sizes.  The mean squared
+difference between the time-averaged sizes of the first two, divided by $\varsigma^2$, is $\chi_{\rm SG}$; using the
+same noise removes most of the sampling error.  The third run tells whether the composition is slaved to the
+noise.  Below the line two economies with the same noise forget their initial sizes and follow each other;
+above it the composition has a motion of its own and they separate.  We measure their distance
+$d=\overline{(S_i^A-S_i^B)^2}/(2\Var S)$ over the last $100$ samples, which is $1$ for independent economies.  For
+each graph we take nine values of $\sigma$ around the predicted line: $\alpha=2.5$ at $\mu=0$, $-0.5$, $-1$, $-1.76$ and
+$-2.5$, and $\alpha=6$ at $\mu=0$, $-1.76$ and $-2.5$, two graphs per point.  The theory uses the degree classes of the
+same graphs, so its lines differ from those of Fig.~\ref{fig:phase}, which are for the reference graph ($N=32000$,
+$C=200$): at $\mu=0$ and $\alpha=2.5$, $0.95$ here against $0.83$ there.
+
+\begin{figure}[t]
+\centering
+\includegraphics{figS_instability_line.pdf}
+\caption{The instability line at $D=0.1$: renewal theory (lines) and simulation (symbols; $N=4000$, $C=100$, two
+graphs per point).  The symbol is the disorder at which the distance between two economies with the same noise
+and different initial sizes crosses $0.01$, and the bar the range over which it rises from $0.003$ to $0.03$.
+Source: \texttt{notebooks/02\_phase\_diagram.ipynb}.}
+\label{fig:instability}
+\end{figure}
+
+\paragraph{The line.}  Deep in the relaxing phase the distance is $10^{-3}$, not zero, because exits at slightly
+different times restart a node from $D$ in one economy and not yet in the other.  It rises by two orders of
+magnitude across the scan.  We take as the onset the disorder at which it crosses $0.01$
+(Fig.~\ref{fig:instability}).  At $\alpha=2.5$ the onset is at $\sigma=0.98$, $1.16$, $1.36$, $1.58$ and $1.73$ for $\mu=0$,
+$-0.5$, $-1$, $-1.76$ and $-2.5$, against a predicted $0.95$, $1.06$, $1.25$, $1.49$ and $1.66$.  At $\alpha=6$ it is at
+$1.45$, $1.46$ and $1.44$ for $\mu=0$, $-1.76$ and $-2.5$, against $1.42$, $1.45$ and $1.47$.  The theory therefore gets
+both the strong rise of the line with competition on the scale-free graph and its absence on the light-tailed
+graph, with nothing fitted.  The simulated onset lies $0.02$ to $0.11$ above the prediction at $\alpha=2.5$ and
+within $0.03$ of it at $\alpha=6$.  The onset is a crossover, $0.1$--$0.2$ wide between the distances $0.003$ and
+$0.03$, and two graphs differ by up to $0.17$ at $\mu=0$ and by $0.03$--$0.12$ elsewhere, so the offset at
+$\alpha=2.5$ is at the limit of what these runs resolve.  The threshold $0.01$ is a choice; the disorder at which
+$\chi_{\rm SG}$ crosses $10$ agrees with it to within $0.06$, except at $\alpha=6$ and $\mu=0$, where it lies $0.12$
+lower.  One graph each at $N=8000$ and $C=200$ gives $1.45$ at $\alpha=2.5$ (predicted $1.50$) and $1.52$ at $\alpha=6$
+(predicted $1.45$), at $\mu=-1.76$: these runs show no trend with the size of the economy.
+
+\paragraph{The susceptibility.}  Well below the line the measured $\chi_{\rm SG}$ is the predicted one, within about
+$10\%$ where the Perron root is below $0.75$ (one point at $15\%$) and within $25\%$ up to $0.85$.  Near the line
+it does not diverge: at the predicted $\sigma_c$ it is $3$--$10$ at $\alpha=2.5$ and $13$--$19$ at $\alpha=6$, where the
+theory gives $60$ or more, and it takes off $0.05$--$0.1$ higher, where the economies with the same noise
+separate.  The transition is rounded, as expected at finite $N$ and $C$ and with a closure that treats each
+field as frozen.
+
+\paragraph{Below the line.}  The same runs test the static solution itself.  For $\mu\le-1$ at $\alpha=2.5$ the growth
+rate of the mean firm and the turnover agree with the closure to within $0.04$ and $5\%$ up to the line.  Under
+weak competition the closure is poor: at $\mu=0$ it overestimates the growth rate and the turnover already
+below the line ($+0.19$ against $+0.15$ and $0.160$ against $0.148$ at $\sigma=0.70$; $+0.72$ against $+0.56$ at
+$\sigma=0.88$).  There the hubs survive, and $60$ degree classes at $C=100$ may not resolve them; we have not
+tested this explanation.
+
+\paragraph{An earlier test.}  A second protocol, without common noise, gives the same picture at one point
+($\alpha=6$, $\mu=-1.76$, $D=0.1$, $N=4000$, $C=100$, total time $4200$, the first $200$ discarded).  For each $\sigma$ we
+run two replicas on each of two graphs with the same couplings and different initial sizes and noise, and
+compare their time-averaged sizes over the last $W$ units of time,
+$d(W)=\overline{(\bar S_i^A-\bar S_i^B)^2}/\Var_i\bar S_i$.  Fast noise alone gives $d\propto1/W$ with $Wd$ set by its
+correlation time; slow collective motion raises $Wd$, and distinct attractors would keep $d$ finite.  For
+$W=125$ to $2000$, $Wd\simeq0.6$ at $\sigma=1.30$ and $1.35$, $0.7$--$1.1$ at $1.40$, $1.3$--$2.9$ at $1.45$, $1.2$--$4.6$ at
+$1.50$ and $5$--$8$ at $1.60$ and $1.70$.  The slow component sets in between $1.40$ and $1.50$, around the
+predicted $\sigma_c=1.451$.  Up to $\sigma=1.7$, $d$ keeps falling
+roughly as $1/W$: the replicas agree on average, and what grows is the correlation time of the
+composition, not the number of attractors (\texttt{scripts/phase\_onset.py}).
 
 %======================================================================
 \section{Two-time closure}
@@ -927,12 +1609,49 @@ $n_{\min}$ & $\zeta_1$ full & $\zeta_1$ one firm & $\zeta_q/\zeta_1$ full & $\ze
 \end{ruledtabular}
 \end{table*}
 
+\subsection{Derivation of the volatility law}
+
+Start from Eq.~\eqref{eq:app-log}.  Let $y_F$ solve the noise-free equation $\dot y_F=\Phi-e^{y_F}$ along the same field and from
+the same initial size, and write $\ln S=y_F+\delta$.  Subtracting,
+\begin{equation}
+\dd\delta=-e^{y_F}\big(e^{\delta}-1\big)\dd t-\frac{D}{2S}\,\dd t+\sqrt{\frac DS}\,\dd W .
+\end{equation}
+\begin{itemize}
+\item Linearise in $\delta$: $-e^{y_F}(e^\delta-1)\simeq-S_F\delta$ with $S_F=e^{y_F}\simeq S$.
+\item Freeze the coefficients over the relaxation time $1/S$ (adiabatic): $\delta$ is an OU process with rate $k=S$ and noise
+  intensity $D/S$, stationary variance $v_\delta=(D/S)/(2S)=D/(2S^2)$.
+\item The It\^o drift $-D/2S$ shifts the mean of $\delta$, not its fluctuations, to this order.
+\end{itemize}
+The increment over $\Delta t$ has variance $2v_\delta(1-e^{-k\Delta t})$:
+\begin{equation}
+\Var(\Delta\delta)=\frac{D}{S^2}\big(1-e^{-S\Delta t}\big).
+\end{equation}
+The growth rate is $g=\Delta y_F+\Delta\delta$.  Taking the two parts as uncorrelated (the noise $W$ is independent of the field,
+and $y_F$ is a functional of the field only) and averaging the local variance over the life:
+\begin{equation}
+\boxed{\Var g\simeq V_F+B,\qquad B=\Big\langle\frac D{S^2}\big(1-e^{-S\Delta t}\big)\Big\rangle_{\rm life},}
+\end{equation}
+where $V_F$ is the growth variance of $y_F$ over the life.  Limits: $S\Delta t\ll1$ gives $B\to D\Delta t\langle S^{-1}\rangle$; $S\Delta t\gg1$ gives
+$B\to D\langle S^{-2}\rangle$..
+
+\paragraph{Conditions.}  (1) $\delta$ small: $v_\delta=D/(2S^2)\ll1$, i.e.\ $S\gg\sqrt{D/2}\simeq0.22$ at $D=0.1$ (on the plateau, Appendix~\ref{app:constant} finds a variance error of about $2D/S^2$, i.e.\ $20\%$ at $S=1$; along a life the relevant $S$ is the instantaneous one, and
+the error is partly averaged out over a life that also visits larger sizes).  (2) $S$ varies slowly on the time $1/S$.  (3) The cross term $2\Cov(\Delta y_F,\Delta\delta)$ is small: $\delta$
+relaxes towards $y_F$, so the deviation and the path are not exactly independent once the linearisation fails.  All three are
+worst for small firms, consistent with the 9\% error in the lowest decile ($\Sb=0.26$) against 5\% elsewhere.
+
+\paragraph{Why the filter matters.}  If a firm followed its field exactly it would sit on $S=\Phi$, with $\Var g=\Var\Delta\ln\Phi$ plus unfiltered noise
+$D\Delta t\langle S^{-1}\rangle$.  The noise part changes little (at $\Delta t=0.5$, $\sqrt{D\Delta t\langle S^{-1}\rangle}$ is within 6\% of $\sqrt B$),
+but $\Var\Delta\ln\Phi$ is much larger than $V_F$ for small firms: $\ln\Phi$ moves violently when $\Phi$ is small, while $y_F$
+low-pass filters the field at rate $S$.  (Numbers: $\sqrt{\Var\Delta\ln\Phi}$ from $0.92$ to $0.44$, $\sqrt{V_F}$ flat at $0.32$--$0.37$.)
+
+\subsection{The law on the panel}
+
 \paragraph{Volatility law.}  Table~\ref{tab:law} gives the decomposition of Eq.~\eqref{eq:law} by
 deciles of life-mean size.  The prediction is within $5\%$ above the lowest decile and $9\%$ in it,
 where the linearisation of the noise around the noise-free path is worst.  The fitness part is flat,
 $\sqrt{V_F}=0.32$--$0.38$; the two parts are equal at $\Sb\simeq1.6$.  Over the range of the table the
 measured slope of $\mathrm{sd}(g)$ against $\Sb$ is $0.17$ and the prediction's $0.22$.  The field used here
-includes the entry dilution of Sec.~\ref{app:relative}; without it the one-firm exit rate is $2\%$ low.
+includes the entry dilution of Appendix~\ref{app:relative}; without it the one-firm exit rate is $2\%$ low.
 
 \begin{table}[t]
 \caption{Volatility law, lives with at least $20$ growth rates of the two reference economies
@@ -957,47 +1676,229 @@ $\Sb$ & sd$(g)$ & $\sqrt{V_F+B}$ & ratio & $\sqrt{V_F}$ & $\sqrt B$\\
 \end{table}
 
 %======================================================================
-\section{The identity and the floor}
+\section{The criterion, the floor and the length of a life}
 \label{app:multiscaling}
 
-\paragraph{The identity with a composition term.}  Let $p(u\mid\Sb)$ be the law of the floor at fixed size
-and $E_q(\Sb)=\int p(u\mid\Sb)\,(u+B(\Sb))^{q/2}\,du$, so that $\E[v^q\mid\Sb]=E_q\,\E[\epsilon^q]$.  Then
-\begin{gather}
-\zeta_q=-\frac{d\ln E_q}{d\ln\Sb}=\frac q2\,b\,\langle w\rangle_q-c_q,\nonumber\\
-c_q=\frac{1}{E_q}\int\frac{\partial p(u\mid\Sb)}{\partial\ln\Sb}\,(u+B)^{q/2}\,du .
+This appendix derives the results of Secs.~\ref{sec:criterion} and \ref{sec:floor}: the general relation between the
+ratio curve and the dispersion at fixed size, the identity for a growth variance made of a floor and a falling
+part, the conditions under which the curve bends, the make-up of the floor, and the law of life lengths.
+
+\subsection{The general criterion}
+\label{app:cumulant}
+
+Write $v=m(\Sb)\,X$ with $m(\Sb)=\E[v\mid\Sb]$, so that $\E[X\mid\Sb]=1$.  Then
+$\ln\E[v^q\mid\Sb]=q\ln m(\Sb)+K_q(\Sb)$ with $K_q=\ln\E[X^q\mid\Sb]$, and $K_1=0$.  Differentiating in $\ln\Sb$, the
+case $q=1$ gives $\zeta_1=-d\ln m/d\ln\Sb$, and the general case
+\begin{equation}
+\zeta_q=q\,\zeta_1-\frac{dK_q}{d\ln\Sb},
+\end{equation}
+which is Eq.~\eqref{eq:general}.  No assumption has been made.  $K_q$ is the cumulant generating function of $\ln X$
+at fixed size, $K_q=\ln\E[e^{q\ln X}]=\sum_{n\ge1}c_nq^n/n!$ with $c_n(\Sb)$ the cumulants of $\ln X$.  It is convex in
+$q$ (H\"older's inequality) and vanishes at $q=0$ and $q=1$, so it is negative between them and positive for
+$q>1$.  Since $K_1=\sum_nc_n/n!=0$, subtracting $q$ times this from $K_q$ removes the mean $c_1$:
+\begin{equation}
+\zeta_q-q\zeta_1=-\sum_{n\ge2}\frac{q^n-q}{n!}\,\frac{dc_n}{d\ln\Sb}
+=-\frac{q(q-1)}2\,\frac{d\Var(\ln X\mid\Sb)}{d\ln\Sb}-\frac{q(q^2-1)}{6}\,\frac{dc_3}{d\ln\Sb}-\dots
+\end{equation}
+To second order the curve lies below $q$ if and only if the variance of $\ln v$ at fixed size grows with size, and
+above $q$ if it shrinks.  For a lognormal $X$ only $c_2=\sigma^2(\Sb)$ is left and the mean of $\ln X$ is $-\sigma^2/2$, so
+$K_q=q(q-1)\sigma^2/2$, which gives Eq.~\eqref{eq:general-lognormal}.  If the law of $X$ does not depend on size,
+every $c_n$ is constant and $\zeta_q=q\zeta_1$.
+
+\subsection{The identity for a floor and a falling part}
+
+Assume $v_i^2=(u_i+B(\Sb_i))\,\epsilon_i^2$, with $\epsilon_i$ independent of $u_i$ and of $\Sb_i$ (estimation noise), and $B$ a function
+of size alone.  Let $p(u\mid\Sb)$ be the law of the floor at fixed size and
+\begin{equation}
+E_q(\Sb)=\int p(u\mid\Sb)\,(u+B(\Sb))^{q/2}\,\dd u,\qquad \E[v^q\mid\Sb]=E_q(\Sb)\,\E[\epsilon^q].
+\end{equation}
+Since $\E[\epsilon^q]$ does not depend on size, $\zeta_q=-\dd\ln E_q/\dd\ln\Sb$.  Differentiate under the integral; there are two
+contributions, from $B(\Sb)$ inside the power and from $p$:
+\begin{equation}
+\frac{\dd E_q}{\dd\ln\Sb}=\int p\,\frac q2(u+B)^{q/2-1}\frac{\dd B}{\dd\ln\Sb}\,\dd u+\int\frac{\partial p}{\partial\ln\Sb}(u+B)^{q/2}\dd u .
+\end{equation}
+With $\dd B/\dd\ln\Sb=-bB$ and $(u+B)^{q/2-1}B=(u+B)^{q/2}w$, $w=B/(u+B)$, the first term is $-\tfrac q2bE_q\langle w\rangle_q$, where
+\begin{equation}
+\langle w\rangle_q=\frac{\E[(u+B)^{q/2}w\mid\Sb]}{\E[(u+B)^{q/2}\mid\Sb]} .
+\end{equation}
+Dividing by $-E_q$:
+\begin{equation}
+\boxed{\zeta_q=\frac q2\,b\,\langle w\rangle_q-c_q,\qquad c_q=\frac1{E_q}\int\frac{\partial p(u\mid\Sb)}{\partial\ln\Sb}(u+B)^{q/2}\,\dd u .}
 \label{eq:app-identity}
-\end{gather}
-The composition term vanishes if the law of the floor does not depend on size.  On the network it does not
-vanish: larger lives have larger degrees on average, and the floor grows with the degree, so $c_q>0$ and
-the decline is slower than the noise share alone implies.  If the law of $\ln u$ only shifts with size, by
-$\delta(\Sb)$, then $c_q=(q/2)(1-\langle w\rangle_q)\,d\delta/d\ln\Sb$: a rising floor flattens the decline and,
-since $\langle w\rangle_q$ falls with $q$, adds to the bend.  If the floor is the same for all firms of a given
-size, $E_q=(u+B)^{q/2}$ and $\zeta_q=q\zeta_1$ exactly, whatever $c_q$.
+\end{equation}
+$c_q=0$ when the law of the floor does not depend on size.
+The composition term does not vanish on the network: larger lives have larger degrees on average, and the floor grows
+with the degree, so $c_q>0$ and the decline is slower than the noise share alone implies.
 
-\paragraph{Monotonicity of $\langle w\rangle_q$.}  With $Y=u+B$, $\langle w\rangle_q=B\exp[h(q-2)-h(q)]$, where
-$h(q)=\ln\E[Y^{q/2}]$ is the cumulant generating function of $\tfrac12\ln Y$ evaluated at $q$ and therefore
-convex.  Convexity makes $h(q)-h(q-2)$ non-decreasing, so $\langle w\rangle_q$ is non-increasing in $q$, strictly
-unless $Y$ is degenerate at fixed size.
+\paragraph{Floor whose law shifts with size.}  If $\ln u=\delta(\Sb)+\xi$ with the law of $\xi$ fixed, then the size dependence of $p$
+is entirely through $\delta$, and $\partial_{\ln\Sb}$ at fixed $B$ acts on $(e^{\delta+\xi}+B)^{q/2}$ as
+$\tfrac q2(u+B)^{q/2-1}u\,\delta'$.  So
+\begin{equation}
+c_q=\frac q2\big(1-\langle w\rangle_q\big)\delta',\qquad
+\zeta_q=\frac q2\Big[b\langle w\rangle_q-\big(1-\langle w\rangle_q\big)\delta'\Big],\qquad \delta'=\frac{\dd\delta}{\dd\ln\Sb}.
+\end{equation}
+A rising floor ($\delta'>0$) flattens the decline.  It also adds to the bend: write $\zeta_q=\tfrac q2[(b+\delta')x_q-\delta']$ with
+$x_q=\langle w\rangle_q$.  For $x_q<x_1$ and $\zeta_q,\zeta_1>0$,
+\begin{equation}
+\frac{(b+\delta')x_q-\delta'}{(b+\delta')x_1-\delta'}<\frac{x_q}{x_1}\iff -x_1\delta'<-x_q\delta'\iff x_q<x_1 ,
+\end{equation}
+so the ratio is below the $c_q=0$ value $qx_q/x_1$.
 
-\paragraph{Floor make-up.}  The core of a life runs from the first to the last sample at which the
-noise-free size is at least half its median.  For a climb in a constant field $h$, $u=S/h$ obeys
-$\dot u=hu(1-u)$ and $d\ln S/dt=h(1-u)$, so $\int(d\ln S/dt)^2dt=h[\ln(h/S_0)-1+S_0/h]$.  For a collapse in a
-field $-\varphi$, $d\ln S/dt=-(\varphi+S)$ and $\int(\varphi+S)^2dt=\varphi\ln(h/S_{\rm end})+h-S_{\rm end}$.  Times
-$\Delta t$ these are $E_{\rm in}$ and $E_{\rm out}$ of Eq.~\eqref{eq:floor}.  On the $175\,171$ complete lives with at
+\paragraph{Homogeneous floor.}  If $u$ is the same for all firms of a given size, however it depends on size, then
+$E_q=Y(\Sb)^{q/2}$ with $Y=u+B$ and $\zeta_q=-\tfrac q2\dd\ln Y/\dd\ln\Sb=q\zeta_1$ exactly, whatever $c_q$.
+
+\subsection{Monotonicity of $\langle w\rangle_q$ and the bound $\zeta_q/\zeta_1\le q$}
+
+With $Y=u+B$ at fixed size, $\langle w\rangle_q=\E[Y^{q/2}\cdot B/Y]/\E[Y^{q/2}]=B\,\E[Y^{q/2-1}]/\E[Y^{q/2}]$.  Let
+$h(q)=\ln\E[Y^{q/2}]=\ln\E[e^{q\cdot\frac12\ln Y}]$, the cumulant generating function of $\tfrac12\ln Y$; it is convex (H\"older).  Then
+$\langle w\rangle_q=B\exp[h(q-2)-h(q)]$.  For a convex function the secant slope $[h(q)-h(q-2)]/2$ is non-decreasing in $q$, so
+$\langle w\rangle_q$ is non-increasing, and strictly decreasing unless $h$ is linear, i.e.\ unless $\ln Y$ is a.s.\ constant at fixed size.
+With $c_q=0$ (and $b$ the same for all $q$, as it is the slope of $B$),
+\begin{equation}
+\frac{\zeta_q}{\zeta_1}=q\,\frac{\langle w\rangle_q}{\langle w\rangle_1}\le q\qquad(q\ge1),
+\end{equation}
+with equality iff the floor is the same for all firms of equal size.  $\epsilon$ cancels in the ratio.
+
+\subsection{The lognormal case}
+
+If $\ln Y\mid\Sb\sim\mathcal N(m,s^2)$, then $\E[Y^a]=e^{am+a^2s^2/2}$ and
+\begin{equation}
+\langle w\rangle_q=B\exp\Big[\Big(\frac q2-1\Big)m+\Big(\frac q2-1\Big)^2\frac{s^2}2-\frac q2m-\Big(\frac q2\Big)^2\frac{s^2}2\Big]
+=B\,e^{-m}\,e^{(1-q)s^2/2},
+\end{equation}
+since $(q/2-1)^2-(q/2)^2=1-q$.  Hence
+\begin{equation}
+\frac{\langle w\rangle_q}{\langle w\rangle_1}=e^{-(q-1)s^2/2},\qquad \frac{\zeta_q}{\zeta_1}=q\,e^{-(q-1)s^2/2}\quad(c_q=0),
+\qquad\frac{\langle w\rangle_4}{\langle w\rangle_1}=e^{-3s^2/2}.
+\end{equation}
+Exact for a lognormal $Y$; but $Y=u+B\ge B$, so $Y$ cannot be exactly lognormal and the formula is an approximation, good
+when $s$ is small or $B$ is small compared with the typical $Y$.
+
+\paragraph{Narrow floor.}  With $u=\bar ue^{\xi}$ and $\xi$ small, $\ln(u+B)\simeq\ln(\bar u+B)+\frac{\bar u}{\bar u+B}\xi$, so
+$s^2\simeq(1-w)^2\Var(\ln u\mid\Sb)$ with $w$ at $\bar u$.  A heterogeneous floor bends the curve only where it is not small against
+$B$: at large sizes.
+
+\begin{verify}
+Monte Carlo with $s^2=0.25$, $10^6$ samples: $\langle w\rangle_q/\langle w\rangle_1=0.8825$, $0.7789$, $0.6876$ against $e^{-(q-1)s^2/2}=0.8825$, $0.7788$,
+$0.6873$.  The comparison with the panel is in Table~\ref{tab:fifths}.
+\end{verify}
+
+\paragraph{Scope.}  The statement that the curve bends only if floors differ holds within the two-part law
+$v^2=(u+B(\Sb))\epsilon^2$, with $B$ a function of size alone and $\epsilon$ independent of size.  Outside it the general
+criterion of Sec.~\ref{app:cumulant} applies: any dispersion of $\ln v$ that grows with size bends the curve, and any
+dispersion that shrinks with size pushes it above $q$.  The second case occurs in two places below: the
+estimation noise of short lives, and the per-life estimate of $B$, whose dispersion is largest among the smallest
+firms.
+
+\subsection{Estimation noise}
+
+Let a life have $n$ growth rates, independent and Gaussian with standard deviation $s$.  With the mean absolute
+deviation, $v=\sqrt{\pi/2}\,n^{-1}\sum_t|g_t-\bar g|$.  For a Gaussian $\E|g-\bar g|\simeq s\sqrt{2/\pi}$, so $\E v\simeq s$,
+and $\Var|g|=s^2(1-2/\pi)$, so
+\begin{equation}
+\Var\ln\epsilon\simeq\frac{\Var v}{(\E v)^2}=\frac1n\,\frac{1-2/\pi}{2/\pi}=\frac{\pi/2-1}{n}.
+\end{equation}
+With the standard deviation, $v^2$ is $s^2$ times a chi-squared variable over its number of degrees of freedom,
+$\Var(v^2)/s^4\simeq2/n$, and $\Var\ln\epsilon=\tfrac14\Var\ln v^2\simeq1/(2n)$.  Both are leading orders in $1/n$, and fat
+tails raise both.  If the mean number of growth rates grows with size, $\Var\ln\epsilon$ falls with size and by
+Eq.~\eqref{eq:general-lognormal} adds $+\tfrac{q(q-1)}2\,|d\Var\ln\epsilon/d\ln\Sb|$ to $\zeta_q-q\zeta_1$: the ratios move up.
+
+\subsection{What the floor is made of}
+
+\paragraph{Splitting a life.}  The floor of a life is the variance of the growth rates $g^F_t$ of its noise-free path
+$y_F$ (Appendix~\ref{app:reduction}),
+$V_F=n^{-1}\sum_t(g^F_t)^2-(\bar g^F)^2$.  A complete life starts at the newborn size and ends at an exit, so its
+mean growth rate $\bar g^F=n^{-1}\ln(S_{\rm end}/S_0)$ is small and we drop its square.  The core of a life runs
+from the first to the last sample at which the noise-free size is at least half its median; before it is the
+climb and after it the collapse.  Splitting the sum,
+\begin{equation}
+V_F\simeq\frac{n_{\rm core}}{n}\,V_{\rm core}+\frac{E_{\rm in}+E_{\rm out}}{n},\qquad
+E_{\rm in}=\sum_{\rm climb}(g^F_t)^2,\quad E_{\rm out}=\sum_{\rm collapse}(g^F_t)^2 ,
+\end{equation}
+and for the long lives considered $n_{\rm core}\simeq n$, which gives Eq.~\eqref{eq:floor}.  For a path that changes
+slowly over one step, $g^F_t\simeq(d\ln S/dt)\,\Delta t$ and a sum of squares over a stretch is
+$\sum_t(g^F_t)^2\simeq\Delta t\int(d\ln S/dt)^2\,dt$.
+
+\paragraph{The climb.}  In a constant field $h$ the noise-free equation is $\dot S=S(h-S)$.  With $u=S/h$,
+$\dot u=hu(1-u)$ and $d\ln S/dt=h(1-u)$.  Changing variable from $t$ to $u$, $dt=du/[hu(1-u)]$, and from the
+initial size $S_0$ to the plateau,
+\begin{equation}
+\int\Big(\frac{d\ln S}{dt}\Big)^2dt=\int_{S_0/h}^1\frac{h^2(1-u)^2}{hu(1-u)}\,du=h\int_{S_0/h}^1\frac{1-u}{u}\,du
+=h\Big[\ln\frac h{S_0}-1+\frac{S_0}h\Big].
+\end{equation}
+Times $\Delta t$ this is $E_{\rm in}\simeq\Delta t\,h[\ln(h/S_0)-1]$ for $S_0\ll h$.
+
+\paragraph{The collapse.}  In a field that has fallen to $-\varphi<0$, $\dot S=-S(\varphi+S)$ and $d\ln S/dt=-(\varphi+S)$.
+With $dt=-dS/[S(\varphi+S)]$, from the plateau $h$ down to $S_{\rm end}$,
+\begin{equation}
+\int\Big(\frac{d\ln S}{dt}\Big)^2dt=\int_{S_{\rm end}}^h\frac{\varphi+S}{S}\,dS=\varphi\ln\frac h{S_{\rm end}}+h-S_{\rm end}.
+\end{equation}
+Times $\Delta t$ this is $E_{\rm out}\simeq\Delta t\,[\varphi\ln(h/S_{\rm end})+h]$.  Both terms grow with the plateau $h$,
+and both are divided by the length of the life in Eq.~\eqref{eq:floor}.
+
+\paragraph{Test.}  On the $175\,171$ complete lives with at
 least $20$ growth rates, the exit formula follows the measured sum life by life (log-correlation
 $0.85$--$0.91$ by fifth) and lies above it by $6$--$40\%$; the entry formula has the right scale but
 correlates less (log-correlation $0.5$), because a firm climbs in a field that moves.
 
-\paragraph{Life lengths.}  For $dS=r(t)S\,dt+\sqrt{DS}\,dW$ the probability of extinction by time $t$ is
-$\exp[-2S_0/(D\int_0^te^{-R(s)}ds)]$, $R=\int_0^tr$, from the Laplace transform of this Feller diffusion;
-with $S_{\rm det}=S_0e^R$ this is Eq.~\eqref{eq:kill}.  At the bottom of a dip, where $\Phi=S_{\min}$, a saddle
-point gives $J\simeq\sqrt{2\pi/\Phi'}/S_{\min}$: a dip kills when it brings the firm below a size of order $D$
-times its recovery time.  Binned by the predicted probability, the observed kill fractions are $0.015$ at
+\subsection{How long a firm lives}
+
+\paragraph{A firm in a dip is a branching process.}  An established firm sits near its plateau, where its own
+noise cannot kill it: the exit time grows as $e^{\Phi^2/D}$ (Appendix~\ref{app:constant}).  It dies when its field dips
+below zero.  Inside the dip the firm is small and the logistic term $-S^2$ is negligible, so
+\begin{equation}
+dS=r(t)\,S\,dt+\sqrt{DS}\,dW,
+\end{equation}
+with $r(t)$ the field less the self-limitation along the noise-free path.  This is Feller's branching diffusion
+with a time-dependent rate \cite{feller1951}.  Because independent pieces of the firm evolve independently, the
+Laplace transform of its size is exponential in the initial size, $\E[e^{-\lambda S_t}]=e^{-S_0u_0}$, where $u_0$ is
+the value at time $0$ of the solution of the backward equation $-\partial_su=r(s)\,u-\tfrac12Du^2$ with $u(t)=\lambda$.
+The equation is linear in $1/u$, $\partial_s(1/u)=r/u-D/2$, and with $R(t)=\int_0^tr(s)\,ds$ its solution is
+\begin{equation}
+\frac1{u_0}=\frac{e^{-R(t)}}{\lambda}+\frac D2\int_0^te^{-R(s)}\,ds .
+\end{equation}
+The probability that the firm is extinct by time $t$ is the limit $\lambda\to\infty$,
+\begin{equation}
+\Pr(S_t=0)=\exp\Big[-\frac{2S_0}{D\int_0^te^{-R(s)}\,ds}\Big].
+\end{equation}
+The noise-free path through the dip is $S_{\rm det}(t)=S_0e^{R(t)}$, so $S_0^{-1}\int e^{-R}ds=\int dt/S_{\rm det}$, which
+gives Eq.~\eqref{eq:kill}: $P_{\rm kill}=\exp[-2/(DJ)]$ with $J=\int dt/S_{\rm det}$.  For a constant rate $r>0$ and
+$t\to\infty$ it reduces to the classical survival probability $1-e^{-2rS_0/D}$.
+
+\paragraph{The bottom of the dip.}  $J$ is dominated by the times at which the noise-free path is smallest.  At its
+minimum $\dot y_F=\Phi-S_{\min}=0$, and nearby $\ln S_{\rm det}\simeq\ln S_{\min}+\tfrac12\Phi't^2$, with $\Phi'$ the slope of
+the field as it recovers.  A Gaussian integral gives
+\begin{equation}
+J\simeq\frac1{S_{\min}}\int e^{-\Phi't^2/2}\,dt=\frac{\sqrt{2\pi/\Phi'}}{S_{\min}} .
+\end{equation}
+A dip kills when it brings the firm below a size of order $D$ times its recovery time $\sqrt{2\pi/\Phi'}$.
+
+\paragraph{Test of the kill law.}  For every downcrossing of zero by the field of a node whose firm is established
+($S\ge0.3$), we restart the noise-free path at the firm's actual size, integrate until it recovers to that size,
+and compare $P_{\rm kill}$ with whether the firm died.  Over the $446\,554$ dips the predicted kill fraction is
+$0.725$ against $0.722$ observed.  Binned by the predicted probability, the observed kill fractions are $0.015$ at
 $0.027$, $0.102$ at $0.147$, $0.418$ at $0.450$, $0.894$ at $0.853$ and $0.986$ at $0.974$, and the log-likelihood per
-dip is $-0.175$ against $-0.591$ for a constant kill rate.  Rice's rate, from each node's mean, standard
-deviation and lag-$\Delta t$ autocorrelation of the field, lies $1$--$13\%$ above the observed rate in every
-decile of $u$ but the lowest.  Among complete lives the coefficient of variation of $n-20$ is $1.05$--$1.22$
-in every decile of $u$ but the highest, where the window cuts the longest lives.
+dip is $-0.175$ against $-0.591$ for a constant kill rate.  No parameter is fitted.
+
+\paragraph{The rate of dips.}  For a stationary Gaussian field of mean $\bar\Phi$, standard deviation $f$ and
+autocorrelation $\rho(\tau)$, downcrossings of zero occur at Rice's rate \cite{rice1944}
+\begin{equation}
+\nu=\frac{\sqrt{-\rho''(0)}}{2\pi}\,e^{-u^2/2},\qquad u=\frac{\bar\Phi}{f},
+\end{equation}
+the product of the density of the field at zero and the mean downward speed there.  We estimate $\rho''(0)$ from
+the lag-$\Delta t$ autocorrelation, $\rho(\Delta t)\simeq1+\tfrac12\rho''(0)\Delta t^2$.  Rice's rate, from each node's own mean,
+standard deviation and autocorrelation, lies $1$--$13\%$ above the observed rate in every decile of $u$ but the
+lowest; sampling every $\Delta t$ misses brief crossings.
+
+\paragraph{Lives are memoryless.}  The hazard of an established firm is the rate of dips times the mean kill
+probability of a dip, $\nu\,\overline{P_{\rm kill}}$.  Successive dips are nearly independent, so the life of an
+established firm is close to exponential, with a mean that grows as $e^{u^2/2}$: steeply with the mean field over
+its amplitude.  Among complete lives the coefficient of variation of $n-20$ is $1.05$--$1.22$ in every decile of
+$u$ but the highest, where the window cuts the longest lives; an exponential law gives $1$.  The logarithm of an
+exponential variable has variance $\pi^2/6\simeq1.6$, which is the scale of the spread of $\ln n$ among the largest
+firms ($0.91$ at fixed size, Sec.~\ref{sec:floor}).
+
+\subsection{The decomposition on the panel}
 
 \paragraph{Per-life decomposition.}  Table~\ref{tab:mslaw} gives the exponents of the same lives under the
 measured volatility and three laws built from the per-life decomposition, on both graphs, and
@@ -1153,6 +2054,11 @@ at least $20$ growth rates the change is smaller ($\zeta_1=0.253$ and $0.247$, r
 $2.80$ and $1.75$, $2.28$, $2.62$, although at step $2$ these lives span only $0.9$ decades).  The bend
 below $q$ survives the coarser year; the level of $\zeta_1$ for short lives does not
 (\texttt{notebooks/06\_facts.ipynb}).
+
+\paragraph{The factor in the volatility.}  If
+$X\sim\mathcal N(\mu,s^2)$, then $\E|X-\mu|=s\int|z|\phi(z)\,\dd z=2s\int_0^\infty z\phi(z)\,\dd z=2s\phi_0=s\sqrt{2/\pi}$,
+so $\sqrt{\pi/2}\,\E|X-\mu|=s$.  For Gaussian growth $v$ estimates the standard deviation; for fat-tailed
+growth it is a robust scale that is smaller than the standard deviation.
 
 \paragraph{Minimum life length.}  MSB keep every firm with at least two growth rates; their firms have $46$ on
 average, and their results do not change for firms with at least $20$.  Their growth rates are annual
