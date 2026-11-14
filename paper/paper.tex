@@ -9,8 +9,7 @@
 % spread tests, predictions); the within-class kurtosis is 0.3, not 2.1 (notebook 04 pooled a top class
 % spanning kappa 2.6-98).  Those cells, and Fig. mechanism, must be run on the Mac's reference economies (the
 % Linux copies differ); the red \todo{} numbers come from the Linux copies and are to be replaced.
-% figS_moment_fits.pdf is a draft from the Linux copy of the production run; notebook 06 rewrites it.  Every
-% figure in figures/ is written by a notebook in ../notebooks/.
+% Every figure in figures/ is written by a notebook in ../notebooks/.
 \documentclass[pre,onecolumn,superscriptaddress,nofootinbib]{revtex4-2}
 \usepackage{amsmath,amssymb,bm}
 \usepackage{graphicx}
@@ -231,7 +230,7 @@ v=\sqrt{\frac{\pi}{2}}\,\frac1n\sum_{t=1}^{n}\big|g_t-\bar g\big|,\qquad
 \label{eq:vol}
 \end{equation}
 the factor making $v$ the standard deviation for Gaussian growth.  Exponents are least-squares slopes of
-$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:fits}).
+$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:facts}b).
 
 \paragraph{Samples.}  We compare with data on lives with at least five growth rates, the cut that matches MSB's
 (Appendix~\ref{app:protocol}).  The comparison uses seven economies with $N=32000$.  The theory tests use lives with at least $20$ growth rates, long enough to estimate each
@@ -242,11 +241,15 @@ aggregate.  We exclude one of the eight production economies for this reason (Ap
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_facts.pdf}
-\caption{The size--volatility facts at the reference point against Compustat \cite{moran2024} (lives with
-at least $5$ growth rates; $N=32000$, seven economies pooled).
-(a) Mean volatility against life-mean size, with the Compustat slope.  (b) Ratio curve; the band is the
-range over the seven economies.  (c) Distribution of $v/\E[v\mid\Sb]$ by fifth of size, from the smallest
-(light) to the largest (dark), with the Compustat tail.  The other facts are in Table~\ref{tab:facts}.}
+\caption{The facts at the reference point against Compustat \cite{moran2024}.  (a)--(d): lives with at least
+$5$ growth rates, $N=32000$, seven economies pooled.  (a) Mean volatility against life-mean size, with the
+Compustat slope.  (b) Moments $\E[v^q\mid\Sb]$ over the $25$ bins and the least-squares lines whose slopes are
+the exponents $\zeta_q$.
+(c) Ratio curve; the band is the range over the seven economies.  (d) Distribution of $v/\E[v\mid\Sb]$ by fifth
+of size, from the smallest (light) to the largest (dark), with the Compustat tail.  (e), (f): two reference
+economies, $N=16000$.  (e) Growth rates of lives with at least five growth rates, pooled and divided by their
+common volatility, with a Gaussian and a Laplace law of the same volatility.  (f) Distribution of relative sizes
+over all firm-years, with Zipf's law.  The other facts are in Table~\ref{tab:facts}.}
 \label{fig:facts}
 \end{figure*}
 
@@ -288,16 +291,14 @@ uncertainties are spreads between economies (Appendix~\ref{app:protocol}).}
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_growth.pdf}
-\caption{Growth rates and co-movement at the reference point.  (a) The model's growth rates pooled and divided
-by their common volatility, with a Gaussian and a Laplace law of the same volatility (two reference economies,
-$N=16000$, lives with at least five growth rates; also (b) and (d)).  (b) Growth rates rescaled by the life's
-leave-one-out mean and volatility, by fifth of life-mean size, and a Gaussian null with the same life lengths.
-(c) The same in Compustat, read from MSB's Figs.~5 and 7 \cite{moran2024}: kernel density estimates averaged
-over the five size bins of each fifth, and all firms.  (d) Excess kurtosis of rescaled growth on $|z|\le8$
-against size rank.  (e) Correlation of a firm's growth with the aggregate and mean pairwise correlation within
-a fifth (production run, $N=32000$, seven economies; bars: spread between economies).  (f) Kurtosis of 3-year
-growth over its value for iid growth, lives with at least $20$ growth rates; Compustat is above $1$ at all
-sizes \cite{moran2024}.}
+\caption{Rescaled growth, co-movement and persistence at the reference point.  (a) Growth rates rescaled by the
+life's leave-one-out mean and volatility, by fifth of life-mean size, and a Gaussian null with the same life
+lengths (two reference economies, $N=16000$, lives with at least five growth rates; also (c)).  (b) The same in
+Compustat, read from MSB's Figs.~5 and 7 \cite{moran2024}: kernel density estimates averaged over the five size
+bins of each fifth, and all firms.  (c) Excess kurtosis of rescaled growth on $|z|\le8$ against size rank.
+(d) Correlation of a firm's growth with the aggregate and mean pairwise correlation within a fifth (production
+run, $N=32000$, seven economies; bars: spread between economies).  (e) Kurtosis of 3-year growth over its value
+for iid growth, lives with at least $20$ growth rates; Compustat is above $1$ at all sizes \cite{moran2024}.}
 \label{fig:growth}
 \end{figure*}
 
@@ -322,31 +323,31 @@ and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least five gro
 \label{fig:strip}
 \end{figure*}
 
-\paragraph{What works.}  The decline is monotone, and the ratio curve lies below $q$ (Fig.~\ref{fig:facts}a,b).
-Growth rates have tent-shaped, exponential tails (Fig.~\ref{fig:growth}a and Appendix~\ref{app:protocol}).
+\paragraph{What works.}  The decline is monotone, and the ratio curve lies below $q$ (Fig.~\ref{fig:facts}a--c).
+Growth rates have tent-shaped, exponential tails (Fig.~\ref{fig:facts}e and Appendix~\ref{app:protocol}).
 Rescaled by each firm's volatility, they stay fat-tailed among the largest firms, with the excess kurtosis of
-Compustat in the largest fifth (Fig.~\ref{fig:growth}b--d); granular models predict Gaussian tails there
+Compustat in the largest fifth (Fig.~\ref{fig:growth}a--c); granular models predict Gaussian tails there
 \cite{moran2024}.
 
 \paragraph{What works in part.}  The higher exponents are too large: $\zeta_4=0.685$ against $0.58(4)$, so the
 curve bends less than in Compustat.  The bend also depends on the minimum life length.  With all lives the ratios
 lie above $q$, and they fall below $q$ from $n_{\min}\simeq5$ (Sec.~\ref{sec:criterion}); MSB's results do not
 change with the cut.  The rescaled growth rates of small firms have tails that are too thin, and most of their
-kurtosis comes from the rescaling of short lives (Fig.~\ref{fig:growth}d).  The model's tails are asymmetric, the
-negative one fatter (Fig.~\ref{fig:growth}b).  Multi-year persistence is confined to the largest firms
-(Fig.~\ref{fig:growth}f): small firms are moved by near-Gaussian, mean-reverting birth--death noise, large firms by
+kurtosis comes from the rescaling of short lives (Fig.~\ref{fig:growth}c).  The model's tails are asymmetric, the
+negative one fatter (Fig.~\ref{fig:growth}a).  Multi-year persistence is confined to the largest firms
+(Fig.~\ref{fig:growth}e): small firms are moved by near-Gaussian, mean-reverting birth--death noise, large firms by
 rare and persistent dips of their field.
 
-Co-movement rises with size (Fig.~\ref{fig:growth}e), but we do not count it as a result.  The growth rates in
+Co-movement rises with size (Fig.~\ref{fig:growth}d), but we do not count it as a result.  The growth rates in
 these correlations include the growth of the mean firm, and the model's aggregate volatility is several times too
 large.  A common shock added to growth whose own volatility falls with size makes both correlations rise with size
 by itself.  We have not separated this common mode from the effect of the interactions.
 
 \paragraph{What fails.}  The decline spans two orders of magnitude of size rather than four, and volatility falls
 by a factor $2.8$ against $5.5$ (Fig.~\ref{fig:facts}a); Section~\ref{sec:range} explains both numbers.  The tail
-of the volatility distribution is too thin, and thinner for longer lives (Fig.~\ref{fig:facts}c).  With all lives
+of the volatility distribution is too thin, and thinner for longer lives (Fig.~\ref{fig:facts}d).  With all lives
 the model gives $b=4.4$, but a null with iid Laplace growth gives $4.3$, so that match is an artefact of short
-lives.  The size distribution has no Pareto tail (Fig.~\ref{fig:limits}a): sizes are capped near the highest
+lives.  The size distribution has no Pareto tail (Fig.~\ref{fig:facts}f): it falls off steeply above about ten times the mean firm, near the highest
 plateaus.  Lives are too short.  Newborns have extreme infant mortality, $38\%$ of the lives with at least two
 growth rates have exactly two, and small established firms shrink on average; MSB's firms have $46$ growth rates
 on average.  Aggregate volatility is $0.088$ per year, several times too large, and it does not fall as $N^{-1/2}$
@@ -355,16 +356,16 @@ over the sizes we simulate (Table~\ref{tab:robust}).
 \paragraph{The year is a choice.}  At a step of $2$ time units instead of $0.5$, the bend survives, but $\zeta_1$
 for lives with at least five growth rates falls to $0.15$.  The serial correlation of growth depends on the step:
 at our step it rises with size, as reported for French firms \cite{coad2007}, and at a step of $2$ it vanishes at
-every size (Fig.~\ref{fig:limits}b and Appendix~\ref{app:protocol}).
+every size (Fig.~\ref{fig:limits} and Appendix~\ref{app:protocol}).
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics{fig_limits.pdf}
-\caption{What the model misses.  (a) Distribution of relative sizes over all firm-years of the two reference
-economies ($N=16000$), with Zipf's law.  (b) Lag-one autocorrelation of growth within lives with at least five
-growth rates, by fifth of life-mean size, at sampling steps of $0.5$ (our year), $1$ and $2$ time units.}
+\caption{The choice of the year.  Lag-one autocorrelation of growth within lives with at least five growth rates,
+by fifth of life-mean size, at sampling steps of $0.5$ (our year), $1$ and $2$ time units (two reference
+economies, $N=16000$).}
 \label{fig:limits}
-\end{figure*}
+\end{figure}
 
 %======================================================================
 \section{Theory of the model}
@@ -1823,19 +1824,9 @@ $2.0$, $1.8$ and $1.4$ orders of magnitude: the ratios lie above $q$ for $n_{\mi
 estimation noise of short lives requires (Sec.~\ref{sec:criterion}), and the range shrinks because long lives
 do not occur at the newborn sizes.
 
-\paragraph{The fits.}  Figure~\ref{fig:fits} shows the lines behind the exponents of Table~\ref{tab:facts}.  For
-$q\le2$ the residuals stay within $0.1$ in log units; for $q=3$ and $4$ the end bins lie above the lines.
-
-\begin{figure*}[t]
-\centering
-\includegraphics{figS_moment_fits.pdf}
-\caption{Fits of the volatility moments behind Table~\ref{tab:facts} (production run, seven economies, $N=32000$).
-Top: $\E[v^q\mid\Sb]$ in the $25$ equal-count bins of $\Sb$ (markers) and the least-squares lines whose slopes are
-the exponents $\zeta_q$, each scaled to one at the middle of the range.  Bottom: residuals about the lines, in log
-units.  (a) Lives with at least five growth rates, the cut compared with Compustat; (b) at least $20$, the cut of
-the theory tests.  Source: \texttt{notebooks/06\_facts.ipynb}.}
-\label{fig:fits}
-\end{figure*}
+\paragraph{The fits.}  Figure~\ref{fig:facts}b shows the lines behind the exponents of Table~\ref{tab:facts}.  For
+$q\le2$ the residuals stay within $0.1$ in log units; for $q=3$ and $4$ the end bins lie above the lines, by up
+to $0.19$ and $0.52$ in the largest bin (\texttt{notebooks/06\_facts.ipynb}).
 
 \paragraph{The tail index $b$.}  For lives with at least two growth rates the model gives
 $b=4.39$--$4.44$ at every parameter point, close to the Compustat value $4.6$.  A null with iid Laplace
@@ -1864,7 +1855,7 @@ moments are dominated by rare events beyond $|z|=8$, outside the range of the Co
 instead by each life's own volatility, lives with at least $10$ growth rates give $1.3$ to $23$ by fifth in the
 production run (\texttt{notebooks/06\_facts.ipynb}).
 
-\paragraph{The tail of the growth rates.}  The tails of the pooled growth rates of Fig.~\ref{fig:growth}a
+\paragraph{The tail of the growth rates.}  The tails of the pooled growth rates of Fig.~\ref{fig:facts}e
 are exponential, not power laws.  Over the $1.8\times10^7$ growth rates of lives with at least five, divided
 by their common volatility, the Hill index of $|z|$ rises with the depth of the tail, $2.3$, $3.0$, $3.5$,
 $4.3$ and $5.2$ for the top $10\%$, $3\%$, $1\%$, $0.3\%$ and $0.1\%$, as for a Laplace law ($3.1$ to $7.8$)
