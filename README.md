@@ -27,10 +27,12 @@ Each loads cached results from `data/` and recomputes what is missing.
 |---|---|---|
 | [`01_model`](notebooks/01_model.ipynb) | the facts, the model, relative sizes, a small economy, the panel protocol | background |
 | [`02_phase_diagram`](notebooks/02_phase_diagram.ipynb) | mean-field theory, $\sigma_c$, zero growth, renewal law, where the facts hold | Figs. strip and phase; mean-field and constant-field appendices |
-| [`04_volatility_law`](notebooks/04_volatility_law.ipynb) | one firm is enough; the field; $v^2\simeq V_F+B$ | Sec. one firm; reduction appendix |
-| [`05_multiscaling`](notebooks/05_multiscaling.ipynb) | the identity and its test; regular graph; all lives | Fig. mechanism, table of cases; identity appendix |
+| [`04_volatility_law`](notebooks/04_volatility_law.ipynb) | one firm is enough; the field; $v^2\simeq V_F+B$ | Sec. one firm; reduction table |
+| [`05_multiscaling`](notebooks/05_multiscaling.ipynb) | the identity and its test; regular graph; all lives | the ratios with all lives (Sec. bend) |
 | [`06_facts`](notebooks/06_facts.ipynb) | every MSB fact, bursts, robustness, the fits, rescaled growth | Sec. data, Figs. facts, fits and tails; robustness and protocol appendices |
-| [`07_floor_theory`](notebooks/07_floor_theory.ipynb) | what the floor is made of, lifetimes, the field's statistics, predictions | Secs. floors and predictions; field statistics |
+| [`07_floor_theory`](notebooks/07_floor_theory.ipynb) | what the floor is made of, lifetimes, the field's statistics, predictions | Fig. predictions (tests appendix); field statistics; lifetimes |
+| [`08_margin_theory`](notebooks/08_margin_theory.ipynb) | size is the mean field; volatility follows the margin $u=h/f$; closed law; depth runs; $\zeta_1$ from the two-time closure | not yet |
+| [`09_filter_law`](notebooks/09_filter_law.ipynb) | the filter law at current size (a firm low-pass filters its market at a rate equal to its size), and its average over lives against life-mean size, sorting | Sec. theory, Fig. filter, Table panel, filter-law appendix |
 
 The reference economies (notebooks 04, 05, 07) take about an hour each to simulate without the cache, and the
 robustness runs of notebook 06 (80 economies) hours on many cores.
