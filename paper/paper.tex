@@ -28,10 +28,11 @@ independent parts, cannot produce this multiscaling together with the other regu
 we ask whether interactions between firms can.  We study an economy of interacting firms with demographic noise
 and scale-invariant dynamics.  Tuned to the observed decline of mean volatility, the model reproduces the multiscaling, the
 tent-shaped distribution of growth rates and the fat tails of rescaled growth among large firms.  It does not
-reproduce the range of sizes over which volatility falls, nor Zipf's law of firm sizes.  A theory of one firm in its
-moving field explains the decline: self-limitation makes a firm a low-pass filter of its market, with a cutoff equal
-to its size, and the panel of firm lives averages this law.  The bend comes from the spread of mean fields among
-firms of equal degree.
+reproduce the range of sizes over which volatility falls, Zipf's law of firm sizes, or the power law of volatility
+against the size at the start of each year.  A theory of one firm in its moving field explains the decline:
+self-limitation makes a firm a low-pass filter of its market, with a cutoff equal to its size, and the panel of firm
+lives averages this curved law into straight lines.  The bend comes from the spread of mean fields among firms of
+equal degree.  Volatility against the mean size of a life is therefore not enough to test a model of firm growth.
 \end{abstract}
 
 \maketitle
@@ -49,7 +50,8 @@ Compustat the conditional moments scale as
 \end{equation}
 with $\zeta_q=0.20(1)$, $0.39(2)$, $0.51(3)$, $0.58(4)$ for $q=1,\dots,4$, over four orders of magnitude of size
 \cite{stanley1996,amaral1997,sutton2002,moran2024}.  The ratios $\zeta_q/\zeta_1=1.95$, $2.55$, $2.90$ lie
-below $q$ \cite{moran2024}.
+below $q$ \cite{moran2024}.  Conditioned instead on the size at the start of each year, the standard deviation of
+one-year growth falls with the same exponent, $0.20(3)$, over about six orders of magnitude \cite{amaral1997}.
 
 The bend has a simple meaning.  If a firm's volatility were a function of its size times a random factor
 whose law does not depend on size, the ratios would be exactly $q$.  Ratios below $q$ therefore say that firms
@@ -83,10 +85,13 @@ We find three things.  First, with one fitted exponent the model reproduces in k
 granular models: a ratio curve below $q$, tent-shaped growth, and rescaled growth that stays fat-tailed among the
 largest firms (Sec.~\ref{sec:data}).  Second, the decline has a simple cause: self-limitation makes a firm relax at
 a rate equal to its size, so a firm is a low-pass filter of its market, and a larger firm is a stiffer one
-(Sec.~\ref{sec:filter}).  Third, the panel on which the facts are measured shapes them.  Against current size the
-model's volatility falls with a slope of $0.58$, against the mean size of a life with $\zeta_1=0.19$; and the bend
-comes from the spread of mean fields among firms of equal degree, which the life protocol turns into a dispersion
-of volatilities that grows with size (Sec.~\ref{sec:panel}).  Section~\ref{sec:fails} explains where the model
+(Sec.~\ref{sec:filter}).  Third, the panel on which the facts are measured shapes them.  Against the size at the
+start of each year the model's volatility is not a power law: it is flat among the smallest firms and falls steeply
+among the others, whereas in Compustat it falls with one exponent.  Against the mean size of a life the same firms
+give straight lines with $\zeta_1=0.19$.  The panel of lives therefore cannot tell a curved law from a power law,
+and a model of firm growth has to be tested against both sizes.  The bend comes from the spread of mean fields
+among firms of equal degree, which the life protocol turns into a dispersion of volatilities that grows with size
+(Sec.~\ref{sec:panel}).  Section~\ref{sec:fails} explains where the model
 fails, and Sec.~\ref{sec:discussion} discusses the open problems.
 
 %======================================================================
@@ -210,7 +215,7 @@ v=\sqrt{\frac{\pi}{2}}\,\frac1n\sum_{t=1}^{n}\big|g_t-\bar g\big|,\qquad
 \label{eq:vol}
 \end{equation}
 the factor making $v$ the standard deviation for Gaussian growth.  Exponents are least-squares slopes of
-$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:facts}b).
+$\ln\E[v^q\mid\Sb]$ against $\ln\Sb$ over $25$ equal-count bins (Fig.~\ref{fig:facts}).
 
 \paragraph{Samples.}  We compare with data on lives with at least $n_{\min}=5$ growth rates, the cut that matches MSB's
 (Appendix~\ref{app:protocol}).  The comparison uses seven economies with $N=32000$.  An eighth is excluded,
@@ -220,16 +225,23 @@ measure each life's own field, in two economies with $N=16000$.
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_facts.pdf}
-\caption{The facts at the reference point against Compustat \cite{moran2024}.  (a)--(d): lives with at least
-$5$ growth rates, $N=32000$, seven economies pooled.  (a) Mean volatility against life-mean size, with the
-Compustat slope.  (b) Moments $\E[v^q\mid\Sb]$ over the $25$ bins and the least-squares lines whose slopes are
-the exponents $\zeta_q$.
-(c) Ratio curve; the band is the range over the seven economies.  (d) Distribution of $v/\E[v\mid\Sb]$ by fifth
-of size, from the smallest (light) to the largest (dark), with the Compustat tail.  (e), (f): two reference
-economies, $N=16000$.  (e) Growth rates of lives with at least five growth rates, pooled and divided by their
-common volatility, with a Gaussian and a Laplace law of the same volatility.  (f) Distribution of relative sizes
-over all firm-years, with Zipf's law.}
+\caption{The decline of volatility at the reference point against Compustat \cite{moran2024}: lives with at least
+$5$ growth rates, $N=32000$, seven economies pooled.  (a)--(d) Moments $\E[v^q\mid\Sb]$, $q=1,\dots,4$, over the
+$25$ bins, with the least-squares lines whose slopes are the exponents $\zeta_q=0.209$, $0.400$, $0.561$,
+$0.685$ (solid), and lines through their centre with the Compustat slopes $0.20$, $0.39$, $0.51$, $0.58$
+(dotted).}
 \label{fig:facts}
+\end{figure*}
+
+\begin{figure*}[t]
+\includegraphics[width=\linewidth]{fig_shapes.pdf}
+\caption{The ratio curve and the distributions at the reference point against Compustat \cite{moran2024}.  (a),
+(b): lives with at least $5$ growth rates, $N=32000$, seven economies pooled.  (a) Ratio curve; the band is the range
+over the seven economies.  (b) Distribution of $v/\E[v\mid\Sb]$ by fifth of size, from the smallest (light) to the
+largest (dark), with the Compustat tail.  (c), (d): two reference economies, $N=16000$.  (c) Growth rates of lives
+with at least five growth rates, pooled and divided by their common volatility, with a Gaussian and a Laplace law
+of the same volatility.  (d) Distribution of relative sizes over all firm-years, with Zipf's law.}
+\label{fig:shapes}
 \end{figure*}
 
 \begin{table*}[t]
@@ -247,6 +259,9 @@ Compustat curves (Appendix~\ref{app:protocol}).  The reference point is chosen t
 \raggedright $\zeta_q$, $q=2,3,4$ & \raggedright $0.400$, $0.561$, $0.685$ & \raggedright $0.39(2)$, $0.51(3)$, $0.58(4)$\tabularnewline
 \raggedright $\zeta_q/\zeta_1$ & \raggedright $1.92$, $2.69$, $3.28$ & \raggedright $1.95$, $2.55$, $2.90$\tabularnewline
 \raggedright range of the decline & \raggedright $2.0$ orders of magnitude & \raggedright $4$\tabularnewline
+\raggedright decline against the size at the start of the year (two reference economies) & \raggedright not a power
+law: local slope $0\to0.6$; one fit over $4.3$ decades $0.30$ & \raggedright power law, $0.20(3)$ over $6$ decades
+\cite{amaral1997}\tabularnewline
 \raggedright mean volatility, smallest $\to$ largest bin & \raggedright $1.11\to0.39$ & \raggedright $1.22\to0.22$\tabularnewline
 \raggedright tail $b$ of $v/\E[v\mid\Sb]$ & \raggedright $5.2$ &\raggedright $4.6$\tabularnewline
 \raggedright growth rates & \raggedright tent-shaped, exponential tails & \raggedright tent-shaped\tabularnewline
@@ -282,8 +297,8 @@ and the Compustat value.  (c) $\zeta_4/\zeta_1$ for lives with at least five gro
 
 
 \paragraph{What works.}  Beyond the fitted $\zeta_1$, the model reproduces three qualitative facts.  The decline
-of volatility is monotone, and the ratio curve lies below $q$ (Fig.~\ref{fig:facts}a--c).  Growth rates are
-tent-shaped, with exponential tails (Fig.~\ref{fig:facts}e and Appendix~\ref{app:protocol}).  And rescaled by
+of volatility is monotone, and the ratio curve lies below $q$ (Figs.~\ref{fig:facts} and \ref{fig:shapes}a).  Growth rates are
+tent-shaped, with exponential tails (Fig.~\ref{fig:shapes}c and Appendix~\ref{app:protocol}).  And rescaled by
 each firm's own volatility, growth rates stay fat-tailed even among the largest firms, where granular models
 predict Gaussian tails \cite{moran2024}; in the largest fifth their excess kurtosis matches Compustat's
 (Table~\ref{tab:facts}).
@@ -301,9 +316,13 @@ smallest fifth to $0.29$ in the largest, but we do not count it as a result: the
 times too volatile, and a common shock alone would make this correlation rise with size.
 
 \paragraph{What fails.}  The decline spans two orders of magnitude of size rather than four, and volatility falls by
-a factor $2.8$ rather than $5.5$ (Fig.~\ref{fig:facts}a).  The size distribution has no Pareto tail
-(Fig.~\ref{fig:facts}f): it falls off steeply above about ten times the mean firm.  The distribution of volatilities
-at fixed size has the wrong shape: its tail is too thin, and thinner for longer lives (Fig.~\ref{fig:facts}d), and
+a factor $2.8$ rather than $5.5$ (Fig.~\ref{fig:facts}a).  Against the size at the start of each year, the
+conditioning of Refs.~\cite{stanley1996,amaral1997}, the decline is not a power law: it is flat among firms near
+the newborn size and steep above, and one power law over the whole range gives $0.30$ against Compustat's $0.20$
+(Sec.~\ref{sec:filter}).  The straight lines of Fig.~\ref{fig:facts} appear only on the panel of lives
+(Sec.~\ref{sec:lives}).  The size distribution has no Pareto tail
+(Fig.~\ref{fig:shapes}d): it falls off steeply above about ten times the mean firm.  The distribution of volatilities
+at fixed size has the wrong shape: its tail is too thin, and thinner for longer lives (Fig.~\ref{fig:shapes}b), and
 it spreads among the largest firms, where MSB find an approximate collapse.  With all lives the model does give
 $b=4.4$, close to Compustat's $4.6$, but a null with iid Laplace growth gives $4.3$, so the match is an artefact of
 short lives.  Lives are too short, with $38\%$ of the lives with at least two growth rates having exactly two,
@@ -348,6 +367,17 @@ measured against $0.59$ predicted on the power-law graph, and $0.67$ against $0.
 fails in two places: below $S\simeq0.15$, where the firms are newborns and the few that survive the horizon are a
 selected group, and over four years on the power-law graph, where the firms move too far for linear response.
 
+\paragraph{Against firm data.}  Conditioning on the size at the start of the year is the measurement of Amaral
+\emph{et al.}\ \cite{amaral1997}, who find that the standard deviation of one-year growth falls as $S_0^{-0.20(3)}$
+over about six orders of magnitude.  The filter law cannot give a power law.  Among small firms it gives no decline,
+and among large ones a volatility that falls towards $f/S$, so a decline with one small exponent would need a field
+whose amplitude grows almost in proportion to the firm's size, whereas it grows as $S^{0.10}$
+(Sec.~\ref{sec:onefirm}).  With Amaral's protocol over the whole range of sizes, the model's curve is flat below
+$S\simeq0.08$, falls above with a local slope of up to $0.62$ on the power-law graph and $0.74$ on the regular one,
+and on the power-law graph flattens again among the largest firms; one power law over the $4.3$ decades gives $0.30$ on the power-law graph, $0.29$ for lives with at
+least five growth rates, and $0.39$ on the regular graph.  Figure~\ref{fig:filter}a shows the curve above
+$S=0.05$ against Compustat's slope.
+
 \paragraph{The horizon.}  The model has its own clock, set by the rate at which a firm relaxes and the time over
 which its field changes, and the year is our choice of how to read it.  In Eq.~\eqref{eq:filter} the horizon is a
 variable of the law, through the motion of the field over $\tau$.  On the panel, a step of $2$ time units instead of
@@ -360,7 +390,8 @@ growth (Appendix~\ref{app:protocol}).
 deviation).  (a), (b) Volatility of the growth over $\tau=0.5$, $1$ and $2$ time units given the current size, measured
 (dots) and from Eq.~\eqref{eq:filter} (lines), on the power-law and the regular graph; in the shaded range the firms are
 newborns.  (c) The panel of MSB, lives with at least $20$ growth rates: measured (dots) and Eq.~\eqref{eq:lifeavg}
-with each life's own field amplitude (solid) or the node's (dashed).}
+with each life's own field amplitude (solid) or the node's (dashed).  Dotted green: Compustat's slope $0.20$, against
+the size at the start of the year in (a) \cite{amaral1997} and against life-mean size in (c) \cite{moran2024}.}
 \label{fig:filter}
 \end{figure*}
 
@@ -384,8 +415,11 @@ The curve against mean size is therefore much flatter than the curve against cur
 $0.58$ at current size and $\zeta_1=0.19$ on the panel.
 
 \paragraph{The conditioning matters.}  The match with MSB's exponent therefore depends on their protocol as much as on
-the dynamics.  Whether firm data show the same gap between current size and mean size is a test of the model
-(Appendix~\ref{app:tests}).
+the dynamics.  Firm data show no such gap: Compustat gives $0.20$ against the size at the start of each year
+\cite{amaral1997} and against life-mean size \cite{moran2024}.  This is what a power law does, since averaging it over
+a life whose sizes spread by a factor independent of scale keeps its exponent.  The model's law is curved at current
+size and straight on the panel, so the panel of lives cannot tell a curved law from a power law, and a model that
+passes it can still fail at current size.  Both conditionings are needed to test a model of firm growth.
 
 \paragraph{Sorting.}  The average needs the right amplitude.  Averaging the measured volatility at current size over
 each life gives $\zeta_1=0.37$, too large for the smallest lives and too small for the largest.  Firms of equal
@@ -402,7 +436,7 @@ $\zeta_1=0.25$ against $0.155$ on the power-law graph, and it overstates the sma
 the decline and the levels only; the higher moments have a different origin.
 
 %======================================================================
-\subsection{When the ratio curve bends}
+\subsection{Why the panel's ratio curve bends}
 \label{sec:criterion}
 
 \paragraph{Dispersion at fixed size.}  The higher exponents say how the distribution of volatilities at fixed
@@ -436,16 +470,35 @@ spreads or only its upper tail.
 
 \paragraph{Where the bend comes from in the model.}  The filter law describes the typical firm of a size, and we do
 not use it for the higher moments: the bend is a matter of how firms of equal size differ.  At current size they
-differ little, and the ratio curve of the growth over one year stays close to $q$ ($1.97$, $2.87$, $3.67$ on the
-power-law graph).  On the panel the curve bends ($1.79$, $2.37$, $2.80$ for lives with at least $20$ growth rates,
-with the panel's estimator).  One firm per node, driven by a Gaussian field with the node's mean, amplitude and
-correlation, reproduces this bend ($1.78$, $2.37$, $2.81$).  Setting every node's amplitude to the value of its
-degree class leaves the bend ($1.81$, $2.42$, $2.86$), whereas setting the mean fields to their class value as well
-removes it ($1.93$, $2.79$, $3.56$; Appendix~\ref{app:field}).  The bend therefore comes from the frozen spread of
-mean fields among nodes of equal degree.  The life protocol turns this spread into a spread of volatilities at fixed
-size that grows with size: the mean field decides how long a firm lives and how much of its field's motion its life
-sees, and among the largest lives these differences are widest (Sec.~\ref{sec:lives}).  On the regular graph the
-curve stays closer to $q$ ($1.93$, $2.78$, $3.53$ with the growth standard deviation).
+differ little, and the ratio curve of the growth over one year stays close to $q$ (Table~\ref{tab:bend}).  On the
+panel the curve bends, and one firm per node, driven by a Gaussian field with the node's mean, amplitude and
+correlation, reproduces the bend.  Setting every node's amplitude to the value of its degree class leaves the bend,
+whereas setting the mean fields to their class value as well removes it (Appendix~\ref{app:field}).  The bend
+therefore comes from the frozen spread of mean fields among nodes of equal degree.  The life protocol turns this
+spread into a spread of volatilities at fixed size that grows with size: the mean field decides how long a firm
+lives and how much of its field's motion its life sees, and among the largest lives these differences are widest
+(Sec.~\ref{sec:lives}).  On the regular graph the curve stays closer to $q$.
+
+\begin{table}[t]
+\caption{Where the bend comes from: ratios $\zeta_q/\zeta_1$ on the power-law graph, two reference economies, lives
+with at least $20$ growth rates and the panel's estimator unless the row says otherwise.  The one-firm rows drive one
+firm per node by a Gaussian field with the node's mean, amplitude and correlation, then with the
+amplitudes, or the means and amplitudes, set to the value of the node's degree class (Appendix~\ref{app:field}).}
+\label{tab:bend}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+ & $q=2$ & $3$ & $4$\\
+\hline
+current size, one year (s.d.) & $1.97$ & $2.87$ & $3.67$\\
+panel of lives & $1.79$ & $2.37$ & $2.80$\\
+one firm per node, node's field & $1.78$ & $2.37$ & $2.81$\\
+\quad amplitudes at class value & $1.81$ & $2.42$ & $2.86$\\
+\quad means and amplitudes at class value & $1.93$ & $2.79$ & $3.56$\\
+regular graph, panel of lives (s.d.) & $1.93$ & $2.78$ & $3.53$\\
+Compustat \cite{moran2024} & $1.95$ & $2.55$ & $2.90$\\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 \paragraph{Estimation noise.}  The ratio curve also depends on how precisely each life's volatility is measured, and
 that precision depends on the length of the life.  The estimation variance of $\ln v$ falls as $1/n$ with the number
@@ -464,23 +517,47 @@ less; because the growth is weakest for $q=2$, the bend sits in the higher momen
 \section{Where the model fails, and why}
 \label{sec:fails}
 
-\subsection{The range of the decline}
+Most failures have one of two causes.  Self-limitation ties a firm's size to the level of its field, while the
+amplitude of the field hardly grows with that level: this caps the sizes, curves the decline at current size and
+ends the range of the decline at the top.  Newborns enter at a fixed fraction $D$ of the mean firm, into a field that
+has just failed: this ends the range at the bottom and makes lives short.  The aggregate is a third problem, and we
+leave open the shape of the distribution of volatilities at fixed size.
+
+\subsection{Size is the level of the field}
+\label{sec:level}
+
+\paragraph{The tail of sizes.}  A firm in a field $\Phi$ relaxes to $S=\Phi$, and the field of a node is a sum over
+its neighbours whose mean has a nearly Gaussian spread at equal degree (Appendix~\ref{app:field}).  The largest firms
+therefore sit at the highest plateaus, a few times the mean firm, and the size distribution falls off steeply above
+about ten times the mean firm instead of following Zipf's law.
+
+\paragraph{The top of the decline.}  On a high plateau the noise term of Eq.~\eqref{eq:filter} is small and the firm
+follows its market, so its volatility is the motion of the field divided by its size.  A large firm is large because
+its field is high, not because its field moves more: the amplitude grows only as $S^{0.10}$
+(Sec.~\ref{sec:onefirm}).  Volatility therefore falls steeply among large firms, and the decline at current size is
+curved where Compustat's is a power law (Sec.~\ref{sec:filter}).  The same cap ends the range of the decline half an
+order of magnitude below Compustat's largest bins (Sec.~\ref{sec:range}).
+
+\paragraph{What it would take.}  A decline with one small exponent and a fat tail of sizes both need the motion of a
+firm's market to grow with its level, almost in proportion.  The field of Eq.~\eqref{eq:field} is a sum over many
+neighbours, whose fluctuations do not grow with its level.
+
+\subsection{Newborns}
 \label{sec:range}
 
-\paragraph{The ends of the range.}  The bins hold equal numbers of lives, so the range is the spread of life-mean
+\paragraph{The range of the decline.}  The bins hold equal numbers of lives, so the range is the spread of life-mean
 sizes between the smallest and the largest $4\%$ of lives.  The smallest lives are newborns that survive a few
-years: in the production run the smallest bin sits at $\Sb=0.032$, that is $0.32D$.  The largest lives sit on high
-plateaus, since a firm in a field $\Phi$ relaxes to $S=\Phi$, and the largest bin sits at $\Sb=3.2$.  The range is
-therefore
+years: in the production run the smallest bin sits at $\Sb=0.032$, that is $0.32D$.  The largest bin sits at
+$\Sb=3.2$, on the high plateaus of Sec.~\ref{sec:level}.  The range is therefore
 \begin{equation}
 R\simeq\log_{10}\frac{\Sb_{\rm top}}{0.3\,D},
 \label{eq:range}
 \end{equation}
 with $\Sb_{\rm top}$ the mean size of the largest lives: two orders of magnitude at $D=0.1$.  Against Compustat's
 bins, which run from about $10^{-3}$ to $10$ times the mean firm \cite{moran2024}, the model loses one and a half
-orders of magnitude at the bottom, set by the newborn size, and half of one at the top, set by the thin tail of
-sizes.  At equal depth, from $D=0.05$ to $0.2$, the smallest bin sits at $0.32$--$0.33\,D$ and
-Eq.~\eqref{eq:range} gives the number of decades to within $0.05$.
+orders of magnitude at the bottom, set by the newborn size, and half of one at the top.  At equal depth, from
+$D=0.05$ to $0.2$, the smallest bin sits at $0.32$--$0.33\,D$ and Eq.~\eqref{eq:range} gives the number of decades to
+within $0.05$.
 
 \paragraph{The bottom of the decline.}  A small firm is far below its plateau, so its self-limitation is
 negligible and $dS=\Phi S\,dt+\sqrt{DS}\,dW$.  In units of the newborn size, $s=S/D$, this reads
@@ -488,39 +565,22 @@ $ds=\Phi s\,dt+\sqrt s\,dW$, and $D$ drops out.  Growth rates are differences of
 units leaves alone, so the lower part of the decline depends on $\Sb/D$ alone.  At equal depth ($\mu=-1.25$,
 $\sigma-\sigma_c=0.21$) the curves $\E[v\mid\Sb]$ for $D=0.05$, $0.1$ and $0.2$ coincide against $\Sb/D$ up to
 $\Sb\simeq4D$, and the smallest lives have volatility $1.10$--$1.11$ at every $D$; at the reference point it is
-$1.11$.
-
-\paragraph{The top of the decline.}  The largest lives sit on high plateaus, where the noise term of
-Eq.~\eqref{eq:filter} is small and the firm follows its market, so their volatility is the motion of the field
-divided by the size.  The top is not set by the field alone, however.  At equal depth the volatility of
-the largest bin rises from $0.40$ to $0.50$ between $D=0.05$ and $0.2$, for reasons we have not isolated.  The
-fall from the bottom to the top, $2.8$ at the reference point, therefore shrinks as $D$ grows, from $2.75$ to
-$2.19$ at equal depth, together with the range, and the exponent, close to the logarithm of the fall over the
-range, changes only from $0.169$ to $0.193$.
-
-\paragraph{What it would take.}  Matching Compustat would take more than a smaller newborn.  A smaller $D$
-extends the range downwards, but the fall grows less than the range, so $\zeta_1$ falls, to $0.169$ at
-$D=0.05$.  Four orders of magnitude at $\zeta_1\simeq0.2$ need a decline that stays steep below the plateaus.
-The top needs a fatter tail of sizes, which is the failure on Zipf's law.
-
-\subsection{Sizes, lives and the aggregate}
-
-\paragraph{The tail of sizes.}  A firm in a field $\Phi$ relaxes to $S=\Phi$, and the field of a node is a sum over its
-neighbours whose mean has a nearly Gaussian spread at equal degree (Appendix~\ref{app:field}).  The largest firms
-therefore sit at the highest plateaus, a few times the mean firm, and the size distribution falls off steeply above
-about ten times the mean firm instead of following Zipf's law.  The same cap sets the top of the range of the
-decline.
+$1.11$.  A smaller newborn therefore extends the range downwards, but the volatility of the smallest lives stays the
+same, so the fall of volatility grows less than the range and $\zeta_1$ falls, to $0.169$ at $D=0.05$.  Four orders
+of magnitude at $\zeta_1\simeq0.2$ need a decline that stays steep below the plateaus.
 
 \paragraph{Short lives.}  A newborn takes the node, and the couplings, of a firm that exited, and exits happen in dips
 of the field: the field is below zero at the last sample before $83\%$ of the exits of established firms
-(Appendix~\ref{app:multiscaling}).  A newborn therefore starts in a field that has just failed, and many newborns die at
-once: $38\%$ of the lives with at least two growth rates have exactly two.  The bottom of the size range is made of these newborns (Sec.~\ref{sec:range}), whereas
-Compustat's smallest firms are listed firms.
+(Appendix~\ref{app:multiscaling}).  A newborn therefore starts in a field that has just failed, and many newborns die
+at once: $38\%$ of the lives with at least two growth rates have exactly two.  The bottom of the size range is made of
+these newborns, whereas Compustat's smallest firms are listed firms.
 
-\paragraph{The aggregate.}  The growth rate of the mean firm is several times more volatile than in the data, and it
-does not fall as $N^{-1/2}$ over the sizes we simulate (Table~\ref{tab:robust}).  The economy therefore keeps a common
-mode, which we have not separated from the effect of the interactions; this is also why we do not count the rise of
-co-movement with size as a result.
+\subsection{The aggregate}
+
+The growth rate of the mean firm is several times more volatile than in the data, and it does not fall as $N^{-1/2}$
+over the sizes we simulate (Table~\ref{tab:robust}).  The economy therefore keeps a common mode, which we have not
+separated from the effect of the interactions; this is also why we do not count the rise of co-movement with size as
+a result.
 
 %======================================================================
 \section{Discussion}
@@ -529,8 +589,8 @@ co-movement with size as a result.
 We have proposed an economy of interacting firms and scored it on the size--volatility observables of MSB.  With
 one fitted exponent, it gives a ratio curve below $q$, tent-shaped growth rates, and rescaled growth that stays
 fat-tailed among the largest firms.  Its higher exponents are too large, and its bend needs lives of at least five
-growth rates.  It fails on the range of the decline, the tail of the volatility distribution, the size distribution,
-the length of lives and the aggregate volatility.
+growth rates.  It fails on the decline against current size, the range of the decline, the tail of the volatility
+distribution, the size distribution, the length of lives and the aggregate volatility.
 
 One firm in a moving field explains both sides.  Self-limitation makes a firm relax at a rate equal to its size, so
 a firm is a low-pass filter of its market: a small firm integrates the motion of its market, a large one follows it
@@ -541,10 +601,13 @@ small.  The bend comes from elsewhere: firms of equal degree differ in their mea
 this into a dispersion of volatilities that grows with size.
 
 In a granular model a large firm is calm because it has many independent parts; here it is calm because
-self-limitation makes it stiff, and the protocol of the panel matters as much as the dynamics.  Firm data can tell
-the two apart (Appendix~\ref{app:tests}): the decline should be steeper against current size than against mean
-size, the dispersion at fixed size should grow with size, and trimming the years after entry and before exit should
-move the ratio curve towards $q$.
+self-limitation makes it stiff, and the protocol of the panel matters as much as the dynamics.  The panel of MSB
+alone does not tell the two apart.  Our model gives straight lines against the mean size of a life and a curved law
+against the size at the start of each year, where Compustat has the same power law both ways \cite{amaral1997,moran2024}.
+A model of firm growth should therefore be tested against both sizes.  The filter law says what passing both
+requires: a market whose amplitude grows almost in proportion to the size of the firm.  The other tests of
+Appendix~\ref{app:tests} are open: the dispersion at fixed size should grow with size, and trimming the years after
+entry and before exit should move the ratio curve towards $q$.
 
 Anomalous moment scaling has been derived for GLV communities before.  With multiplicative environmental noise
 and migration, abundances obey Taylor's law with one exponent for every order \cite{alhiyasat2026}, through the
@@ -556,8 +619,9 @@ Three problems are open.  First, the theory reproduces the panel only with each 
 direction in which the life protocol sorts the firms by their field, but not its law.  Its ingredients are the
 mean, the frozen spread and the moving amplitude of the field at each degree; a Gaussian closure at finite
 connectivity gets the amplitude $20$--$30\%$ low and misses its spread between firms of equal degree.  A closure that keeps this spread, such as the cavity method solved by population dynamics \cite{tarabolo2025,tonolo2025}, is the
-natural next step.  Second, the model needs a dynamics
-that decouples the decline of volatility from the size cap, both for the range and for Zipf's law.  Third, a theory
+natural next step.  Second, the model needs a dynamics in which the amplitude of a firm's market grows with the
+firm's size.  This would straighten the decline at current size, and it may also lift the cap on sizes that limits
+the range of the decline and Zipf's law.  Third, a theory
 of co-movement in a finite economy would separate the common mode from the effect of the interactions.
 
 \section*{Data availability}
@@ -569,12 +633,13 @@ number of this paper and draw every figure:
   \ref{fig:instability}, Table~\ref{tab:phase}, and the runs at equal depth of Appendix~\ref{app:robust};
 \item \texttt{04\_volatility\_law.ipynb}: Table~\ref{tab:reduction};
 \item \texttt{05\_multiscaling.ipynb}: the ratios with all lives in Sec.~\ref{sec:criterion};
-\item \texttt{06\_facts.ipynb}: Figs.~\ref{fig:facts} and \ref{fig:limits}, Tables~\ref{tab:facts} and \ref{tab:robust}, and the protocol checks of Appendix~\ref{app:protocol};
-\item \texttt{07\_floor\_theory.ipynb}: Fig.~\ref{fig:predictions}, the field statistics of Appendix~\ref{app:field}, the exit times of
+\item \texttt{06\_facts.ipynb}: Figs.~\ref{fig:facts}, \ref{fig:shapes} and \ref{fig:limits}, Tables~\ref{tab:facts} and \ref{tab:robust}, and the protocol checks of Appendix~\ref{app:protocol};
+\item \texttt{07\_floor\_theory.ipynb}: Fig.~\ref{fig:predictions}, Table~\ref{tab:bend} except its first row, the field statistics of Appendix~\ref{app:field}, the exit times of
   Appendix~\ref{app:constant}, the estimation noise and the dips of Appendix~\ref{app:multiscaling}, and the
   bias correction of Appendix~\ref{app:protocol};
-\item \texttt{09\_filter\_law.ipynb}: Fig.~\ref{fig:filter}, Table~\ref{tab:panel}, the field statistics of
-  Sec.~\ref{sec:onefirm} and the numbers of Secs.~\ref{sec:filter} and \ref{sec:panel}.
+\item \texttt{09\_filter\_law.ipynb}: Fig.~\ref{fig:filter}, Table~\ref{tab:panel}, the decline against the size at
+  the start of the year in Table~\ref{tab:facts}, the first row of Table~\ref{tab:bend}, the field statistics of Sec.~\ref{sec:onefirm} and the numbers of
+  Secs.~\ref{sec:filter} and \ref{sec:panel}.
 \end{itemize}
 Three scripts complete the set: \texttt{scripts/two\_time\_dmft.py} solves the two-time closure,
 \texttt{scripts/bursts.py} analyses the bursts, and \texttt{scripts/msb\_curves.py} reads the Compustat curves
@@ -1229,14 +1294,14 @@ The criterion of Sec.~\ref{sec:criterion} holds for any panel.  The theory of Se
 claims that firm data can test: the decline of volatility is a property of the current size, which the panel averages
 over each life, and the bend comes from the spread of mean fields among firms of equal degree, which the life protocol turns
 into a dispersion that grows with size.  They lead to four tests
-(Fig.~\ref{fig:predictions}; two reference economies, the panel's estimator).
+(Fig.~\ref{fig:predictions}; two reference economies, the panel's estimator).  Firm data already answer the first,
+against the model.
 
-\paragraph{The decline is steeper against current size than against mean size.}  The same firms of the model give
-a slope of $0.58$ against current size over one year and $\zeta_1=0.19$ against life-mean size
-(Sec.~\ref{sec:lives}).  Both conditionings can be measured on the same firm data, against the size at the start of
-each year \cite{stanley1996} and against the mean size of each firm's listed life \cite{moran2024}.  A small
-difference between them would mean that real firms pass through a much narrower range of sizes within a life than
-the firms of the model.
+\paragraph{The decline against current size and against mean size.}  The same firms of the model give a curved law
+against the size at the start of each year, with a slope of $0.58$ between $S=0.3$ and $8$ and $0.30$ for one power
+law over the whole range, and $\zeta_1=0.19$ against life-mean size (Secs.~\ref{sec:filter} and \ref{sec:lives}).
+Compustat gives $0.20$ both ways \cite{amaral1997,moran2024}, so the model fails this test.  The two numbers come
+from different samples and years; measuring both conditionings on the same firms would make the comparison exact.
 
 \begin{figure*}[t]
 \includegraphics[width=\linewidth]{fig_predictions.pdf}
@@ -1420,7 +1485,7 @@ the dependence of $\zeta_1$ on the minimum life length is this bias; from $n_{\m
 feels it.
 In the comparison with Compustat we keep the estimator of MSB as it is.
 
-\paragraph{The fits.}  Figure~\ref{fig:facts}b shows the lines behind the exponents of Table~\ref{tab:facts}.  For
+\paragraph{The fits.}  Figure~\ref{fig:facts} shows the lines behind the exponents of Table~\ref{tab:facts}.  For
 $q\le2$ the residuals stay within $0.1$ in log units; for $q=3$ and $4$ the end bins lie above the lines, by up
 to $0.19$ and $0.52$ in the largest bin.
 
@@ -1450,7 +1515,7 @@ small firms most of the model's kurtosis is the rescaling of short lives.  The f
 beyond $|z|=8$, outside the range of the Compustat curves; rescaling instead by each life's own volatility,
 lives with at least $10$ growth rates give $1.3$ to $23$ by fifth in the production run.
 
-\paragraph{The tail of the growth rates.}  The tails of the pooled growth rates of Fig.~\ref{fig:facts}e
+\paragraph{The tail of the growth rates.}  The tails of the pooled growth rates of Fig.~\ref{fig:shapes}c
 are exponential, not power laws.  Over the $1.8\times10^7$ growth rates of lives with at least five, divided
 by their common volatility, the tail exponent of $|z|$ estimated from the top $10\%$, $3\%$, $1\%$, $0.3\%$ and
 $0.1\%$ rises with the depth of the tail, $2.3$, $3.0$, $3.5$, $4.3$ and $5.2$, as for a Laplace law ($3.1$ to $7.8$)
